@@ -2,35 +2,40 @@
 % Please edit documentation in R/icr.R
 \name{x11_trend_selection}
 \alias{x11_trend_selection}
-\alias{x11_trend_selection.default}
-\alias{x11_trend_selection.ts}
-\title{X-11 Selection of Trend Filter}
+\alias{find_icr}
+\title{X-11 Selection of Trend-Cycle Filter}
 \usage{
-x11_trend_selection(x, ...)
+x11_trend_selection(x, freq)
 
-\method{x11_trend_selection}{default}(x, ..., freq)
-
-\method{x11_trend_selection}{ts}(x, ...)
+find_icr(length, freq = 12)
 }
 \arguments{
-\item{x}{I/C ratio \code{\link[=icr]{icr()}} or a time series}
-
-\item{...}{further arguments passed to or from other methods.}
+\item{x}{a \code{"ts"} object.}
 
 \item{freq}{frequency of the time series used to compute the I/C ratio.}
+
+\item{length}{length of the filter.}
 }
 \description{
-X-11 Selection of Trend Filter
+Perform X-11 selection of the length of Henderson (\code{x11_trend_selection()}) and
+compute the associated I/C ratio used to build Musgrave fuilters (\code{find_icr()}).
 }
 \details{
 The following procedure is used in X-11 to select the length of the trend filter:
 \enumerate{
-\item Computes the I/C ratio, \eqn{icr} with an Henderson filter of length 13.
+\item Computes the I/C ratio, \eqn{icr} with an Henderson filter of length the frequency plus 1.
 \item The length depends on the value or \eqn{icr}:
 \itemize{
 \item if \eqn{icr < 1} then the selected length is 9 for monthly data and 5 otherwise;
 \item if \eqn{1 \leq icr < 3.5} then the selected length is \eqn{freq + 1} where \eqn{freq} is the frequency of data (12 for monthly data, 4 for quarterly data...).
 \item if \eqn{icr \geq 3.5} then the selected length is 23 for monthly data and 7 otherwise.
+}
+\item The value of \eqn{icr} is then fixed to build Musgrave filters (\code{find_icr()}) :
+\itemize{
+\item for quarterly data, if the length is 5 then \eqn{icr = 0.001}, otherwide \eqn{icr = 4.5};
+\item if the length if less or equal to 9 then \eqn{icr = 1};
+\item else if the length if less or equal to 13 then \eqn{icr = 3.5};
+\item else \eqn{icr = 4.5}.
 }
 }
 }

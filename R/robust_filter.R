@@ -153,20 +153,22 @@ henderson_robust_smoothing <- function(x,
 	#### Local estimation of ICR #####
 	##################################
 
+	icr_l <- icr_r <- icr
 	if (local_icr) {
-		if (!is.null(icr) || length(icr) != h) {
-			icr <- NULL
-		}
+		icr_param <- check_icr(icr, h)
+		icr_l <- icr_param$icr_l
+		icr_r <- icr_param$icr_r
+		all_icr <- vector("numeric",length = h)
 
-		if (is.null(icr)) {
-			H_tmp <- H
-			if (local_var) {
-				# remove asymmetric MA
-				H_tmp[c(1:abs(lb), (n - ub+1):n),] <- 0
-			}
-			var <- variance_hat_matrix(x, H_tmp)
+		if (is.null(icr_r)) {
+			H_sym <- H
+			# remove asymmetric MA
+			H_sym[c(1:abs(lb), (n - ub+1):n),] <- 0
+			var <- variance_hat_matrix(x, H_sym)
 		}
-
+		#####################
+		### Right filters ###
+		#####################
 		for (i in (n-ub+1):n) {
 			c_coef <- default_filter@rfilters[[i - (n-ub)]]
 			focus_reg <- window(reg,
@@ -176,7 +178,7 @@ henderson_robust_smoothing <- function(x,
 			q <- n - i
 			X <- build_matrix_reg(focus_reg, fun_out, h, U = U, current_date = dates_x[i])
 			sym <- sym_robust_filter(X = X, kernel = kernel, degree = degree, horizon = h)
-			if (is.null(icr)) {
+			if (is.null(icr_r)) {
 				local_param_f <- local_daf_est(p = h, q = q, d = degree,
 											   dest = dest, kernel = kernel,
 											   X_sup = X)
@@ -212,9 +214,10 @@ henderson_robust_smoothing <- function(x,
 					bias_i <- param_i / sqrt(tmp_var)
 				}
 			} else {
-				bias_i <- 2/(sqrt(pi) * (icr[i - (n-ub)]))
+				bias_i <- 2/(sqrt(pi) * (icr_r[i - (n-ub)]))
 			}
 			bias_i[bias_i >= max_bias] <- max_bias
+			all_icr[i- (n-ub)] <- 2/(sqrt(pi) * (bias_i))
 			X <- check_matrix_reg(X, q)
 			c_coef <- mmsre_filter(
 				ref_filter = sym,
@@ -226,6 +229,79 @@ henderson_robust_smoothing <- function(x,
 			H[i, ] <- 0
 			H[i, seq(i + lower_bound(c_coef), length.out = length(c_coef))] <- coef(c_coef)
 		}
+		icr_r <- all_icr
+
+		####################
+		### Left filters ###
+		####################
+		for (i in 1:abs(lb)) {
+			c_coef <- default_filter@lfilters[[i]]
+			focus_reg <- window(reg,
+								start = dates_x[i + lower_bound(c_coef)] ,
+								end = dates_x[i + upper_bound(c_coef)],
+								extend = TRUE)
+			q <- i - 1
+			X <- X_invert <- build_matrix_reg(focus_reg, fun_out, h, U = U, current_date = dates_x[i])
+			if (!is.null(X_invert)){
+				X_invert <- X_invert[nrow(X_invert):1,, drop = FALSE]
+			}
+			sym <- sym_robust_filter(X = X_invert,
+									 kernel = kernel, degree = degree, horizon = h)
+			if (is.null(icr_l)) {
+				local_param_f <- local_daf_est(p = h, q = q, d = degree,
+											   dest = dest, kernel = kernel,
+											   X_sup = X)
+				param_i <- rjd3filters::filter(window(
+					x,
+					start = dates_x[i + lower_bound(c_coef)] ,
+					end = dates_x[i + upper_bound(c_coef)],
+					extend = TRUE
+				),
+				local_param_f)
+				param_i <- param_i[abs(lower_bound(local_param_f)) + 1]
+				bias_i <- param_i / sqrt(var)
+				bias_i[bias_i >= max_bias] <- max_bias
+
+				if (local_var) {
+					default_ma <- mmsre_filter(
+						ref_filter = sym,
+						q = q,
+						delta = bias_i,
+						U = U,
+						Z = Z
+					)
+					default_ma <- rev(default_ma)
+					H_asym <- build_robust_hat_matrix_ma(
+						reg = reg,
+						fun_out = fun_out,
+						delta = bias_i,
+						default_ma = default_ma,
+						U = U,
+						Z = Z,
+						degree = degree,
+						lfilter = TRUE
+					)
+					tmp_var <- variance_hat_matrix(x, H_asym)
+					bias_i <- param_i / sqrt(tmp_var)
+				}
+			} else {
+				bias_i <- 2/(sqrt(pi) * (icr_l[i - (n-ub)]))
+			}
+			bias_i[bias_i >= max_bias] <- max_bias
+			all_icr[i- (n-ub)] <- 2/(sqrt(pi) * (bias_i))
+			X <- check_matrix_reg(X_invert, q)
+			c_coef <- mmsre_filter(
+				ref_filter = sym,
+				q = q,
+				delta = bias_i,
+				U = cbind(U, X),
+				Z = Z
+			)
+			c_coef <- rev(c_coef)
+			H[i, ] <- 0
+			H[i, seq(i + lower_bound(c_coef), length.out = length(c_coef))] <- coef(c_coef)
+		}
+		icr_l <- all_icr
 	}
 
 	filtered <- ts(H %*% x,
@@ -238,21 +314,26 @@ henderson_robust_smoothing <- function(x,
 		x = x,
 		parameters = list(
 			hat_matrix = H,
-			icr = icr
+			reg = reg,
+			fun_out = fun_out,
+			U = U,
+			Z = Z,
+			icr = list(icr_l = icr_l, icr_r = icr_r)
 		)
 	)
 	class(res) <- c("tc_estimates", "robust_henderson")
 	res
 }
 
-build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, degree) {
+build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, degree, lfilter = FALSE) {
 	kernel <- "Henderson"
 	dates_x <- as.numeric(time(reg))
 	n <- length(dates_x)
 	H <- matrix(0,ncol = n, nrow = n)
 	lb <- lower_bound(default_ma)
-	ub <- q <- upper_bound(default_ma)
-	h <- max(abs(lb), ub)
+	ub <- upper_bound(default_ma)
+	q <- min(abs(lb), abs(ub))
+	h <- max(abs(lb), abs(ub))
 	for (i in (abs(lb) + 1):(n-ub)) {
 		# right filters
 		c_coef <- default_ma
@@ -262,6 +343,9 @@ build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, de
 							extend = TRUE)
 		X <- build_matrix_reg(focus_reg, fun_out, h, U = U, current_date = dates_x[i])
 		if (!is.null(X)) {
+			if (lfilter) { # invert the order of the ligns
+				X <- X[nrow(X):1,, drop = FALSE]
+			}
 			sym <- sym_robust_filter(X = X, kernel = kernel, degree = degree, horizon = h)
 			X <- check_matrix_reg(X, q)
 			c_coef <- mmsre_filter(
@@ -271,6 +355,9 @@ build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, de
 				U = cbind(U, X),
 				Z = Z
 			)
+			if (lfilter) {
+				c_coef <- rev(c_coef) # reverse the order of the coefficients
+			}
 		}
 		H[i, seq(i + lb, length.out = length(default_ma))] <- coef(c_coef)
 	}
@@ -288,6 +375,15 @@ variance_hat_matrix <- function(x, H) {
 	nu2 <- sum(diag(t(H) %*% H))
 	res <- sum((sc - x)^2, na.rm = TRUE)
 	res / (nobs - 2*nu1 + nu2)
+}
+
+df_var_hat_matrix <- function(H) {
+	n <- nrow(H)
+	non_estimate <- apply(H == 0, 1, all)
+	I <- diag(1,ncol = n)
+	I[non_estimate, non_estimate] <- 0
+	Delta <- I - H
+	tr(Delta)^2 / tr(Delta %*% t(Delta))
 }
 sym_robust_filter <- function(X = NULL, kernel = "Henderson", degree = 3,
 							  horizon = 6) {

@@ -50,6 +50,7 @@ henderson_smoothing <- function(x,
 							 endpoints = endpoints,
 							 ...)
 		param_f <- NULL
+		icr <- list(icr_l = icr, icr_r = icr)
 	} else {
 		local_param_est <- local_param_filter(x, icr = icr,
 											  endpoints = endpoints,
@@ -96,73 +97,104 @@ local_param_filter <- function(x, icr = NULL,
 								   ...))
 	}
 
+	icr_param <- check_icr(icr, horizon)
+	icr_l <- icr_param$icr_l
+	icr_r <- icr_param$icr_r
 
 	local_param_f <- NULL
-	if (is.null(icr) || length(icr) != horizon) {
-		dest <- switch (endpoints,
-						LC = 1,
-						QL = 2,
-						CQ = 3
-		)
-		if (degree < dest) {
-			degree <- dest
-		}
-		length <- horizon * 2 + 1
-		icr <- find_icr(length, frequency(x))
-		local_param_f <- local_param_est[[
-			as.character(length)
-			]][[
-				sprintf("d=%i", degree)
-				]][[
-					sprintf("dest=%i", dest)
-				]]
-		if (kernel != "Henderson" | is.null(local_param_f)) {
-			local_param_f <- local_daf_filter(p = horizon, d = degree,
-											  dest = dest, kernel = kernel)
-		}
-
+	dest <- switch (endpoints,
+					LC = 1,
+					QL = 2,
+					CQ = 3
+	)
+	if (degree < dest) {
+		degree <- dest
+	}
+	length <- horizon * 2 + 1
+	local_param_f <- local_param_est[[
+		as.character(length)
+	]][[
+		sprintf("d=%i", degree)
+	]][[
+		sprintf("dest=%i", dest)
+	]]
+	if (kernel != "Henderson" | is.null(local_param_f)) {
+		local_param_f <- local_daf_filter(p = horizon, d = degree,
+										  dest = dest, kernel = kernel)
+	}
+	sym_filter <- lp_filter(horizon = horizon)@sfilter
+	if (is.null(icr_r)) {
 		last_param <- tail(rjd3filters::filter(tail(x, horizon * 2 + 1),
 											   local_param_f),
 						   horizon)
-		sym_filter <- lp_filter(horizon = horizon)@sfilter
 		var <- rjd3filters::var_estimator(x, sym_filter)
 		if (local_var) {
-			icr <- 2/(sqrt(pi) * (last_param / sqrt(var)))
-			icr[abs(icr) <= min_icr] <- min_icr
+			icr_r <- 2/(sqrt(pi) * (last_param / sqrt(var)))
+			icr_r[abs(icr_r) <= min_icr] <- min_icr
 			default_f <- lapply(1:horizon, function(i){
 				q <- horizon - i
 				lp_filter(
 					horizon = horizon,
 					endpoints = endpoints,
-					ic = icr[i],
+					ic = icr_r[i],
 					kernel = kernel
 				)[, sprintf("q=%i", q)]
 			})
 			var <- sapply(default_f, rjd3filters::var_estimator, x = x)
 		}
-		icr <- 2/(sqrt(pi) * (last_param / sqrt(var)))
+		icr_r <- 2/(sqrt(pi) * (last_param / sqrt(var)))
 	}
 
+	if (is.null(icr_l)) {
+		last_param <- head(rjd3filters::filter(head(x, horizon * 2 + 1),
+											   local_param_f),
+						   horizon)
+
+		var <- rjd3filters::var_estimator(x, sym_filter)
+		if (local_var) {
+			icr_l <- 2/(sqrt(pi) * (last_param / sqrt(var)))
+			icr_l[abs(icr_l) <= min_icr] <- min_icr
+			default_f <- lapply(1:horizon, function(i){
+				lp_filter(
+					horizon = horizon,
+					endpoints = endpoints,
+					ic = icr_l[i],
+					kernel = kernel
+				)@lfilters[[i]]
+			})
+			var <- sapply(default_f, rjd3filters::var_estimator, x = x)
+		}
+		icr_l <- 2/(sqrt(pi) * (last_param / sqrt(var)))
+	}
 	default_f <- lp_filter(horizon = horizon,
 						   endpoints = endpoints,
 						   ic = find_icr(length, frequency(x)),,
 						   kernel = kernel)
 	lfilters <- default_f@lfilters
 
-	icr[abs(icr) <= min_icr] <- min_icr
-
+	icr_l[abs(icr_l) <= min_icr] <- min_icr
+	icr_r[abs(icr_r) <= min_icr] <- min_icr
+	lfilters <- lapply(1:horizon, function(i){
+		lp_filter(
+			horizon = horizon,
+			endpoints = endpoints,
+			ic = icr_l[i],
+			kernel = kernel
+		)@lfilters[[i]]
+	})
 	rfilters <- lapply(1:horizon, function(i){
 		q <- horizon - i
 		lp_filter(
 			horizon = horizon,
 			endpoints = endpoints,
-			ic = icr[i],
+			ic = icr_r[i],
 			kernel = kernel
 		)[, sprintf("q=%i", q)]
 	})
 	list(trend_f = finite_filters(sym_filter, rfilters = rfilters, lfilters = lfilters),
 		 param_f = local_param_f,
-		 icr = icr)
+		 icr = list(icr_l = icr_l, icr_r = icr_r)
+		 )
 }
 
 # Not used (in case we implement left/right icr)

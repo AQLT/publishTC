@@ -34,3 +34,24 @@ gen_ao_tc <- function(t, h = 6){
 	}
 	X
 }
+build_reg <-  function(x, ao, ao_tc, ls, ...){
+	dates <- as.numeric(time(x))
+	ao_reg <- ao_tc_reg <- ls_reg <- NULL
+	if (!is.null(ao)) {
+		ao_reg <- ts(sapply(round(ao, 3), `%in%`, x = round(dates, 3)),
+					 start = start(x), frequency = frequency(x))
+	}
+	if (!is.null(ao_tc)) {
+		ao_tc_reg <- ts(sapply(round(ao_tc, 3), `%in%`, x = round(dates, 3)),
+						start = start(x), frequency = frequency(x))
+	}
+	if (!is.null(ls)) {
+		ls_reg <- ts(sapply(round(ls, 3), `%in%`, x = round(dates, 3)),
+					 start = start(x), frequency = frequency(x))
+	}
+	fun_out <- c(rep(list(gen_ao), length(ao)),
+				 rep(list(gen_ao_tc), length(ao_tc)),
+				 rep(list(gen_ls), length(ls)))
+	reg <- cbind(ao_reg, ao_tc_reg, ls_reg)
+	list(fun_out = fun_out, reg = reg)
+}

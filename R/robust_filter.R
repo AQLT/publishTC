@@ -48,23 +48,9 @@ henderson_robust_smoothing <- function(x,
 	}
 
 	dates_x <- as.numeric(time(x))
-	ao_reg <- ao_tc_reg <- ls_reg <- NULL
-	if (!is.null(ao)) {
-		ao_reg <- ts(sapply(round(ao, 3), `%in%`, x = round(dates_x, 3)),
-					 start = start(x), frequency = frequency(x))
-	}
-	if (!is.null(ao_tc)) {
-		ao_tc_reg <- ts(sapply(round(ao_tc, 3), `%in%`, x = round(dates_x, 3)),
-						start = start(x), frequency = frequency(x))
-	}
-	if (!is.null(ls)) {
-		ls_reg <- ts(sapply(round(ls, 3), `%in%`, x = round(dates_x, 3)),
-					 start = start(x), frequency = frequency(x))
-	}
-	fun_out <- c(rep(list(gen_ao), length(ao)),
-				 rep(list(gen_ao_tc), length(ao_tc)),
-				 rep(list(gen_ls), length(ls)))
-	reg <- cbind(ao_reg, ao_tc_reg, ls_reg)
+	f_reg <- build_reg(x = x, ao = ao, ao_tc = ao_tc, ls = ls)
+	fun_out <- f_reg$fun_out
+	reg <- f_reg$reg
 
 	h <- (length - 1) / 2
 	default_filter <- lp_filter(horizon = h,
@@ -314,11 +300,11 @@ henderson_robust_smoothing <- function(x,
 		x = x,
 		parameters = list(
 			hat_matrix = H,
-			reg = reg,
-			fun_out = fun_out,
+			outliers = list(ao = ao, ao_tc = ao_tc, ls = ls),
 			U = U,
 			Z = Z,
-			icr = list(icr_l = icr_l, icr_r = icr_r)
+			icr = list(icr_l = icr_l, icr_r = icr_r),
+			kernel = kernel
 		)
 	)
 	class(res) <- c("tc_estimates", "robust_henderson")
@@ -371,8 +357,8 @@ variance_hat_matrix <- function(x, H) {
 	nobs <- n - sum(non_estimate)
 	sc <- H %*% x
 	sc[non_estimate] <- NA
-	nu1 <- sum(diag(H))
-	nu2 <- sum(diag(t(H) %*% H))
+	nu1 <- tr(H)
+	nu2 <- tr(t(H) %*% H)
 	res <- sum((sc - x)^2, na.rm = TRUE)
 	res / (nobs - 2*nu1 + nu2)
 }
@@ -380,10 +366,13 @@ variance_hat_matrix <- function(x, H) {
 df_var_hat_matrix <- function(H) {
 	n <- nrow(H)
 	non_estimate <- apply(H == 0, 1, all)
-	I <- diag(1,ncol = n)
-	I[non_estimate, non_estimate] <- 0
+	I <- diag(1, ncol = n, nrow = n)
+	I[non_estimate,] <- 0
 	Delta <- I - H
 	tr(Delta)^2 / tr(Delta %*% t(Delta))
+}
+tr <- function(x) {
+	sum(diag(x))
 }
 sym_robust_filter <- function(X = NULL, kernel = "Henderson", degree = 3,
 							  horizon = 6) {

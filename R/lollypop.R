@@ -8,7 +8,7 @@ lollypop <- function(sa, tc, xlim = NULL, ylim = NULL,
 }
 
 #' @importFrom graphics points segments
-#' @importFrom stats coef frequency start time ts ts.union window
+#' @importFrom stats coef frequency start time ts ts.union window end qt
 #' @export
 lollypop.default <- function(sa, tc, xlim = NULL, ylim = NULL,
 					 color_points = "black",
@@ -37,7 +37,7 @@ lollypop.tc_estimates <- function(sa, tc, xlim = NULL, ylim = NULL,
 					 color_points = color_points, cex_points = cex_points, ...)
 }
 #' @export
-gglollypop <- function(sa, tc, xlim = NULL, ylim = NULL,
+gglollypop <- function(sa, tc,
 					 color_points = "black",
 					 cex_points = 1,
 					 ...) {
@@ -59,10 +59,10 @@ gglollypop.default <- function(sa, tc,
 		ggplot2::labs(x = NULL, y = NULL)
 }
 #' @export
-gglollypop.tc_estimates <- function(sa, tc, xlim = NULL, ylim = NULL,
+gglollypop.tc_estimates <- function(sa, tc,
 								  color_points = "black",
 								  cex_points = 1,
 								  ...){
-	gglollypop.default(sa = sa[["x"]], tc = sa[["tc"]], xlim = xlim, ylim = ylim,
+	gglollypop.default(sa = sa[["x"]], tc = sa[["tc"]],
 					 color_points = color_points, cex_points = cex_points, ...)
 }

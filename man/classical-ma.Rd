@@ -9,13 +9,13 @@
 \alias{local_param_est}
 \title{Classical Moving Average}
 \format{
-An object of class \code{list} of length 5.
+\code{henderson} is \code{list()} of \code{"moving_average"}.
 
-An object of class \code{finite_filters} of length 1.
+\code{CLF} is a \code{"finite_filters"}.
 
-An object of class \code{finite_filters} of length 1.
+\code{CLF_CN} is a \code{"finite_filters"}.
 
-An object of class \code{list} of length 5.
+\code{local_param_est} is \code{list()} of \code{"finite_filters"}.
 }
 \usage{
 henderson
@@ -27,6 +27,20 @@ CLF_CN
 local_param_est
 }
 \description{
-Classical Moving Average
+Classical moving average for trend-cycle extraction.
+}
+\details{
+\code{henderson} contains the Henderson moving average of length 5, 7, 9, 13 and 23.
+
+\code{CLF} contains the Cascade Linear Filter (CLF) of length 13 and the associated Asymmetric Linear Filters (ALF).
+
+\code{CLF_CN} contains the Cascade Linear Filter (CLF) of length 13 and the associated cut and normalise asymetric filters.
+}
+\references{
+Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59. \url{https://doi.org/10.1080/07474930802387837}
+
+Henderson, R. (1916). "Note on graduation by adjusted average". \emph{Transactions of the actuarial society of America} 17: 43‑48.
+
+Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}
 }
 \keyword{datasets}

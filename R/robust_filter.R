@@ -1,3 +1,11 @@
+#' Smoothing using the Henderson filter
+#'
+#' @inheritParams henderson_smoothing
+#'
+#' @param ao Dates of the Additive Outliers (AO) which effects are associated to the irregular component.
+#' @param ao_tc Dates of the Additive Outliers (AO) which effects are associated to the trend-cycle component.
+#' @param ls Dates of the Level Shifts (LS) which effects are associated to the trend-cycle component.
+#'
 #' @importFrom rjd3filters polynomial_matrix mmsre_filter finite_filters
 #' @export
 henderson_robust_smoothing <- function(x,

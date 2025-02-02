@@ -1,15 +1,32 @@
 #' Classical Moving Average
+#'
+#' Classical moving average for trend-cycle extraction.
+#'
+#' @details
+#' `henderson` contains the Henderson moving average of length 5, 7, 9, 13 and 23.
+#'
+#' `CLF` contains the Cascade Linear Filter (CLF) of length 13 and the associated Asymmetric Linear Filters (ALF).
+#'
+#' `CLF_CN` contains the Cascade Linear Filter (CLF) of length 13 and the associated cut and normalise asymetric filters.
+#'
+#'
+#' @references Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews* 28 (1-3): 40‑59. <https://doi.org/10.1080/07474930802387837>
+#'
+#' Henderson, R. (1916). "Note on graduation by adjusted average". *Transactions of the actuarial society of America* 17: 43‑48.
+#'
+#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>
 #' @docType data
+#' @format `henderson` is `list()` of `"moving_average"`.
 #' @rdname classical-ma
 #' @name classical-ma
 "henderson"
-#' @docType data
+#' @format `CLF` is a `"finite_filters"`.
 #' @name classical-ma
 "CLF"
-#' @docType data
+#' @format `CLF_CN` is a `"finite_filters"`.
 #' @name classical-ma
 "CLF_CN"
-#' @docType data
+#' @format `local_param_est` is `list()` of `"finite_filters"`.
 #' @name classical-ma
 "local_param_est"
 

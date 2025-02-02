@@ -16,7 +16,21 @@ local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 	all_mm <- lapply(seq(p, 0), local_daf_est, p = p, d = d, dest = dest, X_sup = X_sup, ...)
 	rjd3filters::finite_filters(all_mm[[1]], all_mm[-1])
 }
-#' @importFrom utils tail
+#' Smoothing using the Henderson filter
+#'
+#' @param x input time-series.
+#' @param length the length of the
+#' @param endpoints Method used for the asymmetric filter.
+#' By default the Musgrave method is used
+#' @param icr I/C ratio used for the asymmetric filter.
+#' @param local_icr if `TRUE`, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.
+#' @param local_var if `local_icr = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance of the symmetric estimation.
+#' @param degree if `local_icr = TRUE`, degree of polynomial used to estimate the local bias parameter.
+#' @param ... other parameters passed to [rjd3filters::lp_filter()].
+#'
+#' @references
+#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>
+#' @importFrom utils tail head
 #' @export
 henderson_smoothing <- function(x,
 								endpoints = c("Musgrave", "QL", "CQ", "CC", "DAF", "CN"),

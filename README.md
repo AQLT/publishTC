@@ -8,14 +8,14 @@ facilitate the computation of trend-cycle component:
 
 - Using the Cascade Linear Filter (CLF) and the surrogate
   cut-and-normalise asymmetric filters, as done by [Statistique
-  Canada](https://www.statcan.gc.ca/en/dai/btd/trend-cycle) ;
+  Canada](https://www.statcan.gc.ca/en/dai/btd/trend-cycle);
 
 - Using the classical Henderson symmetric filter and the surrogate
   Musgrave asymmetric filters, as done by Australian Bureau of
-  Statistics (Trewin 2003) ;
+  Statistics (Trewin 2003);
 
 - Using a local Parametrization of the Musgrave asymmetric filters, as
-  described in Quartier-la-Tente (2024) ;
+  described in Quartier-la-Tente (2024);
 
 - Extending the Henderson symmetric fiter and the surrogate Musgrave
   asymmetric filters to take into account additive outliers and level

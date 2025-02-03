@@ -303,9 +303,9 @@ henderson_robust_smoothing <- function(x,
 				   frequency = frequency(x))
 
 
-	res <- list(
+	res <- tc_estimates(
 		tc = filtered,
-		x = x,
+		sa = x,
 		parameters = list(
 			hat_matrix = H,
 			outliers = list(ao = ao, ao_tc = ao_tc, ls = ls),
@@ -313,9 +313,9 @@ henderson_robust_smoothing <- function(x,
 			Z = Z,
 			icr = list(icr_l = icr_l, icr_r = icr_r),
 			kernel = kernel
-		)
+		),
+		extra_class = "robust_henderson"
 	)
-	class(res) <- c("tc_estimates", "robust_henderson")
 	res
 }
 

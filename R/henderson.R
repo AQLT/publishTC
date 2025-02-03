@@ -29,7 +29,7 @@ local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 #' @param ... other parameters passed to [rjd3filters::lp_filter()].
 #'
 #' @references
-#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>
+#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>.
 #' @importFrom utils tail head
 #' @export
 henderson_smoothing <- function(x,
@@ -77,16 +77,16 @@ henderson_smoothing <- function(x,
 		param_f <- local_param_est$param_f
 	}
 	filtered <- rjd3filters::filter(x, lp_coef)
-	res <- list(
+	res <- tc_estimates(
 		tc = filtered,
-		x = x,
+		sa = x,
 		parameters = list(
 			tc_coef = lp_coef,
 			icr = icr,
 			param_f = param_f
-		)
+		),
+		extra_class = "henderson"
 	)
-	class(res) <- c("tc_estimates", "henderson")
 	res
 }
 local_param_filter <- function(x, icr = NULL,

@@ -2,17 +2,29 @@
 % Please edit documentation in R/lollypop.R
 \name{lollypop}
 \alias{lollypop}
+\alias{gglollypop}
 \title{Lollypop plot}
 \usage{
 lollypop(
-  sa,
   tc,
+  sa,
   xlim = NULL,
   ylim = NULL,
   color_points = "black",
   cex_points = 1,
   ...
 )
+
+gglollypop(tc, sa, color_points = "black", cex_points = 1, ...)
+}
+\arguments{
+\item{tc, sa}{Seasonally adjusted and trend-cycle components.
+If \code{tc} is a \code{"tc_estimates"} object then \code{sa} is optional}
+
+\item{xlim, ylim}{x and y limits of the plot.
+If \code{NULL} (the default), then the limits determined automatically.}
+
+\item{color_points, cex_points}{color and size of the points associated to the seasonnaly adjusted component.}
 }
 \description{
 Lollypop plot

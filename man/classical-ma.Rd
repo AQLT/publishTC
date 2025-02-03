@@ -37,10 +37,10 @@ Classical moving average for trend-cycle extraction.
 \code{CLF_CN} contains the Cascade Linear Filter (CLF) of length 13 and the associated cut and normalise asymetric filters.
 }
 \references{
-Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59. \url{https://doi.org/10.1080/07474930802387837}
+Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59. \url{https://doi.org/10.1080/07474930802387837}.
 
-Henderson, R. (1916). "Note on graduation by adjusted average". \emph{Transactions of the actuarial society of America} 17: 43‑48.
+Henderson, R. (1916). Note on graduation by adjusted average. \emph{Transactions of the actuarial society of America} 17: 43‑48.
 
-Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}
+Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}.
 }
 \keyword{datasets}

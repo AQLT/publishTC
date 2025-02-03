@@ -10,12 +10,24 @@ lollypop(
   sa,
   xlim = NULL,
   ylim = NULL,
-  color_points = "black",
+  col_tc = "#E69F00",
+  col_sa = "black",
+  color_points = col_sa,
   cex_points = 1,
+  xlab = "",
+  ylab = "",
   ...
 )
 
-gglollypop(tc, sa, color_points = "black", cex_points = 1, ...)
+gglollypop(
+  tc,
+  sa,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  color_points = col_sa,
+  cex_points = 1,
+  ...
+)
 }
 \arguments{
 \item{tc, sa}{Seasonally adjusted and trend-cycle components.
@@ -23,6 +35,8 @@ If \code{tc} is a \code{"tc_estimates"} object then \code{sa} is optional}
 
 \item{xlim, ylim}{x and y limits of the plot.
 If \code{NULL} (the default), then the limits determined automatically.}
+
+\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
 
 \item{color_points, cex_points}{color and size of the points associated to the seasonnaly adjusted component.}
 }

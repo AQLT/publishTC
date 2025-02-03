@@ -1,5 +1,7 @@
 #' @export
-plot.tc_estimates <- function(x, y = NULL, xlim = NULL, ylim = NULL, ...){
+plot.tc_estimates <- function(x, y = NULL, xlim = NULL, ylim = NULL,
+							  col_tc = "#E69F00",
+							  col_sa = "black", ...){
 	tc <- x$tc
 	sa <- x$x
 
@@ -9,14 +11,17 @@ plot.tc_estimates <- function(x, y = NULL, xlim = NULL, ylim = NULL, ...){
 
 	complete_data <- ts.union(sa, tc_final, tc_prov)
 	plot(complete_data, type = "l", plot.type = "single",
-		 lty = c(1 ,1, 2), ...)
+		 lty = c(1 ,1, 2),
+		 col = c(col_sa, col_tc, col_tc), ...)
 }
 
 
 #' @importFrom ggplot2 autoplot
 #' @method autoplot tc_estimates
 #' @export
-autoplot.tc_estimates <- function(object, ...){
+autoplot.tc_estimates <- function(object,
+								  col_tc = "#E69F00",
+								  col_sa = "black", ...){
 	x <- object
 	tc <- x$tc
 	sa <- x$x
@@ -29,7 +34,7 @@ autoplot.tc_estimates <- function(object, ...){
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
 	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_line(ggplot2::aes(y = sa)) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_final)) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_prov), lty = 2)
+		ggplot2::geom_line(ggplot2::aes(y = sa), color = col_sa) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_final), color = col_tc) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = 2)
 }

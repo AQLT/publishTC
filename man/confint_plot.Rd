@@ -3,16 +3,18 @@
 \name{confint_plot}
 \alias{confint_plot}
 \alias{ggconfint_plot}
-\title{confint_plot plot}
+\title{Confidence Intervals plot}
 \usage{
 confint_plot(
-  x,
+  object,
   sa = NULL,
   xlim = NULL,
   ylim = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   col_confint = "grey",
+  xlab = "",
+  ylab = "",
   ...
 )
 
@@ -22,10 +24,27 @@ ggconfint_plot(
   col_tc = "#E69F00",
   col_sa = "black",
   col_confint = "grey",
-  color_points = col_sa,
   ...
 )
 }
+\arguments{
+\item{object}{Data with trend-cycle component and the upper and lower bounds of the confidence interval.
+If \code{object} is a \code{"tc_estimates"} then is is computed using the \code{confint()} function.}
+
+\item{sa}{Seasonally adjusted components.
+If \code{tc} is a \code{"tc_estimates"} object then \code{sa} is optional.}
+
+\item{xlim, ylim}{x and y limits of the plot.
+If \code{NULL} (the default), then the limits determined automatically.}
+
+\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+
+\item{col_confint}{color of the confidence interval.}
+
+\item{xlab, ylab}{x and y axis labels.}
+
+\item{...}{other parameters.}
+}
 \description{
-confint_plot plot
+Confidence Intervals plot
 }

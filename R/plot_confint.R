@@ -1,16 +1,24 @@
-#' confint_plot plot
+#' Confidence Intervals plot
 #'
+#' @param object Data with trend-cycle component and the upper and lower bounds of the confidence interval.
+#' If `object` is a `"tc_estimates"` then is is computed using the `confint()` function.
+#' @param col_confint color of the confidence interval.
+#'
+#' @inheritParams lollypop
+#' @inheritParams plot.tc_estimates
 #' @export
-confint_plot <- function(x, sa = NULL, xlim = NULL, ylim = NULL,
+confint_plot <- function(object, sa = NULL, xlim = NULL, ylim = NULL,
 						 col_tc = "#E69F00",
 						 col_sa = "black",
 						 col_confint = "grey",
+						 xlab = "",
+						 ylab = "",
 						 ...) {
 	UseMethod("confint_plot")
 }
 
-#' @importFrom graphics points segments
-#' @importFrom stats coef frequency start time ts ts.union window end qt
+#' @importFrom graphics lines polygon
+#' @importFrom stats confint
 #' @export
 confint_plot.default <- function(
 		object, sa = NULL, xlim = NULL, ylim = NULL,
@@ -59,7 +67,6 @@ ggconfint_plot <- function(object, sa = NULL,
 						   col_tc = "#E69F00",
 						   col_sa = "black",
 						   col_confint = "grey",
-						   color_points = col_sa,
 						   ...) {
 	UseMethod("ggconfint_plot")
 }

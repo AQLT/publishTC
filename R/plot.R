@@ -1,7 +1,18 @@
+#' Default `"tc_estimates"` plot
+#'
+#'
+#' @param object,x `"tc_estimates"` object.
+#' @param y unused parameter.
+#' @param ... other (unused) parameters.
+#'
+#' @param col_sa,col_tc color of the seasonally adjusted and trend-cycle components.
+#' @param xlab,ylab x and y axis labels.
 #' @export
-plot.tc_estimates <- function(x, y = NULL, xlim = NULL, ylim = NULL,
+plot.tc_estimates <- function(x, y = NULL,
 							  col_tc = "#E69F00",
-							  col_sa = "black", ...){
+							  col_sa = "black",
+							  xlab = "", ylab = "",
+							  ...){
 	tc <- x$tc
 	sa <- x$x
 
@@ -12,12 +23,14 @@ plot.tc_estimates <- function(x, y = NULL, xlim = NULL, ylim = NULL,
 	complete_data <- ts.union(sa, tc_final, tc_prov)
 	plot(complete_data, type = "l", plot.type = "single",
 		 lty = c(1 ,1, 2),
-		 col = c(col_sa, col_tc, col_tc), ...)
+		 col = c(col_sa, col_tc, col_tc),
+		 xlab = xlab, ylab = ylab, ...)
 }
 
 
 #' @importFrom ggplot2 autoplot
 #' @method autoplot tc_estimates
+#' @name plot.tc_estimates
 #' @export
 autoplot.tc_estimates <- function(object,
 								  col_tc = "#E69F00",

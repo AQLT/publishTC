@@ -1,3 +1,9 @@
+#' Confidence Intervals for `"tc_estimates"`
+#'
+#' @param object a `"tc_estimates"` object.
+#' @param parm unused parameter.
+#' @param level the confidence level required.
+#' @param ... other (unused) parameters.
 #'
 #' @export
 #' @importFrom rjd3filters confint_filter

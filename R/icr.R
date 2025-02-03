@@ -82,4 +82,8 @@ find_icr <- function(length, freq = 12){
 		   "D", "findR",
 		   as.integer(length), as.integer(freq))
 }
-utils::globalVariables(c("henderson", "local_param_est"))
+utils::globalVariables(c(
+	"henderson", "local_param_est",
+	"CLF", "CLF_CN",
+	"Confint_m", "Confint_p", "tc"
+	))

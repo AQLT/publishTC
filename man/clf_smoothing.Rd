@@ -12,6 +12,8 @@ clf_smoothing(x, endpoints = c("cut-and-normalize", "ALF"), ...)
 \item{endpoints}{Method used for the asymmetric filter.
 If \code{endpoints = "cut-and-normalize"} (the default) the cut-and-normalise method is used,
 otherwise the Asymmetric Linear Filter (ALF) filters are used.}
+
+\item{...}{other unused parameters.}
 }
 \description{
 Smoothing using the Cascade Linear Filter

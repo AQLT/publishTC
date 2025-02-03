@@ -4,7 +4,7 @@
 #' @param endpoints Method used for the asymmetric filter.
 #' If `endpoints = "cut-and-normalize"` (the default) the cut-and-normalise method is used,
 #' otherwise the Asymmetric Linear Filter (ALF) filters are used.
-
+#' @param ... other unused parameters.
 #' @references
 #' Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews* 28 (1-3): 40‑59.
 #' <https://doi.org/10.1080/07474930802387837>

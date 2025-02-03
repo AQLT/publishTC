@@ -1,12 +1,15 @@
 #' Lollypop plot
 #'
-#' @param tc,sa Seasonally adjusted and trend-cycle components.
-#' If `tc` is a `"tc_estimates"` object then `sa` is optional
+#' @param tc Trend-cycle components or `"tc_estimates"` object.
+#' @param sa Seasonally adjusted components.
+#' If `tc` is a `"tc_estimates"` object then `sa` is optional.
 #'
-#' @param col_sa,col_tc color of the seasonally adjusted and trend-cycle components.
 #' @param color_points,cex_points color and size of the points associated to the seasonnaly adjusted component.
 #' @param xlim,ylim x and y limits of the plot.
 #' If `NULL` (the default), then the limits determined automatically.
+#'
+#' @inheritParams plot.tc_estimates
+#' @param ... other parameters.
 #' @export
 lollypop <- function(tc, sa, xlim = NULL, ylim = NULL,
 					 col_tc = "#E69F00",

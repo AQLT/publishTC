@@ -1,18 +1,73 @@
 #' Compute IC-Ratio
 #'
-#' @param x input time series.
-#' @param sc trend-cycle component.
+#' `icr()` compute the overall I/C ratio, while `icrs()` compute the I/C ratios for each period.
+#' @param x,tc seasonally adjusted and trend-cycle components.
+#' If `x` is a `"tc_estimates"` object then `tc` is ignored.
 #' @param mul boolean indicating if the decomposition is multiplicative or additive.
 #'
+#' @examples
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#'
 #' @export
-icr <- function(x, sc, mul = FALSE){
-	remove_na <- is.na(x) | is.na(sc)
-	x <- as.numeric(x)[!remove_na]
-	sc <- as.numeric(sc)[!remove_na]
-	result <- .jcall("jdplus/x12plus/base/r/X11Decomposition",
-					 "D", "icratio",
-					 x, sc, mul)
-	result
+icr <- function(x, tc, mul = FALSE){
+	if (is_tc_estimates(x)) {
+		tc <- x$tc
+		x <- x$x
+	}
+	if (mul) {
+		si <- x / tc
+	} else {
+		si <- x - tc
+	}
+	gc <- abs_mean_var(tc, 1, mul = mul)
+	gi <- abs_mean_var(si, 1, mul = mul)
+	icr <- gi / gc
+	return(icr)
+}
+#' @name icr
+#' @export
+icrs <- function(x, tc, mul = FALSE){
+	if (is_tc_estimates(x)) {
+		tc <- x$tc
+		x <- x$x
+	}
+	freq <- frequency(x)
+	if (mul) {
+		si <- x / tc
+	} else {
+		si <- x - tc
+	}
+	gc <- abs_mean_var(tc, freq, mul = mul)
+	gi <- abs_mean_var(si, freq, mul = mul)
+	icr <- gi / gc
+	return(icr)
+}
+abs_mean_var <- function(x, nlags = 1, mul = FALSE){
+	sapply(seq_len(nlags), function(lag){
+		d <- x - stats::lag(x, -lag)
+		if (mul) {
+			d <- d / stats::lag(x, -lag)
+		}
+		mean(abs(d), na.rm = TRUE)
+	})
+}
+#' Month of Cyclical Dominance
+#'
+#' @inheritParams icr
+#' @export
+mcd <- function(x, tc, mul = FALSE){
+	ic <- icrs(x = x, tc = tc, mul = mul)
+	inf1 <- ic <= 1
+	for (i in seq_along(ic)) {
+		has_mcd <- all(inf1[i:length(ic)])
+		if (has_mcd) {
+			break;
+		}
+	}
+	if (!has_mcd)
+		return(NULL)
+	mcd
 }
 
 #'@importFrom rjd3filters lp_filter

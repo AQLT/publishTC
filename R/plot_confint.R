@@ -102,3 +102,56 @@ ggconfint_plot.tc_estimates <- function(object, sa = NULL,
 		col_sa = col_sa, col_tc = col_tc, col_confint = col_confint,
 		...)
 }
+
+# ##' @export
+# dyconfint_plot <- function(object, sa = NULL,
+# 						   col_tc = "#E69F00",
+# 						   col_sa = "black",
+# 						   col_confint = "grey",
+# 						   ...) {
+# 	UseMethod("dyconfint_plot")
+# }
+# ##' @export
+# dyconfint_plot.default <- function(object, sa = NULL,
+# 								   col_tc = "#E69F00",
+# 								   col_sa = "black",
+# 								   col_confint = "grey",
+# 								   ...){
+# 	complete_data <- ts.union(object, sa)
+# 	colnames(complete_data)[1] <- "tc"
+# 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
+# 	data <- data.frame(time = as.numeric(time(complete_data)),
+# 					   complete_data)
+# 	dygraphs::dygraph(complete_data) |>
+# 		dygraphs::dySeries("sa", label = "Seasonally adjusted",
+# 				 col = col_sa) |>
+# 		dygraphs::dySeries(c("Confint_m", "tc", "Confint_p"), label = "Trend-cycle",
+# 				 color = col_tc) |>
+# 		dygraphs::dyRangeSelector()
+# }
+# ##' @export
+# dyconfint_plot.tc_estimates <- function(object, sa = NULL,
+# 										col_tc = "#E69F00",
+# 										col_sa = "black",
+# 										col_confint = "grey",
+# 										...){
+# 	dyconfint_plot.default(
+# 		sa = object[["x"]],
+# 		object = confint(object),
+# 		col_sa = col_sa, col_tc = col_tc, col_confint = col_confint,
+# 		...)
+# }
+#
+# ggconfint_plot.default <- function(object, sa = NULL,
+# 								   col_tc = "#E69F00",
+# 								   col_sa = "black",
+# 								   col_confint = "grey",
+# 								   ...){
+# 	complete_data <- ts.union(object, sa)
+# 	colnames(complete_data)[1] <- "tc"
+# 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
+# 	data <- data.frame(time = as.numeric(time(complete_data)),
+# 					   complete_data)
+#
+#
+# }

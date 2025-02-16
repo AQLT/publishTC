@@ -37,7 +37,7 @@ upturn <- function(
 		return(NULL)
 	if(!is.null(digits))
 		x = round(x, digits = digits)
-	res <- zoo::rollapply(
+	res <- rollapply(
 		x, width=k+m+1,
 		function(x){
 			# (x[1]>=x[2]) & (x[2]>=x[3]) &

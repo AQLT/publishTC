@@ -24,6 +24,9 @@ ggconfint_plot(
   col_tc = "#E69F00",
   col_sa = "black",
   col_confint = "grey",
+  legend_tc = "Trend-cycle",
+  legend_sa = "Seasonally adjusted",
+  legend_confint = "Confidence interval",
   ...
 )
 }
@@ -44,6 +47,8 @@ If \code{NULL} (the default), then the limits determined automatically.}
 \item{xlab, ylab}{x and y axis labels.}
 
 \item{...}{other parameters.}
+
+\item{legend_tc, legend_sa, legend_confint}{legend of the trend-cycle and seasonally adjusted components and for the confidence intervals.}
 }
 \description{
 Confidence Intervals plot

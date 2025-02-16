@@ -12,3 +12,7 @@ tc_estimates <- function(tc, sa, parameters = NULL, extra_class = NULL, ...) {
 	class(res) <- c("tc_estimates", extra_class)
 	res
 }
+is_tc_estimates <- function(x) {
+	inherits(x, "tc_estimates")
+}
+

@@ -5,16 +5,16 @@
 \alias{find_icr}
 \title{X-11 Selection of Trend-Cycle Filter}
 \usage{
-x11_trend_selection(x, freq)
+x11_trend_selection(x)
 
 find_icr(length, freq = 12)
 }
 \arguments{
 \item{x}{a \code{"ts"} object.}
 
-\item{freq}{frequency of the time series used to compute the I/C ratio.}
-
 \item{length}{length of the filter.}
+
+\item{freq}{frequency of the time series used to compute the I/C ratio.}
 }
 \description{
 Perform X-11 selection of the length of Henderson (\code{x11_trend_selection()}) and

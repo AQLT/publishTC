@@ -12,10 +12,19 @@
   col_sa = "black",
   xlab = "",
   ylab = "",
+  lty_last_tc = 2,
   ...
 )
 
-\method{autoplot}{tc_estimates}(object, col_tc = "#E69F00", col_sa = "black", ...)
+\method{autoplot}{tc_estimates}(
+  object,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  legend_tc = "Trend-cycle",
+  legend_sa = "Seasonally adjusted",
+  lty_last_tc = 2,
+  ...
+)
 }
 \arguments{
 \item{y}{unused parameter.}
@@ -24,9 +33,13 @@
 
 \item{xlab, ylab}{x and y axis labels.}
 
+\item{lty_last_tc}{line type of the last values of the trend-cycle component.}
+
 \item{...}{other (unused) parameters.}
 
 \item{object, x}{\code{"tc_estimates"} object.}
+
+\item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
 }
 \description{
 Default \code{"tc_estimates"} plot

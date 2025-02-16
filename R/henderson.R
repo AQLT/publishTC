@@ -32,13 +32,14 @@ local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 #' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>.
 #' @importFrom utils tail head
 #' @export
-henderson_smoothing <- function(x,
-								endpoints = c("Musgrave", "QL", "CQ", "CC", "DAF", "CN"),
-								length = NULL, icr = NULL,
-								local_icr = FALSE,
-								local_var = TRUE,
-								degree = 3,
-								...) {
+henderson_smoothing <- function(
+		x,
+		endpoints = c("Musgrave", "QL", "CQ", "CC", "DAF", "CN"),
+		length = NULL, icr = NULL,
+		local_icr = FALSE,
+		local_var = TRUE,
+		degree = 3,
+		...) {
 	if (is.null(length)) {
 		param <- x11_trend_selection(x)
 		length <- param["length"]
@@ -52,7 +53,7 @@ henderson_smoothing <- function(x,
 	}
 	endpoints <- match.arg(toupper(endpoints)[1],
 						   c("MUSGRAVE", "LC", "QL", "CQ", "CC", "DAF", "CN")
-						   )
+	)
 	if (endpoints == "MUSGRAVE") {
 		endpoints <- "LC"
 	}
@@ -208,7 +209,7 @@ local_param_filter <- function(x, icr = NULL,
 	list(trend_f = finite_filters(sym_filter, rfilters = rfilters, lfilters = lfilters),
 		 param_f = local_param_f,
 		 icr = list(icr_l = icr_l, icr_r = icr_r)
-		 )
+	)
 }
 
 # Not used (in case we implement left/right icr)

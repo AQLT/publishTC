@@ -101,7 +101,7 @@ NULL
 #'    * else \eqn{icr = 4.5}.
 #'
 #' @export
-x11_trend_selection <- function(x, freq){
+x11_trend_selection <- function(x){
 	icr <- icr(x, rjd3filters::filter(x, henderson[[as.character(frequency(x)+1)]]))
 	freq <- frequency(x)
 	if (freq == 4) {
@@ -109,7 +109,6 @@ x11_trend_selection <- function(x, freq){
 	} else if (freq == 2) {
 		icr <- icr * 6
 	}
-	icr <- x
 	if (freq == 2) {
 		length <- 5
 	} else if (icr >= 1 && icr < 3.5) {
@@ -140,5 +139,6 @@ find_icr <- function(length, freq = 12){
 utils::globalVariables(c(
 	"henderson", "local_param_est",
 	"CLF", "CLF_CN",
-	"Confint_m", "Confint_p", "tc"
+	"Confint_m", "Confint_p", "tc",
+	"implicit forecast"
 	))

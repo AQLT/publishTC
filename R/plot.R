@@ -7,12 +7,16 @@
 #'
 #' @param col_sa,col_tc color of the seasonally adjusted and trend-cycle components.
 #' @param xlab,ylab x and y axis labels.
+#' @param lty_last_tc line type of the last values of the trend-cycle component.
+#' @param legend_tc,legend_sa legend of the trend-cycle and seasonally adjusted components.
 #' @export
-plot.tc_estimates <- function(x, y = NULL,
-							  col_tc = "#E69F00",
-							  col_sa = "black",
-							  xlab = "", ylab = "",
-							  ...){
+plot.tc_estimates <- function(
+		x, y = NULL,
+		col_tc = "#E69F00",
+		col_sa = "black",
+		xlab = "", ylab = "",
+		lty_last_tc = 2,
+		...){
 	tc <- x$tc
 	sa <- x$x
 
@@ -22,7 +26,7 @@ plot.tc_estimates <- function(x, y = NULL,
 
 	complete_data <- ts.union(sa, tc_final, tc_prov)
 	plot(complete_data, type = "l", plot.type = "single",
-		 lty = c(1 ,1, 2),
+		 lty = c(1 ,1, lty_last_tc),
 		 col = c(col_sa, col_tc, col_tc),
 		 xlab = xlab, ylab = ylab, ...)
 }
@@ -32,9 +36,13 @@ plot.tc_estimates <- function(x, y = NULL,
 #' @method autoplot tc_estimates
 #' @name plot.tc_estimates
 #' @export
-autoplot.tc_estimates <- function(object,
-								  col_tc = "#E69F00",
-								  col_sa = "black", ...){
+autoplot.tc_estimates <- function(
+		object,
+		col_tc = "#E69F00",
+		col_sa = "black",
+		legend_tc = "Trend-cycle",
+		legend_sa = "Seasonally adjusted",
+		lty_last_tc = 2, ...){
 	x <- object
 	tc <- x$tc
 	sa <- x$x
@@ -47,9 +55,11 @@ autoplot.tc_estimates <- function(object,
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
 	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_line(ggplot2::aes(y = sa), color = col_sa) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_final), color = col_tc, na.rm = TRUE) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = 2, na.rm = TRUE)
+		ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa)) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
+		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
+		ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 # autoplot.tc_estimates <- function(object,
 # 								  col_tc = "#E69F00",

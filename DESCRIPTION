@@ -7,8 +7,12 @@ Authors@R: c(
                  email = "alain.quartier@yahoo.fr",
                  comment = c(ORCID = "0000-0001-7890-3857"))
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: This package provides several functions to facilitate the computation of trend-cycle component.
+  In particular, the computation can be done: using the Cascade Linear Filter (CLF) Dagum, E. B., & Luati, A. (2008);
+  using the classical Henderson symmetric filter and the surrogate Musgrave asymmetric filters;
+  using a local Parametrization of the Musgrave asymmetric filters (Quartier-la-Tente 2024);
+  extending the Henderson symmetric fiter and the surrogate Musgrave asymmetric filters to take into account additive outliers and level shifts (Quartier-la-Tente 2025).
+  Confidence intervals can be computed and several plots are available.
 LazyData: true
 Depends:
   R (>= 4.1.0)
@@ -18,6 +22,10 @@ Imports:
   ggplot2,
   zoo,
   rJava
+Remotes:
+  github::rjdverse/rjd3x13
+  github::rjdverse/rjd3filters
+URL: https://github.com/AQLT/publishTC
 SystemRequirements: Java (>= 17)
 License: EUPL
 Encoding: UTF-8

@@ -123,7 +123,7 @@ gglollypop.tc_estimates <- function(
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		...){
-	gglollypop.default(sa = sa[["x"]], tc = sa[["tc"]],
+	gglollypop.default(sa = tc[["x"]], tc = tc[["tc"]],
 					   col_sa = col_sa, col_tc = col_tc,
 					   color_points = color_points, cex_points = cex_points, pch_points = pch_points,
 					   legend_tc = legend_tc, legend_sa = legend_sa,

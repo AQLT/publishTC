@@ -56,5 +56,7 @@ smoothing <- function(
 	if ("clf_alf" %in% methods) {
 		res$clf_alf <- clf_smoothing(x = x, endpoints = "ALF")
 	}
+	if (!is.null(names(methods)))
+		names(res) <- names(methods)
 	res
 }

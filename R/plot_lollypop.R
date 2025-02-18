@@ -1,8 +1,7 @@
 #' Lollypop plot
 #'
-#' @param tc Trend-cycle components or `"tc_estimates"` object.
-#' @param sa Seasonally adjusted components.
-#' If `tc` is a `"tc_estimates"` object then `sa` is optional.
+#' @param object `"tc_estimates"` object.
+#' If `object` is a `"tc_estimates"` object then `sa` is optional.
 #'
 #' @param color_points,cex_points color and size of the points associated to the seasonnaly adjusted component.
 #' @param xlim,ylim x and y limits of the plot.
@@ -13,7 +12,7 @@
 #' @param ... other parameters.
 #' @export
 lollypop <- function(
-		tc, sa, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -29,7 +28,7 @@ lollypop <- function(
 #' @importFrom stats coef frequency start time ts ts.union window end qt
 #' @export
 lollypop.default <- function(
-		tc, sa, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -37,8 +36,9 @@ lollypop.default <- function(
 		pch_points = 16,
 		xlab = "",
 		ylab = "",
-		...){
-	complete_data <- ts.union(tc, sa)
+		...,
+		sa = NULL){
+	complete_data <- ts.union(object, sa)
 	colnames(complete_data) <- c("tc", "sa")
 	if (is.null(xlim))
 		xlim <- range(time(complete_data))
@@ -59,7 +59,7 @@ lollypop.default <- function(
 }
 #' @export
 lollypop.tc_estimates <- function(
-		tc, sa, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -68,7 +68,7 @@ lollypop.tc_estimates <- function(
 		xlab = "",
 		ylab = "",
 		...){
-	lollypop.default(sa = sa[["x"]], tc = sa[["tc"]], xlim = xlim, ylim = ylim,
+	lollypop.default(sa = object[["x"]], object = object[["tc"]], xlim = xlim, ylim = ylim,
 					 col_tc = col_tc, col_sa = col_sa,
 					 color_points = color_points, cex_points = cex_points, pch_points = pch_points,
 					 xlab = xlab, ylab = ylab,
@@ -77,7 +77,7 @@ lollypop.tc_estimates <- function(
 #' @name lollypop
 #' @export
 gglollypop <- function(
-		tc, sa,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -90,7 +90,7 @@ gglollypop <- function(
 }
 #' @export
 gglollypop.default <- function(
-		tc, sa,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -98,8 +98,9 @@ gglollypop.default <- function(
 		pch_points = 16,
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
-		...){
-	complete_data <- ts.union(tc, sa)
+		...,
+		sa = NULL){
+	complete_data <- ts.union(object, sa)
 	colnames(complete_data) <- c("tc", "sa")
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
@@ -114,7 +115,7 @@ gglollypop.default <- function(
 }
 #' @export
 gglollypop.tc_estimates <- function(
-		tc, sa,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		color_points = col_sa,
@@ -123,7 +124,7 @@ gglollypop.tc_estimates <- function(
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		...){
-	gglollypop.default(sa = tc[["x"]], tc = tc[["tc"]],
+	gglollypop.default(sa = object[["x"]], tc = object[["tc"]],
 					   col_sa = col_sa, col_tc = col_tc,
 					   color_points = color_points, cex_points = cex_points, pch_points = pch_points,
 					   legend_tc = legend_tc, legend_sa = legend_sa,

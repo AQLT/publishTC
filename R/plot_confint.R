@@ -1,20 +1,22 @@
 #' Confidence Intervals plot
 #'
-#' @param object Data with trend-cycle component and the upper and lower bounds of the confidence interval.
-#' If `object` is a `"tc_estimates"` then is is computed using the `confint()` function.
+#' @param object `"tc_estimates"`.
+#' The confidence intervals are computed using the [confint()] function.
 #' @param col_confint color of the confidence interval.
 #' @param legend_tc,legend_sa,legend_confint legend of the trend-cycle and seasonally adjusted components and for the confidence intervals.
 #'
 #' @inheritParams lollypop
 #' @inheritParams plot.tc_estimates
+#' @inheritParams confint-tc
 #' @export
 confint_plot <- function(
-		object, sa = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
 		xlab = "",
 		ylab = "",
+		level = 0.95,
 		...) {
 	UseMethod("confint_plot")
 }
@@ -23,13 +25,15 @@ confint_plot <- function(
 #' @importFrom stats confint
 #' @export
 confint_plot.default <- function(
-		object, sa = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
 		xlab = "",
 		ylab = "",
-		...){
+		level = 0.95,
+		...,
+		sa = NULL){
 	complete_data <- ts.union(object, sa)
 	colnames(complete_data)[1] <- "tc"
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
@@ -49,15 +53,16 @@ confint_plot.default <- function(
 }
 #' @export
 confint_plot.tc_estimates <- function(
-		object, sa = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
 		xlab = "",
 		ylab = "",
+		level = 0.95,
 		...){
 	confint_plot.default(sa = object[["x"]],
-						 object = confint(object),
+						 object = confint(object, level = level),
 						 col_tc = col_tc, col_sa = col_sa,
 						 col_confint = col_confint,
 						 xlim = xlim, ylim = ylim,
@@ -66,26 +71,29 @@ confint_plot.tc_estimates <- function(
 }
 #' @name confint_plot
 #' @export
-ggconfint_plot <- function(object, sa = NULL,
+ggconfint_plot <- function(object,
 						   col_tc = "#E69F00",
 						   col_sa = "black",
 						   col_confint = "grey",
 						   legend_tc = "Trend-cycle",
 						   legend_sa = "Seasonally adjusted",
 						   legend_confint = "Confidence interval",
+						   level = 0.95,
 						   ...) {
 	UseMethod("ggconfint_plot")
 }
 #' @export
 ggconfint_plot.default <- function(
-		object, sa = NULL,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		legend_confint = "Confidence interval",
-		...){
+		level = 0.95,
+		...,
+		sa = NULL){
 	complete_data <- ts.union(object, sa)
 	colnames(complete_data)[1] <- "tc"
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
@@ -104,7 +112,7 @@ ggconfint_plot.default <- function(
 }
 #' @export
 ggconfint_plot.tc_estimates <- function(
-		object, sa = NULL,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",

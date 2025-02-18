@@ -1,6 +1,5 @@
 #' Implicit Forecasts plot
 #'
-#' @param sa,i_f,tc Seasonally adjusted, implicit forecasts and trend-cycle components.
 #' @param col_i_f color of the implicit forecasts.
 #'
 #' @param legend_tc,legend_sa,legend_i_f legend of the trend-cycle and seasonally adjusted components and for implicit forecasts.
@@ -9,7 +8,7 @@
 #' @inheritParams plot.tc_estimates
 #' @export
 implicit_forecasts_plot <- function(
-		sa, i_f, tc = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -23,7 +22,7 @@ implicit_forecasts_plot <- function(
 
 #' @export
 implicit_forecasts_plot.default <- function(
-		sa, i_f, tc = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -31,7 +30,10 @@ implicit_forecasts_plot.default <- function(
 		ylab = "",
 		lty_last_tc = 2,
 		lty_i_f = 3,
-		...){
+		...,
+		sa = NULL, i_f = NULL
+		){
+	tc <- object
 	i_f <- ts(c(sa[length(sa)], i_f),
 			  end = end(i_f),
 			  frequency = frequency(i_f))
@@ -52,7 +54,7 @@ implicit_forecasts_plot.default <- function(
 }
 #' @export
 implicit_forecasts_plot.tc_estimates <- function(
-		sa, i_f, tc = NULL, xlim = NULL, ylim = NULL,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -63,9 +65,9 @@ implicit_forecasts_plot.tc_estimates <- function(
 		...){
 
 	implicit_forecasts_plot.default(
-		sa = sa[["x"]],
-		i_f = implicit_forecasts(sa),
-		tc = sa[["tc"]],
+		sa = object[["x"]],
+		i_f = implicit_forecasts(object),
+		object = object[["tc"]],
 		col_tc = col_tc, col_sa = col_sa,
 		col_i_f = col_i_f,
 		xlim = xlim, ylim = ylim,
@@ -76,7 +78,7 @@ implicit_forecasts_plot.tc_estimates <- function(
 #' @name implicit_forecasts_plot
 #' @export
 ggimplicit_forecasts_plot <- function(
-		sa, i_f, tc = NULL,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -90,7 +92,7 @@ ggimplicit_forecasts_plot <- function(
 }
 #' @export
 ggimplicit_forecasts_plot.default <- function(
-		sa, i_f, tc = NULL,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -99,7 +101,9 @@ ggimplicit_forecasts_plot.default <- function(
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		legend_i_f = "Implicit forecasts",
-		...){
+		...,
+		sa = NULL, i_f = NULL){
+	tc <- object
 	i_f <- ts(c(sa[length(sa)], i_f),
 			  end = end(i_f),
 			  frequency = frequency(i_f))
@@ -121,7 +125,7 @@ ggimplicit_forecasts_plot.default <- function(
 }
 #' @export
 ggimplicit_forecasts_plot.tc_estimates <- function(
-		sa, i_f, tc = NULL,
+		object,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
@@ -132,9 +136,9 @@ ggimplicit_forecasts_plot.tc_estimates <- function(
 		legend_i_f = "Implicit forecasts",
 		...){
 	ggimplicit_forecasts_plot.default(
-		sa = sa[["x"]],
-		i_f = implicit_forecasts(sa),
-		tc = sa[["tc"]],
+		sa = object[["x"]],
+		i_f = implicit_forecasts(object),
+		object = object[["tc"]],
 		col_tc = col_tc, col_sa = col_sa,
 		col_i_f = col_i_f,
 		lty_last_tc = lty_last_tc, lty_i_f = lty_i_f,

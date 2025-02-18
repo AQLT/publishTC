@@ -19,7 +19,7 @@ smoothing <- function(
 		ao_tc = NULL,
 		ls = NULL,
 		...) {
-
+	methods <- tolower(methods)
 	res <- list()
 	if ("henderson" %in% methods) {
 		res$henderson <- henderson_smoothing(
@@ -58,5 +58,60 @@ smoothing <- function(
 	}
 	if (!is.null(names(methods)))
 		names(res) <- names(methods)
+	res
+}
+#' @export
+ggsmoothing_plot <- function(
+		object,
+		methods = c("normal", "confint", "lollypop", "implicit_forecasts"),
+		level = 0.95,
+		...) {
+	methods <- tolower(methods)
+	res <- list()
+	if ("normal" %in% methods) {
+		res$normal <- ggplot2::autoplot(
+			object = object,
+			...
+			) +
+			ggplot2::ggtitle("Normal plot")
+		if (!is.null(names(methods)) && names(methods)[methods %in% "normal"]) {
+			res$normal <- res$normal +
+				ggplot2::ggtitle(names(methods)[methods %in% "normal"])
+		}
+	}
+
+	if ("confint" %in% methods) {
+		res$confint <- ggconfint_plot(
+			object = object, level = level, ...
+			) +
+			ggplot2::ggtitle("Confidence intervals")
+		if (!is.null(names(methods)) && names(methods)[methods %in% "confint"]) {
+			res$confint <- res$confint +
+				ggplot2::ggtitle(names(methods)[methods %in% "confint"])
+		}
+	}
+
+	if ("lollypop" %in% methods) {
+		res$lollypop <- gglollypop(
+			object = object,
+			...
+			) +
+			ggplot2::ggtitle("Lollypop")
+		if (!is.null(names(methods)) && names(methods)[methods %in% "lollypop"]) {
+			res$lollypop <- res$lollypop +
+				ggplot2::ggtitle(names(methods)[methods %in% "lollypop"])
+		}
+	}
+
+	if ("implicit_forecasts" %in% methods) {
+		res$implicit_forecasts <- ggimplicit_forecasts_plot(
+			object = object, ...
+			) +
+			ggplot2::ggtitle("Implicit forecasts")
+		if (!is.null(names(methods)) && names(methods)[methods %in% "implicit_forecasts"]) {
+			res$implicit_forecasts <- res$implicit_forecasts +
+				ggplot2::ggtitle(names(methods)[methods %in% "implicit_forecasts"])
+		}
+	}
 	res
 }

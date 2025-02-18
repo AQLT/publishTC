@@ -6,8 +6,7 @@
 \title{Lollypop plot}
 \usage{
 lollypop(
-  tc,
-  sa,
+  object,
   xlim = NULL,
   ylim = NULL,
   col_tc = "#E69F00",
@@ -21,8 +20,7 @@ lollypop(
 )
 
 gglollypop(
-  tc,
-  sa,
+  object,
   col_tc = "#E69F00",
   col_sa = "black",
   color_points = col_sa,
@@ -30,14 +28,13 @@ gglollypop(
   pch_points = 16,
   legend_tc = "Trend-cycle",
   legend_sa = "Seasonally adjusted",
+  lty_last_tc = 2,
   ...
 )
 }
 \arguments{
-\item{tc}{Trend-cycle components or \code{"tc_estimates"} object.}
-
-\item{sa}{Seasonally adjusted components.
-If \code{tc} is a \code{"tc_estimates"} object then \code{sa} is optional.}
+\item{object}{\code{"tc_estimates"} object.
+If \code{object} is a \code{"tc_estimates"} object then \code{sa} is optional.}
 
 \item{xlim, ylim}{x and y limits of the plot.
 If \code{NULL} (the default), then the limits determined automatically.}
@@ -53,6 +50,8 @@ If \code{NULL} (the default), then the limits determined automatically.}
 \item{...}{other parameters.}
 
 \item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
+
+\item{lty_last_tc}{line type of the last values of the trend-cycle component.}
 }
 \description{
 Lollypop plot

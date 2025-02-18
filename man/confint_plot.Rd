@@ -7,7 +7,6 @@
 \usage{
 confint_plot(
   object,
-  sa = NULL,
   xlim = NULL,
   ylim = NULL,
   col_tc = "#E69F00",
@@ -15,27 +14,25 @@ confint_plot(
   col_confint = "grey",
   xlab = "",
   ylab = "",
+  level = 0.95,
   ...
 )
 
 ggconfint_plot(
   object,
-  sa = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   col_confint = "grey",
   legend_tc = "Trend-cycle",
   legend_sa = "Seasonally adjusted",
   legend_confint = "Confidence interval",
+  level = 0.95,
   ...
 )
 }
 \arguments{
-\item{object}{Data with trend-cycle component and the upper and lower bounds of the confidence interval.
-If \code{object} is a \code{"tc_estimates"} then is is computed using the \code{confint()} function.}
-
-\item{sa}{Seasonally adjusted components.
-If \code{tc} is a \code{"tc_estimates"} object then \code{sa} is optional.}
+\item{object}{\code{"tc_estimates"}.
+The confidence intervals are computed using the \code{\link[=confint]{confint()}} function.}
 
 \item{xlim, ylim}{x and y limits of the plot.
 If \code{NULL} (the default), then the limits determined automatically.}
@@ -45,6 +42,8 @@ If \code{NULL} (the default), then the limits determined automatically.}
 \item{col_confint}{color of the confidence interval.}
 
 \item{xlab, ylab}{x and y axis labels.}
+
+\item{level}{the confidence level required.}
 
 \item{...}{other parameters.}
 

@@ -6,9 +6,7 @@
 \title{Implicit Forecasts plot}
 \usage{
 implicit_forecasts_plot(
-  sa,
-  i_f,
-  tc = NULL,
+  object,
   xlim = NULL,
   ylim = NULL,
   col_tc = "#E69F00",
@@ -22,9 +20,7 @@ implicit_forecasts_plot(
 )
 
 ggimplicit_forecasts_plot(
-  sa,
-  i_f,
-  tc = NULL,
+  object,
   col_tc = "#E69F00",
   col_sa = "black",
   col_i_f = col_sa,
@@ -37,7 +33,8 @@ ggimplicit_forecasts_plot(
 )
 }
 \arguments{
-\item{sa, i_f, tc}{Seasonally adjusted, implicit forecasts and trend-cycle components.}
+\item{object}{\code{"tc_estimates"} object.
+If \code{object} is a \code{"tc_estimates"} object then \code{sa} is optional.}
 
 \item{xlim, ylim}{x and y limits of the plot.
 If \code{NULL} (the default), then the limits determined automatically.}

@@ -7,15 +7,19 @@
 #'
 #' @export
 #' @importFrom rjd3filters confint_filter
+#' @rdname confint-tc
+#' @name confint-tc
 confint.henderson <- function(object, parm, level = 0.95, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
 				   gaussian_distribution = FALSE, exact_df = TRUE, ...)
 }
+#' @name confint-tc
 #' @export
 confint.clf <- function(object, parm, level = 0.95, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
 				   gaussian_distribution = FALSE, exact_df = TRUE, ...)
 }
+#' @name confint-tc
 #' @export
 confint.robust_henderson <- function(object, parm, level = 0.95, ...){
 	c <- (1 - level) / 2

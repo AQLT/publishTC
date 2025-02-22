@@ -13,7 +13,7 @@ smoothing <- function(
 		endpoints = "Musgrave",
 		length = NULL,
 		icr = NULL,
-		local_var = TRUE,
+		local_var = FALSE,
 		degree = 3,
 		ao = NULL,
 		ao_tc = NULL,

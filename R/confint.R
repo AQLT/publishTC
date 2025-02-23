@@ -4,24 +4,25 @@
 #' @param parm unused parameter.
 #' @param level the confidence level required.
 #' @param ... other (unused) parameters.
+#' @param asymmetric_var if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance associated the symmetric estimates.
 #'
 #' @export
 #' @importFrom rjd3filters confint_filter
 #' @rdname confint-tc
 #' @name confint-tc
-confint.henderson <- function(object, parm, level = 0.95, ...){
+confint.henderson <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
-				   gaussian_distribution = FALSE, exact_df = TRUE, ...)
+				   gaussian_distribution = FALSE, exact_df = TRUE, asymmetric_var = asymmetric_var, ...)
 }
 #' @name confint-tc
 #' @export
-confint.clf <- function(object, parm, level = 0.95, ...){
+confint.clf <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
-				   gaussian_distribution = FALSE, exact_df = TRUE, ...)
+				   gaussian_distribution = FALSE, exact_df = TRUE, asymmetric_var = asymmetric_var, ...)
 }
 #' @name confint-tc
 #' @export
-confint.robust_henderson <- function(object, parm, level = 0.95, ...){
+confint.robust_henderson <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	c <- (1 - level) / 2
 	c <- c(c, 1 - c)
 	filtered <- object$tc
@@ -61,6 +62,7 @@ confint.robust_henderson <- function(object, parm, level = 0.95, ...){
 				   start = start(filtered), end = end(filtered),
 				   frequency = frequency(filtered))
 	dates_x <- as.numeric(time(filtered))
+
 	for (i in (n-h+1):n) {
 		focus_reg <- window(reg,
 							start = dates_x[i - h ] ,
@@ -85,7 +87,8 @@ confint.robust_henderson <- function(object, parm, level = 0.95, ...){
 			Z = Z,
 			degree = degree
 		)
-		var[i] <- variance_hat_matrix(x, H_asym)
+		if (asymmetric_var)
+			var[i] <- variance_hat_matrix(x, H_asym)
 		quantile[i,] <- qt(c, df = df_var_hat_matrix(H_asym))
 	}
 	for (i in 1:h) {
@@ -119,7 +122,8 @@ confint.robust_henderson <- function(object, parm, level = 0.95, ...){
 			degree = degree,
 			lfilter = TRUE
 		)
-		var[i] <- variance_hat_matrix(x, H_asym)
+		if (asymmetric_var)
+			var[i] <- variance_hat_matrix(x, H_asym)
 		quantile[i,] <- qt(c, df = df_var_hat_matrix(H_asym))
 	}
 

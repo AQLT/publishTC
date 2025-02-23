@@ -2,6 +2,7 @@
 
 S3method(as.list,ts)
 S3method(autoplot,tc_estimates)
+S3method(autoplot,ts)
 S3method(bandwidth,clf)
 S3method(bandwidth,henderson)
 S3method(bandwidth,robust_henderson)

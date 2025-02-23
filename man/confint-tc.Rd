@@ -7,11 +7,11 @@
 \alias{confint.robust_henderson}
 \title{Confidence Intervals for \code{"tc_estimates"}}
 \usage{
-\method{confint}{henderson}(object, parm, level = 0.95, ...)
+\method{confint}{henderson}(object, parm, level = 0.95, asymmetric_var = TRUE, ...)
 
-\method{confint}{clf}(object, parm, level = 0.95, ...)
+\method{confint}{clf}(object, parm, level = 0.95, asymmetric_var = TRUE, ...)
 
-\method{confint}{robust_henderson}(object, parm, level = 0.95, ...)
+\method{confint}{robust_henderson}(object, parm, level = 0.95, asymmetric_var = TRUE, ...)
 }
 \arguments{
 \item{object}{a \code{"tc_estimates"} object.}
@@ -19,6 +19,8 @@
 \item{parm}{unused parameter.}
 
 \item{level}{the confidence level required.}
+
+\item{asymmetric_var}{if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated the symmetric estimates.}
 
 \item{...}{other (unused) parameters.}
 }

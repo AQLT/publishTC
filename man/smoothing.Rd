@@ -11,7 +11,7 @@ smoothing(
   endpoints = "Musgrave",
   length = NULL,
   icr = NULL,
-  local_var = TRUE,
+  asymmetric_var = FALSE,
   degree = 3,
   ao = NULL,
   ao_tc = NULL,
@@ -31,7 +31,7 @@ By default the Musgrave method is used}
 
 \item{icr}{I/C ratio used for the asymmetric filter.}
 
-\item{local_var}{if \code{local_icr = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance of the symmetric estimation.}
+\item{asymmetric_var}{when \code{local_icr = TRUE},  if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.}
 
 \item{degree}{if \code{local_icr = TRUE}, degree of polynomial used to estimate the local bias parameter.}
 

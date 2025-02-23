@@ -10,7 +10,7 @@ henderson_smoothing(
   length = NULL,
   icr = NULL,
   local_icr = FALSE,
-  local_var = TRUE,
+  asymmetric_var = FALSE,
   degree = 3,
   ...
 )
@@ -27,7 +27,7 @@ By default the Musgrave method is used}
 
 \item{local_icr}{if \code{TRUE}, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.}
 
-\item{local_var}{if \code{local_icr = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance of the symmetric estimation.}
+\item{asymmetric_var}{when \code{local_icr = TRUE},  if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.}
 
 \item{degree}{if \code{local_icr = TRUE}, degree of polynomial used to estimate the local bias parameter.}
 

@@ -16,7 +16,7 @@ henderson_robust_smoothing <- function(x,
 									   ls = NULL,
 									   icr = NULL,
 									   local_icr = FALSE,
-									   local_var = TRUE,
+									   asymmetric_var = FALSE,
 									   degree = 3,
 									   ...) {
 	kernel <- "Henderson"
@@ -187,7 +187,7 @@ henderson_robust_smoothing <- function(x,
 				bias_i <- param_i / sqrt(var)
 				bias_i[bias_i >= max_bias] <- max_bias
 
-				if (local_var) {
+				if (asymmetric_var) {
 					default_ma <- mmsre_filter(
 						ref_filter = sym,
 						q = q,
@@ -256,7 +256,7 @@ henderson_robust_smoothing <- function(x,
 				bias_i <- param_i / sqrt(var)
 				bias_i[bias_i >= max_bias] <- max_bias
 
-				if (local_var) {
+				if (asymmetric_var) {
 					default_ma <- mmsre_filter(
 						ref_filter = sym,
 						q = q,
@@ -342,13 +342,18 @@ build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, de
 			}
 			sym <- sym_robust_filter(X = X, kernel = kernel, degree = degree, horizon = h)
 			X <- check_matrix_reg(X, q)
-			c_coef <- mmsre_filter(
-				ref_filter = sym,
-				q = q,
-				delta = delta,
-				U = cbind(U, X),
-				Z = Z
-			)
+			c_coef <- tryCatch(
+				mmsre_filter(
+					ref_filter = sym,
+					q = q,
+					delta = delta,
+					U = cbind(U, X),
+					Z = Z
+				),
+			error = function(e) {
+				default_ma
+			})
+
 			if (lfilter) {
 				c_coef <- rev(c_coef) # reverse the order of the coefficients
 			}

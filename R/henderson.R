@@ -24,7 +24,7 @@ local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 #' By default the Musgrave method is used
 #' @param icr I/C ratio used for the asymmetric filter.
 #' @param local_icr if `TRUE`, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.
-#' @param local_var if `local_icr = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance of the symmetric estimation.
+#' @param asymmetric_var when `local_icr = TRUE`,  if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.
 #' @param degree if `local_icr = TRUE`, degree of polynomial used to estimate the local bias parameter.
 #' @param ... other parameters passed to [rjd3filters::lp_filter()].
 #'
@@ -37,7 +37,7 @@ henderson_smoothing <- function(
 		endpoints = c("Musgrave", "QL", "CQ", "CC", "DAF", "CN"),
 		length = NULL, icr = NULL,
 		local_icr = FALSE,
-		local_var = TRUE,
+		asymmetric_var = FALSE,
 		degree = 3,
 		...) {
 	if (is.null(length)) {
@@ -71,7 +71,7 @@ henderson_smoothing <- function(
 											  endpoints = endpoints,
 											  horizon = horizon,
 											  degree = degree,
-											  local_var = local_var,
+											  asymmetric_var = asymmetric_var,
 											  ...)
 		lp_coef <- local_param_est$trend_f
 		icr <- local_param_est$icr
@@ -94,7 +94,7 @@ local_param_filter <- function(x, icr = NULL,
 							   endpoints = c("Musgrave", "QL", "QL", "CQ", "CC", "DAF", "CN"),
 							   horizon = 6,
 							   degree = 3,
-							   local_var = TRUE,
+							   asymmetric_var = TRUE,
 							   min_icr = 10^-6,
 							   ...){
 	kernel <- "Henderson"
@@ -143,7 +143,7 @@ local_param_filter <- function(x, icr = NULL,
 											   local_param_f),
 						   horizon)
 		var <- rjd3filters::var_estimator(x, sym_filter)
-		if (local_var) {
+		if (asymmetric_var) {
 			icr_r <- 2/(sqrt(pi) * (last_param / sqrt(var)))
 			icr_r[abs(icr_r) <= min_icr] <- min_icr
 			default_f <- lapply(1:horizon, function(i){
@@ -166,7 +166,7 @@ local_param_filter <- function(x, icr = NULL,
 						   horizon)
 
 		var <- rjd3filters::var_estimator(x, sym_filter)
-		if (local_var) {
+		if (asymmetric_var) {
 			icr_l <- 2/(sqrt(pi) * (last_param / sqrt(var)))
 			icr_l[abs(icr_l) <= min_icr] <- min_icr
 			default_f <- lapply(1:horizon, function(i){

@@ -60,9 +60,10 @@ confint_plot.tc_estimates <- function(
 		xlab = "",
 		ylab = "",
 		level = 0.95,
+		asymmetric_var = TRUE,
 		...){
 	confint_plot.default(sa = object[["x"]],
-						 object = confint(object, level = level),
+						 object = confint(object, level = level, asymmetric_var = asymetric_var),
 						 col_tc = col_tc, col_sa = col_sa,
 						 col_confint = col_confint,
 						 xlim = xlim, ylim = ylim,
@@ -120,10 +121,11 @@ ggconfint_plot.tc_estimates <- function(
 		legend_sa = "Seasonally adjusted",
 		legend_confint = sprintf("Confidence interval %s%%", 100 * level),
 		level = 0.95,
+		asymmetric_var = TRUE,
 		...){
 	ggconfint_plot.default(
 		sa = object[["x"]],
-		object = confint(object, level = level),
+		object = confint(object, level = level, asymmetric_var = asymetric_var),
 		col_sa = col_sa, col_tc = col_tc, col_confint = col_confint,
 		legend_tc = legend_tc, legend_sa = legend_sa, legend_confint = legend_confint,
 		...)

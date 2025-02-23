@@ -13,7 +13,7 @@ gen_ls <- function(t, h = 6){
 }
 gen_ao <- function(t, h = 6){
 	if (abs(t) <= h) {
-		X <- c(rep(0, 6+t), 1, rep(0, 6-t))
+		X <- c(rep(0, h + t), 1, rep(0,  h - t))
 		X <- matrix(X, ncol = 1)
 	} else {
 		X <- NULL

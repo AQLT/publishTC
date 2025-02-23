@@ -43,7 +43,7 @@ smoothing <- function(
 			local_icr = FALSE)
 	}
 	if ("henderson_robust_localic" %in% methods) {
-		res$henderson_robus_localic <- henderson_robust_smoothing(
+		res$henderson_robust_localic <- henderson_robust_smoothing(
 			x = x, endpoints = endpoints, length = length, icr = icr,
 			asymmetric_var = asymmetric_var,
 			degree = degree,
@@ -60,57 +60,63 @@ smoothing <- function(
 		names(res) <- names(methods)
 	res
 }
+#' Produce several plots
+#'
+#' @inheritParams ggconfint_plot
+#' @inheritParams confint-tc
+#' @param plots list of plots to use.
+#' @param ... other unused parameters.
 #' @export
 ggsmoothing_plot <- function(
 		object,
-		methods = c("normal", "confint", "lollypop", "implicit_forecasts"),
+		plots = c("normal", "confint", "lollypop", "implicit_forecasts"),
 		level = 0.95,
 		...) {
-	methods <- tolower(methods)
+	plots <- tolower(plots)
 	res <- list()
-	if ("normal" %in% methods) {
+	if ("normal" %in% plots) {
 		res$normal <- ggplot2::autoplot(
 			object = object,
 			...
 			) +
 			ggplot2::ggtitle("Normal plot")
-		if (!is.null(names(methods)) && names(methods)[methods %in% "normal"]) {
+		if (!is.null(names(plots)) && names(plots)[plots %in% "normal"]) {
 			res$normal <- res$normal +
-				ggplot2::ggtitle(names(methods)[methods %in% "normal"])
+				ggplot2::ggtitle(names(plots)[plots %in% "normal"])
 		}
 	}
 
-	if ("confint" %in% methods) {
+	if ("confint" %in% plots) {
 		res$confint <- ggconfint_plot(
 			object = object, level = level, ...
 			) +
 			ggplot2::ggtitle("Confidence intervals")
-		if (!is.null(names(methods)) && names(methods)[methods %in% "confint"]) {
+		if (!is.null(names(plots)) && names(plots)[plots %in% "confint"]) {
 			res$confint <- res$confint +
-				ggplot2::ggtitle(names(methods)[methods %in% "confint"])
+				ggplot2::ggtitle(names(plots)[plots %in% "confint"])
 		}
 	}
 
-	if ("lollypop" %in% methods) {
+	if ("lollypop" %in% plots) {
 		res$lollypop <- gglollypop(
 			object = object,
 			...
 			) +
 			ggplot2::ggtitle("Lollypop")
-		if (!is.null(names(methods)) && names(methods)[methods %in% "lollypop"]) {
+		if (!is.null(names(plots)) && names(plots)[plots %in% "lollypop"]) {
 			res$lollypop <- res$lollypop +
-				ggplot2::ggtitle(names(methods)[methods %in% "lollypop"])
+				ggplot2::ggtitle(names(plots)[plots %in% "lollypop"])
 		}
 	}
 
-	if ("implicit_forecasts" %in% methods) {
+	if ("implicit_forecasts" %in% plots) {
 		res$implicit_forecasts <- ggimplicit_forecasts_plot(
 			object = object, ...
 			) +
 			ggplot2::ggtitle("Implicit forecasts")
-		if (!is.null(names(methods)) && names(methods)[methods %in% "implicit_forecasts"]) {
+		if (!is.null(names(plots)) && names(plots)[plots %in% "implicit_forecasts"]) {
 			res$implicit_forecasts <- res$implicit_forecasts +
-				ggplot2::ggtitle(names(methods)[methods %in% "implicit_forecasts"])
+				ggplot2::ggtitle(names(plots)[plots %in% "implicit_forecasts"])
 		}
 	}
 	res

@@ -61,6 +61,26 @@ autoplot.tc_estimates <- function(
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank())
 }
+
+#' @export
+autoplot.ts <- function (object, ...) {
+
+	data <- data.frame(time = as.numeric(time(object)),
+					   object,
+					   check.names = FALSE)
+	name_methods <- colnames(data)[-1]
+	data <- do.call(
+		rbind,
+		lapply(2:ncol(data), function(i) {
+			data.frame(data[,1], as.numeric(data[,i]), colnames(data)[i])
+		})
+	)
+	colnames(data) <- c("time", "value", "Method")
+	data$Method <- factor(data$Method, levels = name_methods, ordered = TRUE)
+	ggplot2::ggplot(data = data) +
+		ggplot2::geom_line(mapping = ggplot2::aes(
+			x = time, y = value, colour = Method), na.rm = TRUE)
+}
 # autoplot.tc_estimates <- function(object,
 # 								  col_tc = "#E69F00",
 # 								  col_sa = "black", ...){

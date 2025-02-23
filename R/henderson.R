@@ -1,12 +1,15 @@
 # Local estimates of IC-ratios
 # We replicate the direct estimates to have
 # estimators of the slope and the concavity
-local_daf_est <- function(p=6, q=p, d=3, dest = 1, kernel = "Henderson", X_sup = NULL){
-	k <- rjd3filters::get_kernel(kernel, horizon = p)
-	k <- c(rev(k$coef[-1]), k$coef[seq(0,q)+1])
-	K <- diag(k)
+local_daf_est <- function(p=6, q=p, h = max(p, q), d=3, dest = 1, kernel = "Henderson", X_sup = NULL){
+	id_keep <- seq(-abs(p), abs(q)) + (h + 1)
+	k <- rjd3filters::get_kernel(kernel, horizon = h)
+	k <- c(rev(k$coef[-1]), k$coef)
+	K <- diag(k[id_keep])
+	if (!is.null(X_sup))
+		X_sup <- X_sup[id_keep,, drop = FALSE]
 	X <- cbind(rjd3filters::polynomial_matrix(l = -p, u = q, d0 = 0, d1 = d), X_sup)
-	e <- matrix(0, ncol = 1, nrow = d+1)
+	e <- matrix(0, ncol = 1, nrow = ncol(X))
 	e[dest + 1] <- 1
 	MM <- K %*% X %*% solve(t(X) %*% K %*% X, e)
 	rjd3filters::moving_average(MM, lags = -p)

@@ -173,6 +173,7 @@ henderson_robust_smoothing <- function(x,
 			X <- build_matrix_reg(focus_reg, fun_out, h, U = U, current_date = dates_x[i])
 			sym <- sym_robust_filter(X = X, kernel = kernel, degree = degree, horizon = h)
 			if (is.null(icr_r)) {
+				X <- check_matrix_reg(X, q)
 				local_param_f <- local_daf_est(p = h, q = q, d = degree,
 											   dest = dest, kernel = kernel,
 											   X_sup = X)
@@ -242,9 +243,11 @@ henderson_robust_smoothing <- function(x,
 			sym <- sym_robust_filter(X = X_invert,
 									 kernel = kernel, degree = degree, horizon = h)
 			if (is.null(icr_l)) {
+				X_invert <- check_matrix_reg(X_invert, q)
 				local_param_f <- local_daf_est(p = h, q = q, d = degree,
 											   dest = dest, kernel = kernel,
-											   X_sup = X)
+											   X_sup = X_invert)
+				local_param_f <- rev(local_param_f)
 				param_i <- rjd3filters::filter(window(
 					x,
 					start = dates_x[i + lower_bound(c_coef)] ,
@@ -402,7 +405,7 @@ sym_robust_filter <- function(X = NULL, kernel = "Henderson", degree = 3,
 		lags = - horizon)
 }
 
-build_matrix_reg <- function(focus_reg, fun_out, h, current_date, U = NULL) {
+build_matrix_reg <- function(focus_reg, fun_out, h, current_date, U = NULL, q = NULL) {
 	if (!is.matrix(focus_reg))
 		focus_reg <- matrix(focus_reg, ncol = 1)
 	X <- do.call(cbind, lapply(seq_along(fun_out), function(nb_col){
@@ -413,7 +416,7 @@ build_matrix_reg <- function(focus_reg, fun_out, h, current_date, U = NULL) {
 	}))
 	if (is.null(X))
 		return(NULL)
-	check_matrix_reg(X = X, U = U)
+	check_matrix_reg(X = X, U = U, q = q)
 }
 check_matrix_reg <- function(X, U = NULL, q = NULL) {
 	if (is.null(X))

@@ -140,5 +140,5 @@ utils::globalVariables(c(
 	"henderson", "local_param_est",
 	"CLF", "CLF_CN",
 	"Confint_m", "Confint_p", "tc",
-	"implicit forecast"
+	"y",  "Method"
 	))

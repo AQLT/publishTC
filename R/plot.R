@@ -75,11 +75,11 @@ autoplot.ts <- function (object, ...) {
 			data.frame(data[,1], as.numeric(data[,i]), colnames(data)[i])
 		})
 	)
-	colnames(data) <- c("time", "value", "Method")
+	colnames(data) <- c("time", "y", "Method")
 	data$Method <- factor(data$Method, levels = name_methods, ordered = TRUE)
 	ggplot2::ggplot(data = data) +
 		ggplot2::geom_line(mapping = ggplot2::aes(
-			x = time, y = value, colour = Method), na.rm = TRUE)
+			x = time, y = y, colour = Method), na.rm = TRUE)
 }
 # autoplot.tc_estimates <- function(object,
 # 								  col_tc = "#E69F00",

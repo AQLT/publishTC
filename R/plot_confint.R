@@ -63,7 +63,7 @@ confint_plot.tc_estimates <- function(
 		asymmetric_var = TRUE,
 		...){
 	confint_plot.default(sa = object[["x"]],
-						 object = confint(object, level = level, asymmetric_var = asymetric_var),
+						 object = confint(object, level = level, asymmetric_var = asymmetric_var),
 						 col_tc = col_tc, col_sa = col_sa,
 						 col_confint = col_confint,
 						 xlim = xlim, ylim = ylim,
@@ -125,7 +125,7 @@ ggconfint_plot.tc_estimates <- function(
 		...){
 	ggconfint_plot.default(
 		sa = object[["x"]],
-		object = confint(object, level = level, asymmetric_var = asymetric_var),
+		object = confint(object, level = level, asymmetric_var = asymmetric_var),
 		col_sa = col_sa, col_tc = col_tc, col_confint = col_confint,
 		legend_tc = legend_tc, legend_sa = legend_sa, legend_confint = legend_confint,
 		...)

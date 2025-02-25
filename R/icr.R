@@ -57,6 +57,10 @@ abs_mean_var <- function(x, nlags = 1, mul = FALSE){
 #' @inheritParams icr
 #' @export
 mcd <- function(x, tc, mul = FALSE){
+	if (is_tc_estimates(x)) {
+		tc <- x$tc
+		x <- x$x
+	}
 	ic <- icrs(x = x, tc = tc, mul = mul)
 	inf1 <- ic <= 1
 	for (i in seq_along(ic)) {

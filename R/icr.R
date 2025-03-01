@@ -71,7 +71,7 @@ mcd <- function(x, tc, mul = FALSE){
 	}
 	if (!has_mcd)
 		return(NULL)
-	mcd
+	i
 }
 
 #'@importFrom rjd3filters lp_filter

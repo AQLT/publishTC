@@ -62,7 +62,7 @@ smoothing <- function(
 }
 #' Produce several plots
 #'
-#' @inheritParams ggconfint_plot
+#' @inheritParams confint_plot
 #' @inheritParams confint-tc
 #' @param plots list of plots to use.
 #' @param ... other unused parameters.

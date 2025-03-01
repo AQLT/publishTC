@@ -23,8 +23,11 @@
 turning_points <- function(
 		x, start = NULL, end = NULL,
 		digits = 6, k = 3, m = 1){
-	if(is.null(x))
+	if (is.null(x))
 		return(NULL)
+	if (is_tc_estimates(x)) {
+		x <- x$tc
+	}
 	list(upturn = upturn(x, start = start, end = end, digits = digits, k = k, m = m),
 		 downturn = downturn(x, start = start, end = end, digits = digits, k = k, m = m))
 }

@@ -12,7 +12,8 @@ ggsmoothing_plot(
 )
 }
 \arguments{
-\item{object}{a \code{"tc_estimates"} object.}
+\item{object}{\code{"tc_estimates"}.
+The confidence intervals are computed using the \code{\link[=confint]{confint()}} function.}
 
 \item{plots}{list of plots to use.}
 

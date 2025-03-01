@@ -16,3 +16,12 @@ is_tc_estimates <- function(x) {
 	inherits(x, "tc_estimates")
 }
 
+#' @export
+summary.tc_estimates <- function(object, ...) {
+	list(
+		"I/C ratio" = icr(object),
+		"I/C ratios" = icrs(object),
+		MCD = mcd(object),
+		Length = 2 * bandwidth(object) + 1
+	)
+}

@@ -3,6 +3,9 @@
 
 # publishTC
 
+[![R universe
+version](https://aqlt.r-universe.dev/badges/RJDemetra)](https://aqlt.r-universe.dev/publishTC)
+
 Why not publish the trend-cycle? The goal of `publishTC` is to
 facilitate the computation of trend-cycle component:
 

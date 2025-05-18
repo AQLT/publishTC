@@ -6,6 +6,10 @@
 #' @param lty_last_tc,lty_i_f line type of the last values of the trend-cycle component and for the implicit forecasts.
 #' @inheritParams lollypop
 #' @inheritParams plot.tc_estimates
+#'
+#' @examples
+#' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+#' implicit_forecasts_plot(tc_mod, xlim = c(2022, 2025))
 #' @export
 implicit_forecasts_plot <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -16,6 +20,7 @@ implicit_forecasts_plot <- function(
 		ylab = "",
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		...) {
 	UseMethod("implicit_forecasts_plot")
 }
@@ -30,6 +35,7 @@ implicit_forecasts_plot.default <- function(
 		ylab = "",
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		...,
 		sa = NULL, i_f = NULL
 		){
@@ -37,17 +43,17 @@ implicit_forecasts_plot.default <- function(
 	i_f <- ts(c(sa[length(sa)], i_f),
 			  end = end(i_f),
 			  frequency = frequency(i_f))
-	h <- length(i_f)
-	tc_final <- window(tc, end = time(tc)[length(tc) - h])
-	tc_prov <- window(tc, start = time(tc)[length(tc) - h])
+
+	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
+	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 	complete_data <- ts.union(sa, i_f, tc, tc_final, tc_prov)
 	colnames(complete_data)[2] <- c("implicit forecast")
-	if (is.null(xlim))
-		xlim <- range(time(complete_data))
-	if (is.null(ylim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2]), na.rm = TRUE)
+
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
 
 	plot(complete_data, type = "l", plot.type = "single",
+		 xlim = xlim, ylim = ylim,
 		 lty = c(1, lty_last_tc, 1, lty_last_tc),
 		 col = c(col_sa, col_i_f, col_tc, col_tc),
 		 xlab = xlab, ylab = ylab, ...)
@@ -62,6 +68,7 @@ implicit_forecasts_plot.tc_estimates <- function(
 		ylab = "",
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		...){
 
 	implicit_forecasts_plot.default(
@@ -73,17 +80,19 @@ implicit_forecasts_plot.tc_estimates <- function(
 		xlim = xlim, ylim = ylim,
 		xlab = xlab, ylab = ylab,
 		lty_last_tc = lty_last_tc,
+		n_last_tc = ifelse(is.null(n_last_tc), bandwidth(object), n_last_tc) ,
 		...)
 }
 #' @name implicit_forecasts_plot
 #' @export
 ggimplicit_forecasts_plot <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		legend_i_f = "Implicit forecasts",
@@ -92,12 +101,13 @@ ggimplicit_forecasts_plot <- function(
 }
 #' @export
 ggimplicit_forecasts_plot.default <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		legend_i_f = "Implicit forecasts",
@@ -107,10 +117,14 @@ ggimplicit_forecasts_plot.default <- function(
 	i_f <- ts(c(sa[length(sa)], i_f),
 			  end = end(i_f),
 			  frequency = frequency(i_f))
-	h <- length(i_f)
-	tc_final <- window(tc, end = time(tc)[length(tc) - h])
-	tc_prov <- window(tc, start = time(tc)[length(tc) - h])
+
+	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
+	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 	complete_data <- ts.union(sa, i_f, tc, tc_final, tc_prov)
+
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data,
 					   check.names = FALSE)
@@ -121,16 +135,19 @@ ggimplicit_forecasts_plot.default <- function(
 		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_i_f, col_tc)) +
-		ggplot2::theme(legend.title = ggplot2::element_blank())
+		ggplot2::theme(legend.title = ggplot2::element_blank()) +
+		ggplot2::labs(x = NULL, y = NULL) +
+		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 }
 #' @export
 ggimplicit_forecasts_plot.tc_estimates <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_i_f = col_sa,
 		lty_last_tc = 2,
 		lty_i_f = 3,
+		n_last_tc = 4,
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		legend_i_f = "Implicit forecasts",
@@ -139,11 +156,13 @@ ggimplicit_forecasts_plot.tc_estimates <- function(
 		sa = object[["x"]],
 		i_f = implicit_forecasts(object),
 		object = object[["tc"]],
+		xlim = xlim, ylim = ylim,
 		col_tc = col_tc, col_sa = col_sa,
 		col_i_f = col_i_f,
 		lty_last_tc = lty_last_tc, lty_i_f = lty_i_f,
 		legend_tc = legend_tc, legend_sa = legend_sa,
 		legend_i_f = legend_i_f,
+		n_last_tc = ifelse(is.null(n_last_tc), bandwidth(object), n_last_tc),
 		...)
 }
 

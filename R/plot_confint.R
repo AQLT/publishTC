@@ -8,6 +8,10 @@
 #' @inheritParams lollypop
 #' @inheritParams plot.tc_estimates
 #' @inheritParams confint-tc
+#'
+#' @examples
+#' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+#' confint_plot(tc_mod, xlim = c(2022, 2024.5))
 #' @export
 confint_plot <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -37,10 +41,10 @@ confint_plot.default <- function(
 	complete_data <- ts.union(object, sa)
 	colnames(complete_data)[1] <- "tc"
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
-	if (is.null(xlim))
-		xlim <- range(time(complete_data))
-	if (is.null(ylim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2]), na.rm = TRUE)
+
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+
 	plot(1, xlim = xlim, ylim = ylim, ylab = ylab, xlab = xlab, ...)
 	polygon(
 		x = c(time(complete_data), rev(time(complete_data))),
@@ -72,7 +76,7 @@ confint_plot.tc_estimates <- function(
 }
 #' @name confint_plot
 #' @export
-ggconfint_plot <- function(object,
+ggconfint_plot <- function(object, xlim = NULL, ylim = NULL,
 						   col_tc = "#E69F00",
 						   col_sa = "black",
 						   col_confint = "grey",
@@ -85,7 +89,7 @@ ggconfint_plot <- function(object,
 }
 #' @export
 ggconfint_plot.default <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
@@ -98,6 +102,10 @@ ggconfint_plot.default <- function(
 	complete_data <- ts.union(object, sa)
 	colnames(complete_data)[1] <- "tc"
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
+
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
 	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
@@ -113,7 +121,7 @@ ggconfint_plot.default <- function(
 }
 #' @export
 ggconfint_plot.tc_estimates <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_confint = "grey",
@@ -126,6 +134,7 @@ ggconfint_plot.tc_estimates <- function(
 	ggconfint_plot.default(
 		sa = object[["x"]],
 		object = confint(object, level = level, asymmetric_var = asymmetric_var),
+		xlim = xlim, ylim = ylim,
 		col_sa = col_sa, col_tc = col_tc, col_confint = col_confint,
 		legend_tc = legend_tc, legend_sa = legend_sa, legend_confint = legend_confint,
 		...)

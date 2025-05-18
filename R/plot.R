@@ -3,29 +3,45 @@
 #'
 #' @param object,x `"tc_estimates"` object.
 #' @param y unused parameter.
+#' @param xlim,ylim x and y limits of the plot.
+#' If `xlim` is defined and not `ylim`, then `ylim` is determined automatically.
 #' @param ... other (unused) parameters.
 #'
 #' @param col_sa,col_tc color of the seasonally adjusted and trend-cycle components.
 #' @param xlab,ylab x and y axis labels.
 #' @param lty_last_tc line type of the last values of the trend-cycle component.
 #' @param legend_tc,legend_sa legend of the trend-cycle and seasonally adjusted components.
+#' @param n_last_tc number of last values of the trend-cycle component to be plotted with a different line type
+#' (to emphasize that there is higher variability for the last estimates).
+#' If `NULL`, then `n_last_tc` is equal to the bandwidth of the trend-cycle component.
+#'
+#' @examples
+#' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+#' plot(tc_mod, xlim = c(2022, 2024.5))
 #' @export
 plot.tc_estimates <- function(
-		x, y = NULL,
+		x, y = NULL, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		xlab = "", ylab = "",
 		lty_last_tc = 2,
+		n_last_tc = 4,
 		...){
 	tc <- x$tc
 	sa <- x$x
 
 	h <- bandwidth(x)
-	tc_final <- window(tc, end = time(tc)[length(tc) - h])
-	tc_prov <- window(tc, start = time(tc)[length(tc) - h])
+	if (is.null(n_last_tc))
+		n_last_tc <- h
+	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
+	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 
 	complete_data <- ts.union(sa, tc_final, tc_prov)
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+
 	plot(complete_data, type = "l", plot.type = "single",
+		 xlim = xlim, ylim = ylim,
 		 lty = c(1 ,1, lty_last_tc),
 		 col = c(col_sa, col_tc, col_tc),
 		 xlab = xlab, ylab = ylab, ...)
@@ -37,29 +53,38 @@ plot.tc_estimates <- function(
 #' @name plot.tc_estimates
 #' @export
 autoplot.tc_estimates <- function(
-		object,
+		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
-		lty_last_tc = 2, ...){
+		lty_last_tc = 2,
+		n_last_tc = 4, ...){
 	x <- object
 	tc <- x$tc
 	sa <- x$x
 
 	h <- bandwidth(x)
-	tc_final <- window(tc, end = time(tc)[length(tc) - h])
-	tc_prov <- window(tc, start = time(tc)[length(tc) - h])
+	if (is.null(n_last_tc))
+		n_last_tc <- h
+	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
+	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 
 	complete_data <- ts.union(sa, tc_final, tc_prov)
+
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
 	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa)) +
+		ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
-		ggplot2::theme(legend.title = ggplot2::element_blank())
+		ggplot2::theme(legend.title = ggplot2::element_blank()) +
+		ggplot2::labs(x = NULL, y = NULL) +
+		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 }
 
 #' @export
@@ -81,31 +106,4 @@ autoplot.ts <- function (object, ...) {
 		ggplot2::geom_line(mapping = ggplot2::aes(
 			x = time, y = y, colour = Method), na.rm = TRUE)
 }
-# autoplot.tc_estimates <- function(object,
-# 								  col_tc = "#E69F00",
-# 								  col_sa = "black", ...){
-# 	x <- object
-# 	tc <- x$tc
-# 	sa <- x$x
-#
-# 	h <- bandwidth(x)
-# 	tc_final <- window(tc, end = time(tc)[length(tc) - h])
-# 	tc_prov <- window(tc, start = time(tc)[length(tc) - h])
-#
-# 	complete_data <- ts.union(sa, tc_final, tc_prov)
-#
-# 	dygraph(complete_data) %>%
-# 		dySeries("sa", label = "Seasonally adjusted") %>%
-# 		dySeries("tc_final", label = "Trend-cycle") %>%  # Série en trait plein
-# 		dySeries("tc_prov",
-# 				 color = col_tc,
-# 				 strokeWidth = 1.5,
-# 				 strokePattern = "dotted",
-# 				 showInLegend = FALSE)
-# 	data <- data.frame(time = as.numeric(time(complete_data)),
-# 					   complete_data)
-# 	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-# 		ggplot2::geom_line(ggplot2::aes(y = sa), color = col_sa) +
-# 		ggplot2::geom_line(ggplot2::aes(y = tc_final), color = col_tc) +
-# 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = 2)
-# }
+

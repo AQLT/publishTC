@@ -4,3 +4,8 @@
 
 - correction of local parameterisation functions when series contains NA.
 
+- For the plots, by default only the 4 last values of the trend-cycle are dotted to emphasize the higher variability of the last values.
+
+- New `growthplot()` function
+
+

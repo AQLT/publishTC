@@ -142,7 +142,7 @@ local_param_filter <- function(x, icr = NULL,
 	}
 	sym_filter <- lp_filter(horizon = horizon)@sfilter
 	if (is.null(icr_r)) {
-		last_param <- tail(rjd3filters::filter(tail(x, horizon * 2 + 1),
+		last_param <- tail(rjd3filters::filter(tail(zoo::na.trim(x), horizon * 2 + 1),
 											   local_param_f),
 						   horizon)
 		var <- rjd3filters::var_estimator(x, sym_filter)
@@ -164,7 +164,7 @@ local_param_filter <- function(x, icr = NULL,
 	}
 
 	if (is.null(icr_l)) {
-		last_param <- head(rjd3filters::filter(head(x, horizon * 2 + 1),
+		last_param <- head(rjd3filters::filter(head(zoo::na.trim(x), horizon * 2 + 1),
 											   local_param_f),
 						   horizon)
 

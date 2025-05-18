@@ -20,6 +20,8 @@ confint_plot(
 
 ggconfint_plot(
   object,
+  xlim = NULL,
+  ylim = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   col_confint = "grey",
@@ -35,7 +37,7 @@ ggconfint_plot(
 The confidence intervals are computed using the \code{\link[=confint]{confint()}} function.}
 
 \item{xlim, ylim}{x and y limits of the plot.
-If \code{NULL} (the default), then the limits determined automatically.}
+If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
 
 \item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
 
@@ -51,4 +53,8 @@ If \code{NULL} (the default), then the limits determined automatically.}
 }
 \description{
 Confidence Intervals plot
+}
+\examples{
+tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+confint_plot(tc_mod, xlim = c(2022, 2024.5))
 }

@@ -43,6 +43,12 @@ henderson_robust_smoothing <- function(x,
 	if (is.null(ao) & is.null(ao_tc) & is.null(ls)) {
 		return(henderson_smoothing(x, endpoints = endpoints, length = length, icr = icr, degree = degree, ...))
 	}
+
+	has_na <- any(is.na(x))
+	input_x <- x
+	data_clean <- remove_bound_NA(x)
+	x <- data_clean$data
+
 	if (is.null(length)) {
 		param <- x11_trend_selection(x)
 		length <- param["length"]
@@ -305,10 +311,16 @@ henderson_robust_smoothing <- function(x,
 				   start = start(x),
 				   frequency = frequency(x))
 
+	if (has_na) {
+		filtered <- ts(c(rep(NA, data_clean$leading), filtered,
+						 rep(NA, data_clean$trailing)),
+						 start = start(input_x), frequency = frequency(x))
+	}
+
 
 	res <- tc_estimates(
 		tc = filtered,
-		sa = x,
+		sa = input_x,
 		parameters = list(
 			hat_matrix = H,
 			outliers = list(ao = ao, ao_tc = ao_tc, ls = ls),
@@ -468,4 +480,31 @@ hat_matrix <- function(n, coef) {
 		}
 	}
 	H
+}
+
+
+remove_bound_NA <- function(x) {
+	if (all(is.na(x)))
+		return(x)
+	i <- length(x)
+	j <- 1
+	remove_i_last <- remove_i_first <- NULL
+	while (is.na(x[i]) && i > 0) {
+		remove_i_last <- c(i, remove_i_last)
+		i <- i - 1
+	}
+	while (is.na(x[j]) && j < length(x)) {
+		remove_i_first <- c(j, remove_i_first)
+		j <- j + 1
+	}
+
+	if (is.null(remove_i_first) && is.null(remove_i_last)) {
+		# list(data = x, leading = 0,
+		#      trailing = 0)
+	} else {
+		x <- x[- c(remove_i_first, remove_i_last)]
+	}
+
+	list(data = x, leading = length(remove_i_first),
+		 trailing = length(remove_i_last))
 }

@@ -1,7 +1,7 @@
 Package: publishTC
 Type: Package
 Title: Tools to help publish the trend-cycle
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre"),
                  email = "alain.quartier@yahoo.fr",
@@ -25,7 +25,7 @@ Imports:
 Remotes:
   github::rjdverse/rjd3x13
   github::rjdverse/rjd3filters
-URL: https://github.com/AQLT/publishTC
+URL: https://github.com/AQLT/publishTC, https://aqlt.github.io/publishTC/
 SystemRequirements: Java (>= 17)
 License: EUPL
 Encoding: UTF-8

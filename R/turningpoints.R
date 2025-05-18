@@ -1,5 +1,8 @@
 #' Detect turning points in a time series
 #'
+#' `turning_points()` returns the number of downturns (`downturn()`) and upturns (`upturn()`) in a time series.
+#' `unwanted_ripples()` returns the number of unwanted ripples in a time series.
+#'
 #' @param x the input time series.
 #' @param start,end the interval where to find turning points.
 #' @param digits number of digits used for the comparison of the values.
@@ -17,6 +20,9 @@
 #' \deqn{
 #' y_{t-k}\leq\cdots\leq y_{t-1}>y_t\geq y_{t+1}\geq\cdots y_{t+m}
 #' }
+#'
+#' An unwanted ripple is defined whenever two downturns or upturns occur within a 10 month period
+#' (i.e.: small cycles of less than 11 months).
 #' @export
 #' @importFrom stats ts start end time window
 #' @importFrom zoo rollapply
@@ -76,4 +82,22 @@ downturn <- function(
 	res <- window(res, start = start, end = end, extend = TRUE)
 	res <- time(res)[which(res)]
 	res
+}
+#' @rdname turning_points
+#' @export
+unwanted_ripples <- function(
+		x, start = NULL, end = NULL,
+		digits = 6, k = 3, m = 1){
+	if (is.null(x))
+		return(NULL)
+	if (is_tc_estimates(x)) {
+		x <- x$tc
+	}
+	tp <- turning_points(x, start = start, end = end, digits = digits, k = k, m = m)
+	# sum(sapply(tp, function(tp_s){
+	# 	sum(diff(tp_s) <= 10 / frequency(x))
+	# }))
+	tp <- sort(unlist(tp))
+	sum(diff(tp) <= 10 / frequency(x))
+
 }

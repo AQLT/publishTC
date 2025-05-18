@@ -8,32 +8,45 @@
 \method{plot}{tc_estimates}(
   x,
   y = NULL,
+  xlim = NULL,
+  ylim = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   xlab = "",
   ylab = "",
   lty_last_tc = 2,
+  n_last_tc = 4,
   ...
 )
 
 \method{autoplot}{tc_estimates}(
   object,
+  xlim = NULL,
+  ylim = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   legend_tc = "Trend-cycle",
   legend_sa = "Seasonally adjusted",
   lty_last_tc = 2,
+  n_last_tc = 4,
   ...
 )
 }
 \arguments{
 \item{y}{unused parameter.}
 
+\item{xlim, ylim}{x and y limits of the plot.
+If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+
 \item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
 
 \item{xlab, ylab}{x and y axis labels.}
 
 \item{lty_last_tc}{line type of the last values of the trend-cycle component.}
+
+\item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
+(to emphasize that there is higher variability for the last estimates).
+If \code{NULL}, then \code{n_last_tc} is equal to the bandwidth of the trend-cycle component.}
 
 \item{...}{other (unused) parameters.}
 
@@ -43,4 +56,8 @@
 }
 \description{
 Default \code{"tc_estimates"} plot
+}
+\examples{
+tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+plot(tc_mod, xlim = c(2022, 2024.5))
 }

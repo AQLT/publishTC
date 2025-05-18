@@ -70,7 +70,7 @@ mcd <- function(x, tc, mul = FALSE){
 		}
 	}
 	if (!has_mcd)
-		return(NULL)
+		return(length(ic))
 	i
 }
 

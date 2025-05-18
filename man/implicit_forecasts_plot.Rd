@@ -16,16 +16,20 @@ implicit_forecasts_plot(
   ylab = "",
   lty_last_tc = 2,
   lty_i_f = 3,
+  n_last_tc = 4,
   ...
 )
 
 ggimplicit_forecasts_plot(
   object,
+  xlim = NULL,
+  ylim = NULL,
   col_tc = "#E69F00",
   col_sa = "black",
   col_i_f = col_sa,
   lty_last_tc = 2,
   lty_i_f = 3,
+  n_last_tc = 4,
   legend_tc = "Trend-cycle",
   legend_sa = "Seasonally adjusted",
   legend_i_f = "Implicit forecasts",
@@ -33,11 +37,10 @@ ggimplicit_forecasts_plot(
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"} object.
-If \code{object} is a \code{"tc_estimates"} object then \code{sa} is optional.}
+\item{object}{\code{"tc_estimates"} object.}
 
 \item{xlim, ylim}{x and y limits of the plot.
-If \code{NULL} (the default), then the limits determined automatically.}
+If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
 
 \item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
 
@@ -47,10 +50,18 @@ If \code{NULL} (the default), then the limits determined automatically.}
 
 \item{lty_last_tc, lty_i_f}{line type of the last values of the trend-cycle component and for the implicit forecasts.}
 
+\item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
+(to emphasize that there is higher variability for the last estimates).
+If \code{NULL}, then \code{n_last_tc} is equal to the bandwidth of the trend-cycle component.}
+
 \item{...}{other parameters.}
 
 \item{legend_tc, legend_sa, legend_i_f}{legend of the trend-cycle and seasonally adjusted components and for implicit forecasts.}
 }
 \description{
 Implicit Forecasts plot
+}
+\examples{
+tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+implicit_forecasts_plot(tc_mod, xlim = c(2022, 2025))
 }

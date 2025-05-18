@@ -23,8 +23,8 @@ Imports:
   zoo,
   rJava
 Remotes:
-  github::rjdverse/rjd3x13
-  github::rjdverse/rjd3filters
+    github::rjdverse/rjd3x13
+    github::rjdverse/rjd3filters
 URL: https://github.com/AQLT/publishTC, https://aqlt.github.io/publishTC/
 SystemRequirements: Java (>= 17)
 License: EUPL

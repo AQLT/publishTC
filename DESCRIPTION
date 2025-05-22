@@ -17,14 +17,14 @@ LazyData: true
 Depends:
   R (>= 4.1.0)
 Imports:
-  rjd3filters,
-  rjd3x13,
+  rjd3filters (>= 2.3.0),
+  rjd3x13 (>= 3.3.0),
   ggplot2,
   zoo,
   rJava
 Remotes:
-    github::rjdverse/rjd3x13
-    github::rjdverse/rjd3filters
+  github::rjdverse/rjd3x13,
+  github::rjdverse/rjd3filters
 URL: https://github.com/AQLT/publishTC, https://aqlt.github.io/publishTC/
 SystemRequirements: Java (>= 17)
 License: EUPL

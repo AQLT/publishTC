@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # publishTC
 
-[![R universe version](https://aqlt.r-universe.dev/badges/RJDemetra)](https://aqlt.r-universe.dev/publishTC)
+[![R universe version](https://aqlt.r-universe.dev/badges/publishTC)](https://aqlt.r-universe.dev/publishTC)
 
 
 Why not publish the trend-cycle?

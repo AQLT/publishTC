@@ -6,10 +6,10 @@ on:
     paths:
       - 'man/**'
 
-  pull_request:
-    branches: [master, develop]
-  release:
-    types: [published]
+  # pull_request:
+  #   branches: [master, develop]
+  # release:
+  #   types: [published]
   workflow_dispatch:
 
 name: pkgdown

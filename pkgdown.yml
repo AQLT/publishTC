@@ -1,0 +1,8 @@
+pandoc: 3.1.11
+pkgdown: 2.1.2
+pkgdown_sha: ~
+articles: {}
+last_built: 2025-05-22T19:53Z
+urls:
+  reference: https://aqlt.github.io/publishTC/reference
+  article: https://aqlt.github.io/publishTC/articles

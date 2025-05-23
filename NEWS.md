@@ -1,3 +1,7 @@
+# publishTC 0.2.1
+
+- Improvement of `ggplot2` plots.
+
 # publishTC 0.2.0
 
 - `mcd()` now returns by default the value of the number of period (instead of `NULL`)

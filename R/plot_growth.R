@@ -118,13 +118,15 @@ gggrowthplot.default <- function(
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
 		ggplot2::geom_col(ggplot2::aes(y = sa, color = legend_sa), fill = col_sa_fill, na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc, color = legend_tc), na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
-		ggplot2::labs(x = NULL, y = NULL) +
-		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 gggrowthplot.tc_estimates <- function(

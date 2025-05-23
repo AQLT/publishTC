@@ -135,7 +135,7 @@ gglollypop.default <- function(
 		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
 
 
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
 		ggplot2::geom_point(ggplot2::aes(y = sa, color = legend_sa), pch = pch_points,
@@ -144,8 +144,10 @@ gglollypop.default <- function(
 		ggplot2::geom_segment(ggplot2::aes(y = tc_prov, yend = sa), color = col_sa, na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
-		ggplot2::labs(x = NULL, y = NULL) +
-		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 gglollypop.tc_estimates <- function(

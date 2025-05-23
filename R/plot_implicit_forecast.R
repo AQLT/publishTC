@@ -38,7 +38,7 @@ implicit_forecasts_plot.default <- function(
 		n_last_tc = 4,
 		...,
 		sa = NULL, i_f = NULL
-		){
+){
 	tc <- object
 	i_f <- ts(c(sa[length(sa)], i_f),
 			  end = end(i_f),
@@ -129,15 +129,17 @@ ggimplicit_forecasts_plot.default <- function(
 					   complete_data,
 					   check.names = FALSE)
 
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
 		ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = i_f, color = legend_i_f), lty = lty_i_f, na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_i_f, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
-		ggplot2::labs(x = NULL, y = NULL) +
-		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 ggimplicit_forecasts_plot.tc_estimates <- function(

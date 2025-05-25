@@ -51,7 +51,7 @@ lollypop.default <- function(
 	complete_data <- ts.union(tc_final, tc_prov, sa)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(complete_data[, c("tc_final", "tc_prov")], type = "l",
 		 ylim = ylim,
@@ -132,7 +132,7 @@ gglollypop.default <- function(
 					   complete_data)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 
 	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +

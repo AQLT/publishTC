@@ -48,7 +48,7 @@ growthplot.default <- function(
 	complete_data <- growth_rate(complete_data, lag = lag, pct = pct)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(complete_data[, "sa"], type = "h",
 		 ylim = ylim,
@@ -114,7 +114,7 @@ gggrowthplot.default <- function(
 	complete_data <- growth_rate(complete_data, lag = lag, pct = pct)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)

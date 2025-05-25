@@ -43,7 +43,7 @@ confint_plot.default <- function(
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(1, xlim = xlim, ylim = ylim, ylab = ylab, xlab = xlab, ...)
 	polygon(
@@ -104,7 +104,7 @@ ggconfint_plot.default <- function(
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)

@@ -38,7 +38,7 @@ plot.tc_estimates <- function(
 
 	complete_data <- ts.union(sa, tc_final, tc_prov)
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(complete_data, type = "l", plot.type = "single",
 		 xlim = xlim, ylim = ylim,
@@ -73,7 +73,7 @@ autoplot.tc_estimates <- function(
 	complete_data <- ts.union(sa, tc_final, tc_prov)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
@@ -90,7 +90,7 @@ autoplot.tc_estimates <- function(
 }
 
 #' @export
-autoplot.ts <- function (object, ...) {
+autoplot.ts <- function (object, xlim = NULL, ylim = NULL, ...) {
 
 	data <- data.frame(time = as.numeric(time(object)),
 					   object,
@@ -102,10 +102,28 @@ autoplot.ts <- function (object, ...) {
 			data.frame(data[,1], as.numeric(data[,i]), colnames(data)[i])
 		})
 	)
+	if (is.null(ylim) & !is.null(xlim))
+		ylim <- get_ylim(object, xlim)
 	colnames(data) <- c("time", "y", "Method")
 	data$Method <- factor(data$Method, levels = name_methods, ordered = TRUE)
-	ggplot2::ggplot(data = data) +
+	p <- ggplot2::ggplot(data = data) +
 		ggplot2::geom_line(mapping = ggplot2::aes(
 			x = time, y = y, colour = Method), na.rm = TRUE)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 
+get_ylim <- function(data, xlim = NULL, na.rm = TRUE) {
+	if ( is.null(xlim)) {
+		return(range(data, na.rm = na.rm))
+	} else {
+		start <- xlim[1]
+		end <- xlim[2]
+		if (is.na(start))
+			start <- NULL
+		if (is.na(end))
+			end <- NULL
+		return(range(window(data, start = start, end = end, extend = TRUE), na.rm = na.rm))
+	}
+}

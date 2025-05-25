@@ -50,7 +50,7 @@ implicit_forecasts_plot.default <- function(
 	colnames(complete_data)[2] <- c("implicit forecast")
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(complete_data, type = "l", plot.type = "single",
 		 xlim = xlim, ylim = ylim,
@@ -123,7 +123,7 @@ ggimplicit_forecasts_plot.default <- function(
 	complete_data <- ts.union(sa, i_f, tc, tc_final, tc_prov)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data,

@@ -136,8 +136,11 @@ gglollypop.default <- function(
 
 
 	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE)
+	if (n_last_tc > 0)
+		p <- p +
+		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE)
+	p <- p +
 		ggplot2::geom_point(ggplot2::aes(y = sa, color = legend_sa), pch = pch_points,
 							size = cex_points, na.rm = TRUE) +
 		ggplot2::geom_segment(ggplot2::aes(y = tc_final, yend = sa), color = col_sa, na.rm = TRUE) +

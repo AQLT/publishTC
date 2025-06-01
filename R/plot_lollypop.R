@@ -146,7 +146,7 @@ gglollypop.default <- function(
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))
-		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
 #' @export

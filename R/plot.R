@@ -85,7 +85,7 @@ autoplot.tc_estimates <- function(
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))
-		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
 
@@ -110,7 +110,7 @@ autoplot.ts <- function (object, xlim = NULL, ylim = NULL, ...) {
 		ggplot2::geom_line(mapping = ggplot2::aes(
 			x = time, y = y, colour = Method), na.rm = TRUE)
 	if (!is.null(xlim) | !is.null(ylim))
-		p <- ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
 

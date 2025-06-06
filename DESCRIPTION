@@ -1,7 +1,7 @@
 Package: publishTC
 Type: Package
 Title: Tools to help publish the trend-cycle
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre"),
                  email = "alain.quartier@yahoo.fr",

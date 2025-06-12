@@ -70,7 +70,8 @@ implicit_forecasts_plot.tc_estimates <- function(
 		lty_i_f = 3,
 		n_last_tc = 4,
 		...){
-
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	implicit_forecasts_plot.default(
 		sa = object[["x"]],
 		i_f = implicit_forecasts(object),
@@ -157,6 +158,8 @@ ggimplicit_forecasts_plot.tc_estimates <- function(
 		legend_sa = "Seasonally adjusted",
 		legend_i_f = "Implicit forecasts",
 		...){
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	ggimplicit_forecasts_plot.default(
 		sa = object[["x"]],
 		i_f = implicit_forecasts(object),

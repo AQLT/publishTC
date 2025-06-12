@@ -13,7 +13,7 @@
 #' @param legend_tc,legend_sa legend of the trend-cycle and seasonally adjusted components.
 #' @param n_last_tc number of last values of the trend-cycle component to be plotted with a different line type
 #' (to emphasize that there is higher variability for the last estimates).
-#' If `NULL`, then `n_last_tc` is equal to the bandwidth of the trend-cycle component.
+#' If `NULL`, then `n_last_tc` is equal to the MCD statistic.
 #'
 #' @examples
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
@@ -32,7 +32,7 @@ plot.tc_estimates <- function(
 
 	h <- bandwidth(x)
 	if (is.null(n_last_tc))
-		n_last_tc <- h
+		n_last_tc <- mcd(x)
 	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
 	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 
@@ -66,7 +66,7 @@ autoplot.tc_estimates <- function(
 
 	h <- bandwidth(x)
 	if (is.null(n_last_tc))
-		n_last_tc <- h
+		n_last_tc <- mcd(x)
 	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
 	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 

@@ -85,6 +85,8 @@ lollypop.tc_estimates <- function(
 		lty_last_tc = 2,
 		n_last_tc = 4,
 		...){
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	lollypop.default(sa = object[["x"]], object = object[["tc"]], xlim = xlim, ylim = ylim,
 					 col_tc = col_tc, col_sa = col_sa,
 					 color_points = color_points, cex_points = cex_points, pch_points = pch_points,
@@ -165,6 +167,8 @@ gglollypop.tc_estimates <- function(
 		lty_last_tc = 2,
 		n_last_tc = 4,
 		...){
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	gglollypop.default(sa = object[["x"]], object = object[["tc"]],
 					   xlim = xlim, ylim = ylim,
 					   col_sa = col_sa, col_tc = col_tc,

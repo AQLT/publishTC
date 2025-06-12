@@ -108,7 +108,7 @@ ggconfint_plot.default <- function(
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
 		ggplot2::geom_ribbon(
 			ggplot2::aes(ymin = Confint_m, ymax = Confint_p, color = legend_confint),
 			fill = col_confint
@@ -118,6 +118,9 @@ ggconfint_plot.default <- function(
 		ggplot2::scale_color_manual(values = c(col_confint, col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 ggconfint_plot.tc_estimates <- function(

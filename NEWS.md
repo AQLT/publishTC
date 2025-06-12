@@ -1,3 +1,7 @@
+# publishTC 0.2.2
+
+- New function `x13_regarima_outliers()` to detect AO and LS on a seasonally adjusted series.
+
 # publishTC 0.2.1
 
 - Improvement of `ggplot2` plots.

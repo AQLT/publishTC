@@ -24,6 +24,12 @@ facilitate the computation of trend-cycle component:
   asymmetric filters to take into account additive outliers and level
   shifts, as described in Quartier-la-Tente (2025).
 
+## Installation
+
+To install `publishTC`:
+
+    install.packages('publishTC', repos = c('https://aqlt.r-universe.dev', 'https://cloud.r-project.org'))
+
 # Bibliography
 
 Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce

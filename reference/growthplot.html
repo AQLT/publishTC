@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">publishTC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,7 @@
 <span>  col_sa <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  sa_bar_line <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  lag <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="op">)</span></span>
@@ -57,6 +58,7 @@
 <span>  pct <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sa_bar_line <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  col_tc <span class="op">=</span> <span class="st">"#E69F00"</span>,</span>
 <span>  col_sa <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>  col_sa_fill <span class="op">=</span> <span class="st">"grey"</span>,</span>
@@ -90,6 +92,11 @@ If <code>xlim</code> is defined and not <code>ylim</code>, then <code>ylim</code
 
 <dt id="arg-xlab-ylab">xlab, ylab<a class="anchor" aria-label="anchor" href="#arg-xlab-ylab"></a></dt>
 <dd><p>x and y axis labels.</p></dd>
+
+
+<dt id="arg-sa-bar-line">sa_bar_line<a class="anchor" aria-label="anchor" href="#arg-sa-bar-line"></a></dt>
+<dd><p>logical. If <code>TRUE</code> (the default), the growth rates of the seasonally adjusted series are
+presented as bar-lines, otherwise they are presented as lines.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -2,9 +2,13 @@
 
 - New function `x13_regarima_outliers()` to detect AO and LS on a seasonally adjusted series.
 
+- New function `smoothness()` to compute a smoothness statistic.
+
 - If `n_last_tc = NULL` then the value is defined according to the MCD statistic.
 
 - `ggconfint_plot()` correction of parameters `xlim` and `ylim` which were not used. 
+
+- New parameter `sa_bar_line` for `growthplot()`.
 
 # publishTC 0.2.1
 

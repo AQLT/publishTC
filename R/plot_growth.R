@@ -5,6 +5,8 @@
 #' @param pct logical. If `TRUE` (the default), the growth rate is expressed in percentage points.
 #' @param col_sa_fill fill color of the bar of the seasonally adjusted series.
 #'
+#' @param sa_bar_line logical. If `TRUE` (the default), the growth rates of the seasonally adjusted series are
+#' presented as bar-lines, otherwise they are presented as lines.
 #' @param lag lag used for the growth rate.
 #' By default, `lag = -1` (i.e. period-to-period growth rate).
 #'
@@ -23,6 +25,7 @@ growthplot <- function(
 		col_sa = "black",
 		xlab = "",
 		ylab = "",
+		sa_bar_line = TRUE,
 		...,
 		lag = -1) {
 	UseMethod("growthplot")
@@ -39,6 +42,7 @@ growthplot.default <- function(
 		col_sa = "black",
 		xlab = "",
 		ylab = "",
+		sa_bar_line = TRUE,
 		...,
 		lag = -1,
 		sa = NULL){
@@ -50,7 +54,9 @@ growthplot.default <- function(
 	if (is.null(ylim) & !is.null(xlim))
 		ylim <- get_ylim(complete_data, xlim)
 
-	plot(complete_data[, "sa"], type = "h",
+	type <- ifelse(sa_bar_line, "h", "l")
+
+	plot(complete_data[, "sa"], type = type,
 		 ylim = ylim,
 		 xlim = xlim,
 		 col = col_sa,
@@ -68,6 +74,7 @@ growthplot.tc_estimates <- function(
 		col_sa = "black",
 		xlab = "",
 		ylab = "",
+		sa_bar_line = TRUE,
 		...,
 		lag = -1,
 		sa = NULL){
@@ -75,6 +82,7 @@ growthplot.tc_estimates <- function(
 		sa = object[["x"]], object = object[["tc"]],
 		pct = pct,
 		xlim = xlim, ylim = ylim,
+		sa_bar_line = sa_bar_line,
 		col_tc = col_tc, col_sa = col_sa,
 		xlab = xlab, ylab = ylab,
 		lag = lag,
@@ -86,6 +94,7 @@ gggrowthplot <- function(
 		object,
 		pct = TRUE,
 		xlim = NULL, ylim = NULL,
+		sa_bar_line = TRUE,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_sa_fill = "grey",
@@ -100,6 +109,7 @@ gggrowthplot.default <- function(
 		object,
 		pct = TRUE,
 		xlim = NULL, ylim = NULL,
+		sa_bar_line = TRUE,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_sa_fill = "grey",
@@ -118,8 +128,16 @@ gggrowthplot.default <- function(
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
-	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_col(ggplot2::aes(y = sa, color = legend_sa), fill = col_sa_fill, na.rm = TRUE) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time))
+
+	if (sa_bar_line) {
+		p <- p +
+			ggplot2::geom_col(ggplot2::aes(y = sa, color = legend_sa), fill = col_sa_fill, na.rm = TRUE)
+	} else {
+		p <- p +
+			ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa), na.rm = TRUE)
+	}
+	p <- p +
 		ggplot2::geom_line(ggplot2::aes(y = tc, color = legend_tc), na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
@@ -133,17 +151,18 @@ gggrowthplot.tc_estimates <- function(
 		object,
 		pct = TRUE,
 		xlim = NULL, ylim = NULL,
+		sa_bar_line = TRUE,
 		col_tc = "#E69F00",
 		col_sa = "black",
 		col_sa_fill = "grey",
 		legend_tc = "Trend-cycle",
 		legend_sa = "Seasonally adjusted",
 		...,
-		lag = -1,
-		sa = NULL){
+		lag = -1){
 	gggrowthplot.default(
 		sa = object[["x"]], object = object[["tc"]],
 		xlim = xlim, ylim = ylim,
+		sa_bar_line = sa_bar_line,
 		pct = pct,
 		col_sa = col_sa, col_tc = col_tc,
 		legend_tc = legend_tc, legend_sa = legend_sa,

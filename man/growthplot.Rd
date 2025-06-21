@@ -14,6 +14,7 @@ growthplot(
   col_sa = "black",
   xlab = "",
   ylab = "",
+  sa_bar_line = TRUE,
   ...,
   lag = -1
 )
@@ -23,6 +24,7 @@ gggrowthplot(
   pct = TRUE,
   xlim = NULL,
   ylim = NULL,
+  sa_bar_line = TRUE,
   col_tc = "#E69F00",
   col_sa = "black",
   col_sa_fill = "grey",
@@ -43,6 +45,9 @@ If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined au
 \item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
 
 \item{xlab, ylab}{x and y axis labels.}
+
+\item{sa_bar_line}{logical. If \code{TRUE} (the default), the growth rates of the seasonally adjusted series are
+presented as bar-lines, otherwise they are presented as lines.}
 
 \item{...}{other (unused) parameters.}
 

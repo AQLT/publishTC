@@ -46,7 +46,7 @@ If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined au
 
 \item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
 (to emphasize that there is higher variability for the last estimates).
-If \code{NULL}, then \code{n_last_tc} is equal to the bandwidth of the trend-cycle component.}
+If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
 
 \item{...}{other (unused) parameters.}
 

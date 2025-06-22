@@ -4,7 +4,7 @@
 # publishTC
 
 [![R universe
-version](https://aqlt.r-universe.dev/badges/RJDemetra)](https://aqlt.r-universe.dev/publishTC)
+version](https://aqlt.r-universe.dev/badges/publishTC)](https://aqlt.r-universe.dev/publishTC)
 
 Why not publish the trend-cycle? The goal of `publishTC` is to
 facilitate the computation of trend-cycle component:
@@ -23,6 +23,12 @@ facilitate the computation of trend-cycle component:
 - Extending the Henderson symmetric fiter and the surrogate Musgrave
   asymmetric filters to take into account additive outliers and level
   shifts, as described in Quartier-la-Tente (2025).
+
+## Installation
+
+To install `publishTC`:
+
+    install.packages('publishTC', repos = c('https://aqlt.r-universe.dev', 'https://cloud.r-project.org'))
 
 # Bibliography
 

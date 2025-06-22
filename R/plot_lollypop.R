@@ -51,7 +51,7 @@ lollypop.default <- function(
 	complete_data <- ts.union(tc_final, tc_prov, sa)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(complete_data[, c("tc_final", "tc_prov")], type = "l",
 		 ylim = ylim,
@@ -85,6 +85,8 @@ lollypop.tc_estimates <- function(
 		lty_last_tc = 2,
 		n_last_tc = 4,
 		...){
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	lollypop.default(sa = object[["x"]], object = object[["tc"]], xlim = xlim, ylim = ylim,
 					 col_tc = col_tc, col_sa = col_sa,
 					 color_points = color_points, cex_points = cex_points, pch_points = pch_points,
@@ -132,20 +134,25 @@ gglollypop.default <- function(
 					   complete_data)
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE) +
-		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+		ggplot2::geom_line(ggplot2::aes(y = tc_final, color = legend_tc), na.rm = TRUE)
+	if (n_last_tc > 0)
+		p <- p +
+		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE)
+	p <- p +
 		ggplot2::geom_point(ggplot2::aes(y = sa, color = legend_sa), pch = pch_points,
 							size = cex_points, na.rm = TRUE) +
 		ggplot2::geom_segment(ggplot2::aes(y = tc_final, yend = sa), color = col_sa, na.rm = TRUE) +
 		ggplot2::geom_segment(ggplot2::aes(y = tc_prov, yend = sa), color = col_sa, na.rm = TRUE) +
 		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
-		ggplot2::labs(x = NULL, y = NULL) +
-		ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 gglollypop.tc_estimates <- function(
@@ -160,6 +167,8 @@ gglollypop.tc_estimates <- function(
 		lty_last_tc = 2,
 		n_last_tc = 4,
 		...){
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(object)
 	gglollypop.default(sa = object[["x"]], object = object[["tc"]],
 					   xlim = xlim, ylim = ylim,
 					   col_sa = col_sa, col_tc = col_tc,

@@ -43,7 +43,7 @@ confint_plot.default <- function(
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	plot(1, xlim = xlim, ylim = ylim, ylab = ylab, xlab = xlab, ...)
 	polygon(
@@ -104,11 +104,11 @@ ggconfint_plot.default <- function(
 	colnames(complete_data)[2:3] <- c("Confint_m", "Confint_p")
 
 	if (is.null(ylim) & !is.null(xlim))
-		ylim <- range(window(complete_data, start = xlim[1], end = xlim[2], extend = TRUE), na.rm = TRUE)
+		ylim <- get_ylim(complete_data, xlim)
 
 	data <- data.frame(time = as.numeric(time(complete_data)),
 					   complete_data)
-	ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
+	p <- ggplot2::ggplot(data = data, ggplot2::aes(x = time)) +
 		ggplot2::geom_ribbon(
 			ggplot2::aes(ymin = Confint_m, ymax = Confint_p, color = legend_confint),
 			fill = col_confint
@@ -118,6 +118,9 @@ ggconfint_plot.default <- function(
 		ggplot2::scale_color_manual(values = c(col_confint, col_sa, col_tc)) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
+	if (!is.null(xlim) | !is.null(ylim))
+		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
+	p
 }
 #' @export
 ggconfint_plot.tc_estimates <- function(

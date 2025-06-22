@@ -31,22 +31,6 @@
 #' @name classical-ma
 "local_param_est"
 
-#' Data set examples
-#' @docType data
-#' @rdname ts-exemple
-#' @name ts-exemple
-"cars_registrations"
-#' @docType data
-#' @name ts-exemple
-"french_ipi"
-#' @docType data
-#' @name ts-exemple
-"fred"
-#' @docType data
-#' @name ts-exemple
-"simulated_data"
-
-
 # H5 <- lp_filter(horizon = 2)@sfilter
 # H7 <- lp_filter(horizon = 3)@sfilter
 # H9 <- lp_filter(horizon = 4)@sfilter
@@ -100,3 +84,45 @@
 # usethis::use_data(CLF, overwrite = TRUE)
 # usethis::use_data(CLF_CN, overwrite = TRUE)
 # usethis::use_data(local_param_est, overwrite = TRUE)
+
+#' Data set examples
+#'
+#' All data sets examples used in the paper Quartier-la-Tente (2025).
+#'
+#' - `cars_registrations`: monthly new passenger cars registrations in France, published in October 2024.
+#'
+#' - `french_ipi`: monthly industrial production index in France for Crude Petroleum, Motor Vehicles and Manufacturing published in October 2024.
+#'
+#' - `fred`: the series CE16OV (Civilian Employment Level) and RETAILx (Retail and Food Services Sales) from the FRED-MD database published in November 2022.
+#'
+#' - `simulated_data`: simulated trends of degree 0, 1 and 2 with an Additive Outlier (AO) or Level Shift (LS) in January 2022
+#'
+#' `etip` corresponds to the Expected trend in production (balance of opinion) in the French Manufacturing industry, published in May 2025 in
+#' the monthly business survey in goods-producing industries by the INSEE.
+#'
+#' @references
+#' Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. <https://github.com/AQLT/robustMA>.
+#' McCracken, Michael W., et Serena Ng. 2016. FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics 34 (4): 574‑89. <https://doi.org/10.1080/07350015.2015.1086655>.
+#' @docType data
+#' @rdname ts-exemple
+#' @name ts-exemple
+"cars_registrations"
+#' @docType data
+#' @name ts-exemple
+"french_ipi"
+#' @docType data
+#' @name ts-exemple
+"fred"
+#' @docType data
+#' @name ts-exemple
+"simulated_data"
+#' @docType data
+#' @name ts-exemple
+"etip"
+#
+# etip <- read.ts("../publishTC.wp/data/CONJ_INDUSTRIE/2025_05.csv")[,"tppre"]
+# usethis::use_data(etip, overwrite = TRUE)
+# list.files("../publishTC.wp/data/CONJ_INDUSTRIE")
+
+
+

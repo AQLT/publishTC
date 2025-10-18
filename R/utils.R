@@ -57,3 +57,11 @@ smoothness <- function(x) {
 			sum((base::diff(sa, 1) / stats::lag(sa, -1))^2)
 	)
 }
+
+
+dates_to_num <- function(date, frequency){
+	if (length(date) == 2) {
+		return (date[1] + (date[2] - 1) / frequency)
+	}
+	date
+}

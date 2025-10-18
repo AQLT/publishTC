@@ -1,3 +1,10 @@
+# publishTC 0.2.3
+
+- Handle filtering cases when the series is constant.
+
+- New function `split_smoothing()` to smooth series taking into account breaks.
+
+
 # publishTC 0.2.2
 
 - New function `x13_regarima_outliers()` to detect AO and LS on a seasonally adjusted series.

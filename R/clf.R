@@ -1,6 +1,6 @@
 #' Smoothing using the Cascade Linear Filter
 #'
-#' @param x input time-series.
+#' @inheritParams henderson_smoothing
 #' @param endpoints Method used for the asymmetric filter.
 #' If `endpoints = "cut-and-normalize"` (the default) the cut-and-normalise method is used,
 #' otherwise the Asymmetric Linear Filter (ALF) filters are used.

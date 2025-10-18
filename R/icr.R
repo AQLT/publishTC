@@ -22,8 +22,20 @@ icr <- function(x, tc, mul = FALSE){
 	}
 	gc <- abs_mean_var(tc, 1, mul = mul)
 	gi <- abs_mean_var(si, 1, mul = mul)
-	icr <- gi / gc
+	if (gc == 0) {
+		icr <- find_icr(default_length(frequency(x)), frequency(x))
+	} else {
+		icr <- gi / gc
+	}
 	return(icr)
+}
+default_length <- function(freq) {
+	if (freq == 2) {
+		length <- 5
+	} else {
+		length <- freq + 1
+	}
+	return(length)
 }
 #' @name icr
 #' @export

@@ -4,6 +4,8 @@
 
 - New function `split_smoothing()` to smooth series taking into account breaks.
 
+- Correction in legend colors of ggplot2 plots whend the names of the items are changes.
+
 
 # publishTC 0.2.2
 

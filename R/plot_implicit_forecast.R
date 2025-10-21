@@ -138,7 +138,10 @@ ggimplicit_forecasts_plot.default <- function(
 		p <- p +
 		ggplot2::geom_line(ggplot2::aes(y = tc_prov), color = col_tc, lty = lty_last_tc, na.rm = TRUE)
 	p <- p  +
-		ggplot2::scale_color_manual(values = c(col_sa, col_i_f, col_tc)) +
+		ggplot2::scale_color_manual(
+			values = c(col_sa, col_i_f, col_tc),
+			breaks = c(legend_sa, legend_i_f, legend_tc)
+		) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))

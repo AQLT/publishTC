@@ -139,7 +139,10 @@ gggrowthplot.default <- function(
 	}
 	p <- p +
 		ggplot2::geom_line(ggplot2::aes(y = tc, color = legend_tc), na.rm = TRUE) +
-		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
+		ggplot2::scale_color_manual(
+			values = c(col_sa, col_tc),
+			breaks = c(legend_sa, legend_tc)
+		) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))

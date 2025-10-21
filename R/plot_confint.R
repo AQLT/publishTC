@@ -115,7 +115,10 @@ ggconfint_plot.default <- function(
 		) +
 		ggplot2::geom_line(ggplot2::aes(y = sa, color = legend_sa)) +
 		ggplot2::geom_line(ggplot2::aes(y = tc, color = legend_tc)) +
-		ggplot2::scale_color_manual(values = c(col_confint, col_sa, col_tc)) +
+		ggplot2::scale_color_manual(
+			values = c(col_confint, col_sa, col_tc),
+			breaks = c(legend_confint, legend_sa, legend_tc)
+			) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))

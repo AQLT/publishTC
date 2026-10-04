@@ -5,7 +5,7 @@
 \alias{confint.henderson}
 \alias{confint.clf}
 \alias{confint.robust_henderson}
-\title{Confidence Intervals for \code{"tc_estimates"}}
+\title{Confidence Intervals for Trend-Cycle Estimates}
 \usage{
 \method{confint}{henderson}(object, parm, level = 0.95, asymmetric_var = TRUE, ...)
 
@@ -20,10 +20,31 @@
 
 \item{level}{the confidence level required.}
 
-\item{asymmetric_var}{if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated the symmetric estimates.}
+\item{asymmetric_var}{if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters
+instead of using the variance associated the symmetric estimates.}
 
 \item{...}{other (unused) parameters.}
 }
+\value{
+A \code{matrix} or \code{mts} object with the filtered series and the lower and upper bounds of the confidence interval.
+}
 \description{
-Confidence Intervals for \code{"tc_estimates"}
+Computes confidence intervals for trend-cycle estimates of class \code{"tc_estimates"}.
+}
+\details{
+See \code{\link[rjd3filters:confint_filter]{rjd3filters::confint_filter()}} for details on the computation of confidence intervals.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+tc <- henderson_smoothing(x)
+confint <- confint(tc)
+
+plot(confint, plot.type = "single",
+	 col = c("red", "black", "black"),
+	 lty = c(1, 2, 2), xlab = NULL, ylab = NULL)
+lines(x, col = "grey")
+legend("topleft", legend = c("x", "Smoothed", "CI (95\%)"),
+	   col= c("grey", "red", "black"), lty = c(1, 1, 2))
+\dontshow{\}) # examplesIf}
 }

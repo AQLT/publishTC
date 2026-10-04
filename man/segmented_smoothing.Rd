@@ -23,6 +23,11 @@ segmented_smoothing(
 
 \item{...}{Other parameters passed to the smoothing method.}
 }
+\value{
+An object of class \code{c("tc_estimates", "henderson")} if
+the smoothing method is \code{\link[=henderson_smoothing]{henderson_smoothing()}} or
+\code{c("tc_estimates", "clf")} if the smoothing method is \code{\link[=clf_smoothing]{clf_smoothing()}}.
+}
 \description{
 Segmented Smoothing around Breakpoints
 }
@@ -36,6 +41,7 @@ Two methods are available to estimate the trend-cycle around breakpoints:
 The \code{"parameters"} field of the returned object corresponds to the parameters of the last segment (used to build confidence intervals and implicit forecasts).
 }
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x <- window(publishTC::french_ipi[, "manufacturing"], start = 2015)
 tc_h <- henderson_smoothing(x, length = 13)$tc
 breaks <- list(c(2020, 3))
@@ -57,4 +63,5 @@ legend(
 	lty = c(3, 1, 1, 1, 1),
 	cex = 0.7
 )
+\dontshow{\}) # examplesIf}
 }

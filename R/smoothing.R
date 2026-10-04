@@ -1,10 +1,18 @@
 
 #' Smoothing using several methods
 #'
+#' Smoothing using several methods and returning a list of trend-cycle estimates.
+#'
 #' @inheritParams henderson_smoothing
 #' @inheritParams henderson_robust_smoothing
 #' @param methods list of methods to use.
 #' @param ... other unused parameters.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- french_ipi[, "manufacturing"]
+#' outliers <- x13_regarima_outliers(x)
+#' all_methods <- smoothing(x, ao = outliers$ao, ao_tc = outliers$ao_tc, ls = outliers$ls)
+#' ggsmoothing_plot(all_methods)
 #' @export
 smoothing <- function(
 		x,
@@ -66,10 +74,26 @@ smoothing <- function(
 #' @inheritParams confint-tc
 #' @param plots list of plots to use.
 #' @param ... other unused parameters.
+#'
+#' @details
+#' The following plots can be produced:
+#'
+#' - `"normal"` using [autoplot.tc_estimates()] function;
+#' - `"confint"` using [ggconfint_plot()] function;
+#' - `"lollypop"` using [gglollypop()] function;
+#' - `"implicit_forecasts"` using [ggimplicit_forecasts_plot()] function;
+#' - `"underlying_forecasts"` using [ggunderlying_forecasts_plot()] function.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' ggsmoothing_plot(tc)
+#'
+#' @returns A list of ggplot objects of length equal to the number of plots requested by the parameter `plots`
 #' @export
 ggsmoothing_plot <- function(
 		object,
-		plots = c("normal", "confint", "lollypop", "implicit_forecasts"),
+		plots = c("normal", "confint", "lollypop", "implicit_forecasts", "underlying_forecasts"),
 		level = 0.95,
 		...) {
 	plots <- tolower(plots)
@@ -117,6 +141,17 @@ ggsmoothing_plot <- function(
 		if (!is.null(names(plots)) && names(plots)[plots %in% "implicit_forecasts"]) {
 			res$implicit_forecasts <- res$implicit_forecasts +
 				ggplot2::ggtitle(names(plots)[plots %in% "implicit_forecasts"])
+		}
+	}
+
+	if ("underlying_forecasts" %in% plots) {
+		res$underlying_forecasts <- ggunderlying_forecasts_plot(
+			object = object, ...
+		) +
+			ggplot2::ggtitle("Underlying forecasts")
+		if (!is.null(names(plots)) && names(plots)[plots %in% "underlying_forecasts"]) {
+			res$underlying_forecasts <- res$underlying_forecasts +
+				ggplot2::ggtitle(names(plots)[plots %in% "underlying_forecasts"])
 		}
 	}
 	res

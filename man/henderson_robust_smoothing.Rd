@@ -42,6 +42,21 @@ By default the Musgrave method is used}
 
 \item{...}{other parameters passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
 }
+\value{
+An object of class \code{c("tc_estimates", "robust_henderson")}.
+See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
+}
 \description{
 Smoothing using the Henderson filter
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+outliers <- x13_regarima_outliers(x)
+tc <- henderson_robust_smoothing(x, ao = outliers$ao, ls = outliers$ls, local_icr = TRUE)
+
+tc_henderson <- henderson_smoothing(x)
+plot(tc, xlim = c(2019, 2022))
+lines(tc_henderson$tc, col = "blue")
+\dontshow{\}) # examplesIf}
 }

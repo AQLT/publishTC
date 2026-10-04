@@ -5,9 +5,31 @@
 #' If `x` is a `"tc_estimates"` object then `tc` is ignored.
 #' @param mul boolean indicating if the decomposition is multiplicative or additive.
 #'
-#' @examples
+#' @details
+#' The I/C ratio is a measure of the relative importance of the irregular component compared to the trend-cycle component in a time series decomposition.
+#' For a time series of frequency \eqn{p}, when the decomposition is additive (`mul = FALSE`, the default),
+#'  `icrs()` returns a vector with the ratio of the mean absolute variation of the irregular component
+#'  to the mean absolute variation of the trend-cycle component:
+#' \deqn{
+#' \frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t-I_{t-k}\rvert}{\sum\lvert TC_t-TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
+#' }
+#' If the decomposition is multiplicative (`mul = TRUE`), the ratio is computed as:
+#' \deqn{
+#' \frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t/I_{t-k}\rvert}{\sum\lvert TC_t/TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
+#' }
+#' `icr()` returns the so called overall I/C ratio, which is the \eqn{\bar{I_1}/\bar{C_1}}.
+#'
+#' The irregular component is computed as the difference (or ratio, depending of the `mul` parameter?) between the original time series and the trend-cycle component:
+#' \deqn{I_t = X_t - TC_t\text{ or }I_t = X_t / TC_t.}
+#'
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' x <- cars_registrations
 #' tc <- henderson_smoothing(x)
+#' icr(tc)
+#' icrs(tc)
+#'
+#' @returns `icr()` returns the overall I/C ratio, while `icrs()` returns a vector of I/C ratios for each period.
 #'
 #' @export
 icr <- function(x, tc, mul = FALSE){
@@ -29,6 +51,8 @@ icr <- function(x, tc, mul = FALSE){
 	}
 	return(icr)
 }
+#' @noRd
+#' @keywords internal
 default_length <- function(freq) {
 	if (freq == 2) {
 		length <- 5
@@ -67,6 +91,19 @@ abs_mean_var <- function(x, nlags = 1, mul = FALSE){
 #' Month of Cyclical Dominance
 #'
 #' @inheritParams icr
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' icr(tc)
+#' icrs(tc)
+#' mcd(tc)
+#'
+#' @details The Month of Cyclical Dominance (MCD) is the months needed for the absolute variations of the trend-cycle component to override those of the irregular component
+#' smallest it takes on average for the cyclical signal to outweigh the irregular fluctuations.
+#' It is computed as the first month where the I/C ratio is less than or equal to 1.
+#' Therefore, the MCD is the number \eqn{k} such that \eqn{\bar{I_j}/\bar{C_j}\leq 1} for any \eqn{j\geq k}.
+#'
 #' @export
 mcd <- function(x, tc, mul = FALSE){
 	if (is_tc_estimates(x)) {
@@ -115,6 +152,13 @@ NULL
 #'    * if the length if less or equal to 9 then \eqn{icr = 1};
 #'    * else if the length if less or equal to 13 then \eqn{icr = 3.5};
 #'    * else \eqn{icr = 4.5}.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x11_trend_selection(cars_registrations)
+#' find_icr(13)
+#'
+#' @returns `x11_trend_selection()` returns a named vector with the selected length and the associated I/C ratio.
+#' `find_icr()` returns the I/C ratio associated with the specified length and frequency used in the X-11 algorithm.
 #'
 #' @export
 x11_trend_selection <- function(x){

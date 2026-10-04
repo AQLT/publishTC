@@ -16,6 +16,10 @@ find_icr(length, freq = 12)
 
 \item{freq}{frequency of the time series used to compute the I/C ratio.}
 }
+\value{
+\code{x11_trend_selection()} returns a named vector with the selected length and the associated I/C ratio.
+\code{find_icr()} returns the I/C ratio associated with the specified length and frequency used in the X-11 algorithm.
+}
 \description{
 Perform X-11 selection of the length of Henderson (\code{x11_trend_selection()}) and
 compute the associated I/C ratio used to build Musgrave fuilters (\code{find_icr()}).
@@ -38,4 +42,10 @@ The following procedure is used in X-11 to select the length of the trend filter
 \item else \eqn{icr = 4.5}.
 }
 }
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x11_trend_selection(cars_registrations)
+find_icr(13)
+\dontshow{\}) # examplesIf}
 }

@@ -3,6 +3,7 @@
 \name{plot.tc_estimates}
 \alias{plot.tc_estimates}
 \alias{autoplot.tc_estimates}
+\alias{autoplot.ts}
 \title{Default \code{"tc_estimates"} plot}
 \usage{
 \method{plot}{tc_estimates}(
@@ -31,6 +32,8 @@
   n_last_tc = 4,
   ...
 )
+
+\method{autoplot}{ts}(object, xlim = NULL, ylim = NULL, ...)
 }
 \arguments{
 \item{y}{unused parameter.}
@@ -54,10 +57,16 @@ If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
 
 \item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
 }
+\value{
+\code{plot()} returns \code{NULL}, called for side effect.
+\code{autoplot()} returns a \code{ggplot} object.
+}
 \description{
 Default \code{"tc_estimates"} plot
 }
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 plot(tc_mod, xlim = c(2022, 2024.5))
+\dontshow{\}) # examplesIf}
 }

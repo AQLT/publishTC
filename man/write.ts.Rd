@@ -5,7 +5,7 @@
 \alias{read.ts}
 \title{Export and Import time series object to/from CSV}
 \usage{
-write.ts(x, file)
+write.ts(x, file, ...)
 
 read.ts(file, frequency = NULL, list = FALSE)
 }
@@ -14,11 +14,24 @@ read.ts(file, frequency = NULL, list = FALSE)
 
 \item{file}{a character string giving the name of the file to write to.}
 
+\item{...}{other arguments passed to \code{\link[utils:write.csv]{utils::write.csv()}} or \code{\link[utils:read.csv]{utils::read.csv()}}.}
+
 \item{frequency}{an integer giving the number of observations per unit of time.
 By default it is guessed from the data.}
 
 \item{list}{boolean, if \code{TRUE}, the function returns a list of time series objects.}
 }
+\value{
+\code{write.ts()} returns \code{NULL} invisibly, while \code{read.ts()} returns a \code{ts()} object or a list of \code{ts()} objects.
+}
 \description{
-Export and Import time series object to/from CSV
+\code{write.ts()} exports a time series object to a CSV file addind a column \code{"time"},
+while \code{read.ts()} imports the CSV file which first column are the dates and returns a \code{ts()} object.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+file <- tempfile(fileext = ".csv")
+write.ts(AirPassengers, file)
+read.ts(file)
+\dontshow{\}) # examplesIf}
 }

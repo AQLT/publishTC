@@ -9,6 +9,9 @@ smoothness(x)
 \arguments{
 \item{x}{a \code{"tc_estimates"} object.}
 }
+\value{
+A numeric value representing the smoothness of the trend-cycle estimates.
+}
 \description{
 Compute the smoothness of trend-cycle estimates using Picard and Matthews (2006) definition.
 }
@@ -25,6 +28,15 @@ There are several definitions or criteria of smoothness. The measure of smoothne
 }
 This represents a measure of the month-to-month percentage change in the trend-cycle.
 The smaller the smoothness number is, the smoother the trend-cycle.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- french_ipi[, "manufacturing"]
+tc_clf <- clf_smoothing(x)
+tc_henderson <- henderson_smoothing(x)
+smoothness(tc_clf)
+smoothness(tc_henderson)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Picard, Frédéric et Steve Matthews (2016).

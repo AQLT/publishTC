@@ -24,6 +24,12 @@ unwanted_ripples(x, start = NULL, end = NULL, digits = 6, k = 3, m = 1)
 
 \item{k, m}{number of observation before and after the turning point (see details).}
 }
+\value{
+\code{turning_points()} returns a list with two components:
+\code{"upturn"} and \code{"downturn"}, each containing the dates of the turning points.
+\code{upturn()} and \code{downturn()} returns a vector with the dates of the turning points in the time series.
+\code{unwanted_ripples()} returns the number of unwanted ripples in the time series.
+}
 \description{
 \code{turning_points()} returns the number of downturns (\code{downturn()}) and upturns (\code{upturn()}) in a time series.
 \code{unwanted_ripples()} returns the number of unwanted ripples in a time series.
@@ -44,4 +50,11 @@ y_{t-k}\leq\cdots\leq y_{t-1}>y_t\geq y_{t+1}\geq\cdots y_{t+m}
 
 An unwanted ripple is defined whenever two downturns or upturns occur within a 10 month period
 (i.e.: small cycles of less than 11 months).
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+tc <- henderson_smoothing(french_ipi[, "manufacturing"])
+turning_points(tc)
+unwanted_ripples(tc)
+\dontshow{\}) # examplesIf}
 }

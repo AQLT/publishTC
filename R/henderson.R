@@ -31,6 +31,14 @@ local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 #' @param degree if `local_icr = TRUE`, degree of polynomial used to estimate the local bias parameter.
 #' @param ... other parameters passed to [rjd3filters::lp_filter()].
 #'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' plot(window(x, start = 2005))
+#' lines(tc$tc, col = "blue")
+#'
+#' @returns An object of class `c("tc_estimates", "henderson")`.
+#' See [tc_estimates()] for a full description of the returned object.
 #' @references
 #' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>.
 #' @importFrom utils tail head
@@ -93,6 +101,8 @@ henderson_smoothing <- function(
 	)
 	res
 }
+#' @noRd
+#' @keywords internal
 local_param_filter <- function(x, icr = NULL,
 							   endpoints = c("Musgrave", "QL", "QL", "CQ", "CC", "DAF", "CN"),
 							   horizon = 6,
@@ -215,6 +225,8 @@ local_param_filter <- function(x, icr = NULL,
 	)
 }
 
+#' @noRd
+#' @keywords internal
 # Not used (in case we implement left/right icr)
 check_icr <- function(icr, horizon) {
 	if (is.null(icr) ||

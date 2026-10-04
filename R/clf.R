@@ -8,6 +8,16 @@
 #' @references
 #' Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews* 28 (1-3): 40‑59.
 #' <https://doi.org/10.1080/07474930802387837>
+#'
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' tc <- clf_smoothing(cars_registrations)
+#' plot(tc, xlim = c(2022, 2025))
+#'
+#' @returns An object of class `c("tc_estimates", "clf")`.
+#' See [tc_estimates()] for a full description of the returned object.
+#'
+#'
 #' @importFrom utils tail head
 #' @export
 clf_smoothing <- function(x,

@@ -61,10 +61,16 @@ If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
 
 \item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
 }
+\value{
+\code{lollypop()} returns \code{NULL}, called for side effect.
+\code{gglollypop()} returns a \code{ggplot} object.
+}
 \description{
 Lollypop plot
 }
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 lollypop(tc_mod, xlim = c(2022, 2024.5))
+\dontshow{\}) # examplesIf}
 }

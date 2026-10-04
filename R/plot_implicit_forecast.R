@@ -7,7 +7,9 @@
 #' @inheritParams lollypop
 #' @inheritParams plot.tc_estimates
 #'
-#' @examples
+#' @returns `implicit_forecasts_plot()` returns `NULL`, called for side effect.
+#' `ggimplicit_forecasts_plot()` returns a `ggplot` object.
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' implicit_forecasts_plot(tc_mod, xlim = c(2022, 2025))
 #' @export
@@ -74,7 +76,7 @@ implicit_forecasts_plot.tc_estimates <- function(
 		n_last_tc <- mcd(object)
 	implicit_forecasts_plot.default(
 		sa = object[["x"]],
-		i_f = implicit_forecasts(object),
+		i_f = rjd3filters::implicit_forecasts(object),
 		object = object[["tc"]],
 		col_tc = col_tc, col_sa = col_sa,
 		col_i_f = col_i_f,
@@ -165,7 +167,7 @@ ggimplicit_forecasts_plot.tc_estimates <- function(
 		n_last_tc <- mcd(object)
 	ggimplicit_forecasts_plot.default(
 		sa = object[["x"]],
-		i_f = implicit_forecasts(object),
+		i_f = rjd3filters::implicit_forecasts(object),
 		object = object[["tc"]],
 		xlim = xlim, ylim = ylim,
 		col_tc = col_tc, col_sa = col_sa,
@@ -177,27 +179,32 @@ ggimplicit_forecasts_plot.tc_estimates <- function(
 		...)
 }
 
-#' Compute Implicit Forecasts
+#' Implicit Forecasts Methodes
 #'
-#' @param x a `"tc_estimates"` object otherwise uses the [rjd3filters::implicit_forecast()] function.
+#' [rjd3filters::implicit_forecasts()] methods for `"tc_estimates"` objects.
+#'
+#' @param x a `"tc_estimates"` object otherwise uses the [rjd3filters::implicit_forecasts()] function.
 #' @param ... other unused parameters.
-#' @export
-implicit_forecasts <- function(x, ...) {
-	UseMethod("implicit_forecasts", x)
-}
-#' @export
-implicit_forecasts.default <- function(x, ...) {
-	rjd3filters::implicit_forecast(x, ...)
-}
-#' @export
+#'
+#' @details
+#' See [rjd3filters::implicit_forecasts()] for details on the computation of implicit forecasts.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+#' implicit_forecasts(tc_mod)
+#'
+#' @rdname implicit_forecasts.tc_estimates
+#' @exportS3Method rjd3filters::implicit_forecasts
 implicit_forecasts.henderson <- function(x, ...) {
-	rjd3filters::implicit_forecast(x = x$x, coefs = x$parameters$tc_coef)
+	rjd3filters::implicit_forecasts(x = x$x, coefs = x$parameters$tc_coef)
 }
-#' @export
+#' @rdname implicit_forecasts.tc_estimates
+#' @exportS3Method rjd3filters::implicit_forecasts
 implicit_forecasts.clf <- function(x, ...) {
-	rjd3filters::implicit_forecast(x = x$x, coefs = x$parameters$tc_coef)
+	rjd3filters::implicit_forecasts(x = x$x, coefs = x$parameters$tc_coef)
 }
-#' @export
+#' @rdname implicit_forecasts.tc_estimates
+#' @exportS3Method rjd3filters::implicit_forecasts
 implicit_forecasts.robust_henderson <- function(x, ...) {
 	# We rebuild the coefficients to be coherent with the definition of the implicit forecast
 	sa <- x$x
@@ -238,5 +245,5 @@ implicit_forecasts.robust_henderson <- function(x, ...) {
 		)
 	})
 	coefs <- finite_filters(sym, rfilters, first_to_last = TRUE)
-	rjd3filters::implicit_forecast(x = sa, coefs = coefs)
+	rjd3filters::implicit_forecasts(x = sa, coefs = coefs)
 }

@@ -15,8 +15,7 @@
 #' 2. `"two-sides"`: The trend-cycle is estimated on each segment defined by the breakpoints and the estimates are combined to form the final trend-cycle.
 #'
 #' The `"parameters"` field of the returned object corresponds to the parameters of the last segment (used to build confidence intervals and implicit forecasts).
-
-#' @examples
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' x <- window(publishTC::french_ipi[, "manufacturing"], start = 2015)
 #' tc_h <- henderson_smoothing(x, length = 13)$tc
 #' breaks <- list(c(2020, 3))
@@ -38,6 +37,10 @@
 #' 	lty = c(3, 1, 1, 1, 1),
 #' 	cex = 0.7
 #' )
+#' @returns An object of class `c("tc_estimates", "henderson")` if
+#' the smoothing method is [henderson_smoothing()] or
+#' `c("tc_estimates", "clf")` if the smoothing method is [clf_smoothing()].
+#' @importFrom stats deltat "window<-"
 #' @export
 segmented_smoothing <- function(
 		x,
@@ -49,6 +52,7 @@ segmented_smoothing <- function(
 	# match arguments
 	break_method <- match.arg(break_method)
 	smoothing_method <- match.arg(smoothing_method)
+	extra_class <- ifelse(smoothing_method == "henderson_smoothing", "henderson", "clf")
 	smoothing_method <- get(smoothing_method, mode = "function")
 	if (is.null(breaks) || !is.list(breaks)) {
 		warning("The breaks paramater should be a list. Parameter ignored.")
@@ -87,7 +91,7 @@ segmented_smoothing <- function(
 		tc = tc,
 		sa = x,
 		parameters = last_tc$parameters,
-		extra_class = "henderson"
+		extra_class = extra_class
 	)
 	res
 }

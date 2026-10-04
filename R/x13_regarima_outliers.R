@@ -8,7 +8,11 @@
 #' @param mean Logical, if `TRUE` the model includes a constant term.
 #' @param ao,ls Boolean to indicate if additive outliers (AO) or level shifts (LS) should be detected.
 #'
-#' @return A list with two elements: `ao` and `ls`, which are vectors of time points where the respective outliers were detected. If no outliers were detected, the corresponding element will be `NULL`.
+#' @return A list with two elements: `ao` and `ls`, which are vectors of time points where the respective outliers were detected.
+#' If no outliers were detected, the corresponding element will be `NULL`.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x13_regarima_outliers(cars_registrations)
 #'
 #' @export
 x13_regarima_outliers <- function(

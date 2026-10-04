@@ -22,9 +22,15 @@ x13_regarima_outliers(
 \item{ao, ls}{Boolean to indicate if additive outliers (AO) or level shifts (LS) should be detected.}
 }
 \value{
-A list with two elements: \code{ao} and \code{ls}, which are vectors of time points where the respective outliers were detected. If no outliers were detected, the corresponding element will be \code{NULL}.
+A list with two elements: \code{ao} and \code{ls}, which are vectors of time points where the respective outliers were detected.
+If no outliers were detected, the corresponding element will be \code{NULL}.
 }
 \description{
 Wrapper around \code{\link[rjd3x13:regarima_outliers]{rjd3x13::regarima_outliers()}} to detect Additive Outliers (AO) or
 Level Shifts (LS) in a seasonnally adjusted series.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x13_regarima_outliers(cars_registrations)
+\dontshow{\}) # examplesIf}
 }

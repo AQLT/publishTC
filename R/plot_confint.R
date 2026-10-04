@@ -9,7 +9,10 @@
 #' @inheritParams plot.tc_estimates
 #' @inheritParams confint-tc
 #'
-#' @examples
+#' @returns `confint_plot()` returns `NULL`, called for side effect.
+#' `ggconfint_plot()` returns a `ggplot` object.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' confint_plot(tc_mod, xlim = c(2022, 2024.5))
 #' @export

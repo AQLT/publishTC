@@ -1,8 +1,13 @@
 #' Get Bandwidth
 #'
-#' Get the bandwidth of a `"tc_estimates"` object.
+#' The bandwidth of a `"tc_estimates"` object is the number of observations on each side of symmetric
+#' the trend-cycle filter used to compute the trend-cycle estimates.
 #' The length of the filter is then equal to \eqn{2 \times \text{bandwidth}(x) + 1}.
 #'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- french_ipi[, "manufacturing"]
+#' tc_clf <- henderson_smoothing(x)
+#' bandwidth(tc_clf)
 #' @param x a `"tc_estimates"` object.
 #' @export
 bandwidth <- function(x) {
@@ -43,6 +48,15 @@ bandwidth.robust_henderson<- function(x) {
 #' }
 #' This represents a measure of the month-to-month percentage change in the trend-cycle.
 #' The smaller the smoothness number is, the smoother the trend-cycle.
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- french_ipi[, "manufacturing"]
+#' tc_clf <- clf_smoothing(x)
+#' tc_henderson <- henderson_smoothing(x)
+#' smoothness(tc_clf)
+#' smoothness(tc_henderson)
+#'
+#' @returns A numeric value representing the smoothness of the trend-cycle estimates.
+#'
 #' @references
 #'
 #' Picard, Frédéric et Steve Matthews (2016).
@@ -58,7 +72,8 @@ smoothness <- function(x) {
 	)
 }
 
-
+#' @noRd
+#' @keywords internal
 dates_to_num <- function(date, frequency){
 	if (length(date) == 2) {
 		return (date[1] + (date[2] - 1) / frequency)

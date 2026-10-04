@@ -51,10 +51,16 @@ If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined au
 
 \item{legend_tc, legend_sa, legend_confint}{legend of the trend-cycle and seasonally adjusted components and for the confidence intervals.}
 }
+\value{
+\code{confint_plot()} returns \code{NULL}, called for side effect.
+\code{ggconfint_plot()} returns a \code{ggplot} object.
+}
 \description{
 Confidence Intervals plot
 }
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 confint_plot(tc_mod, xlim = c(2022, 2024.5))
+\dontshow{\}) # examplesIf}
 }

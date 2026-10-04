@@ -1,11 +1,31 @@
-#' Confidence Intervals for `"tc_estimates"`
+#' Confidence Intervals for Trend-Cycle Estimates
+#'
+#' Computes confidence intervals for trend-cycle estimates of class `"tc_estimates"`.
+#'
 #'
 #' @param object a `"tc_estimates"` object.
 #' @param parm unused parameter.
 #' @param level the confidence level required.
 #' @param ... other (unused) parameters.
-#' @param asymmetric_var if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance associated the symmetric estimates.
+#' @param asymmetric_var if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters
+#' instead of using the variance associated the symmetric estimates.
 #'
+#' @details
+#' See [rjd3filters::confint_filter()] for details on the computation of confidence intervals.
+#'
+#' @returns A `matrix` or `mts` object with the filtered series and the lower and upper bounds of the confidence interval.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' confint <- confint(tc)
+#'
+#' plot(confint, plot.type = "single",
+#' 	 col = c("red", "black", "black"),
+#' 	 lty = c(1, 2, 2), xlab = NULL, ylab = NULL)
+#' lines(x, col = "grey")
+#' legend("topleft", legend = c("x", "Smoothed", "CI (95%)"),
+#' 	   col= c("grey", "red", "black"), lty = c(1, 1, 2))
 #' @export
 #' @importFrom rjd3filters confint_filter
 #' @rdname confint-tc

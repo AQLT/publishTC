@@ -15,3 +15,18 @@ If \code{x} is a \code{"tc_estimates"} object then \code{tc} is ignored.}
 \description{
 Month of Cyclical Dominance
 }
+\details{
+The Month of Cyclical Dominance (MCD) is the months needed for the absolute variations of the trend-cycle component to override those of the irregular component
+smallest it takes on average for the cyclical signal to outweigh the irregular fluctuations.
+It is computed as the first month where the I/C ratio is less than or equal to 1.
+Therefore, the MCD is the number \eqn{k} such that \eqn{\bar{I_j}/\bar{C_j}\leq 1} for any \eqn{j\geq k}.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+tc <- henderson_smoothing(x)
+icr(tc)
+icrs(tc)
+mcd(tc)
+\dontshow{\}) # examplesIf}
+}

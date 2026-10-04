@@ -15,8 +15,18 @@ otherwise the Asymmetric Linear Filter (ALF) filters are used.}
 
 \item{...}{other unused parameters.}
 }
+\value{
+An object of class \code{c("tc_estimates", "clf")}.
+See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
+}
 \description{
 Smoothing using the Cascade Linear Filter
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+tc <- clf_smoothing(cars_registrations)
+plot(tc, xlim = c(2022, 2025))
+\dontshow{\}) # examplesIf}
 }
 \references{
 Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59.

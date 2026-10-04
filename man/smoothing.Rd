@@ -44,5 +44,13 @@ By default the Musgrave method is used}
 \item{...}{other unused parameters.}
 }
 \description{
-Smoothing using several methods
+Smoothing using several methods and returning a list of trend-cycle estimates.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- french_ipi[, "manufacturing"]
+outliers <- x13_regarima_outliers(x)
+all_methods <- smoothing(x, ao = outliers$ao, ao_tc = outliers$ao_tc, ls = outliers$ls)
+ggsmoothing_plot(all_methods)
+\dontshow{\}) # examplesIf}
 }

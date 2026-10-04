@@ -13,7 +13,9 @@
 #' @inheritParams plot.tc_estimates
 #' @inheritParams lollypop
 #'
-#' @examples
+#' @returns `growthplot()` returns `NULL`, called for side effect.
+#' `gggrowthplot()` returns a `ggplot` object.
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' growthplot(tc_mod, xlim = c(2022, 2024.5))
 #' @export

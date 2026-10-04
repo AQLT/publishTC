@@ -8,7 +8,9 @@
 #' @inheritParams plot.tc_estimates
 #' @param ... other parameters.
 #'
-#' @examples
+#' @returns `lollypop()` returns `NULL`, called for side effect.
+#' `gglollypop()` returns a `ggplot` object.
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' lollypop(tc_mod, xlim = c(2022, 2024.5))
 #' @export

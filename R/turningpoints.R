@@ -23,6 +23,16 @@
 #'
 #' An unwanted ripple is defined whenever two downturns or upturns occur within a 10 month period
 #' (i.e.: small cycles of less than 11 months).
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' tc <- henderson_smoothing(french_ipi[, "manufacturing"])
+#' turning_points(tc)
+#' unwanted_ripples(tc)
+#'
+#' @returns `turning_points()` returns a list with two components:
+#' `"upturn"` and `"downturn"`, each containing the dates of the turning points.
+#' `upturn()` and `downturn()` returns a vector with the dates of the turning points in the time series.
+#' `unwanted_ripples()` returns the number of unwanted ripples in the time series.
+#'
 #' @export
 #' @importFrom stats ts start end time window
 #' @importFrom zoo rollapply

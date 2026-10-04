@@ -58,10 +58,16 @@ By default, \code{lag = -1} (i.e. period-to-period growth rate).}
 
 \item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
 }
+\value{
+\code{growthplot()} returns \code{NULL}, called for side effect.
+\code{gggrowthplot()} returns a \code{ggplot} object.
+}
 \description{
 Plots the growth rate of the trend-cycle (solid lines) and the seasonally adjusted series (bar-line).
 }
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 growthplot(tc_mod, xlim = c(2022, 2024.5))
+\dontshow{\}) # examplesIf}
 }

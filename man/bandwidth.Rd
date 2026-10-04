@@ -10,6 +10,14 @@ bandwidth(x)
 \item{x}{a \code{"tc_estimates"} object.}
 }
 \description{
-Get the bandwidth of a \code{"tc_estimates"} object.
+The bandwidth of a \code{"tc_estimates"} object is the number of observations on each side of symmetric
+the trend-cycle filter used to compute the trend-cycle estimates.
 The length of the filter is then equal to \eqn{2 \times \text{bandwidth}(x) + 1}.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- french_ipi[, "manufacturing"]
+tc_clf <- henderson_smoothing(x)
+bandwidth(tc_clf)
+\dontshow{\}) # examplesIf}
 }

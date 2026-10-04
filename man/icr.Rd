@@ -15,11 +15,34 @@ If \code{x} is a \code{"tc_estimates"} object then \code{tc} is ignored.}
 
 \item{mul}{boolean indicating if the decomposition is multiplicative or additive.}
 }
+\value{
+\code{icr()} returns the overall I/C ratio, while \code{icrs()} returns a vector of I/C ratios for each period.
+}
 \description{
 \code{icr()} compute the overall I/C ratio, while \code{icrs()} compute the I/C ratios for each period.
 }
+\details{
+The I/C ratio is a measure of the relative importance of the irregular component compared to the trend-cycle component in a time series decomposition.
+For a time series of frequency \eqn{p}, when the decomposition is additive (\code{mul = FALSE}, the default),
+\code{icrs()} returns a vector with the ratio of the mean absolute variation of the irregular component
+to the mean absolute variation of the trend-cycle component:
+\deqn{
+\frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t-I_{t-k}\rvert}{\sum\lvert TC_t-TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
+}
+If the decomposition is multiplicative (\code{mul = TRUE}), the ratio is computed as:
+\deqn{
+\frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t/I_{t-k}\rvert}{\sum\lvert TC_t/TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
+}
+\code{icr()} returns the so called overall I/C ratio, which is the \eqn{\bar{I_1}/\bar{C_1}}.
+
+The irregular component is computed as the difference (or ratio, depending of the \code{mul} parameter?) between the original time series and the trend-cycle component:
+\deqn{I_t = X_t - TC_t\text{ or }I_t = X_t / TC_t.}
+}
 \examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x <- cars_registrations
 tc <- henderson_smoothing(x)
-
+icr(tc)
+icrs(tc)
+\dontshow{\}) # examplesIf}
 }

@@ -33,8 +33,20 @@ By default the Musgrave method is used}
 
 \item{...}{other parameters passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
 }
+\value{
+An object of class \code{c("tc_estimates", "henderson")}.
+See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
+}
 \description{
 Smoothing using the Henderson filter
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+tc <- henderson_smoothing(x)
+plot(window(x, start = 2005))
+lines(tc$tc, col = "blue")
+\dontshow{\}) # examplesIf}
 }
 \references{
 Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}.

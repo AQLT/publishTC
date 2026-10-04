@@ -6,6 +6,17 @@
 #' @param ao_tc Dates of the Additive Outliers (AO) which effects are associated to the trend-cycle component.
 #' @param ls Dates of the Level Shifts (LS) which effects are associated to the trend-cycle component.
 #'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' outliers <- x13_regarima_outliers(x)
+#' tc <- henderson_robust_smoothing(x, ao = outliers$ao, ls = outliers$ls, local_icr = TRUE)
+#'
+#' tc_henderson <- henderson_smoothing(x)
+#' plot(tc, xlim = c(2019, 2022))
+#' lines(tc_henderson$tc, col = "blue")
+#'
+#' @returns An object of class `c("tc_estimates", "robust_henderson")`.
+#' See [tc_estimates()] for a full description of the returned object.
 #' @importFrom rjd3filters polynomial_matrix mmsre_filter finite_filters
 #' @export
 henderson_robust_smoothing <- function(x,
@@ -60,6 +71,10 @@ henderson_robust_smoothing <- function(x,
 			icr <- find_icr(length, frequency(x))
 		}
 	}
+	icr_default <- icr
+	if (is.null(icr_default)){
+		icr_default <- find_icr(length, frequency(x))
+	}
 
 	dates_x <- as.numeric(time(x))
 	f_reg <- build_reg(x = x, ao = ao, ao_tc = ao_tc, ls = ls)
@@ -67,10 +82,11 @@ henderson_robust_smoothing <- function(x,
 	reg <- f_reg$reg
 
 	h <- (length - 1) / 2
-	default_filter <- lp_filter(horizon = h,
-								ic = icr,
-								endpoints = endpoints,
-								kernel = kernel)
+	default_filter <- lp_filter(
+		horizon = h,
+		ic = icr_default,
+		endpoints = endpoints,
+		kernel = kernel)
 	sym_coef <- default_filter@sfilter
 	lb <- lower_bound(sym_coef)
 	ub <- upper_bound(sym_coef)
@@ -106,7 +122,7 @@ henderson_robust_smoothing <- function(x,
 				c_coef <- mmsre_filter(
 					ref_filter = sym,
 					q = q,
-					delta = 2 / (sqrt(pi) * icr),
+					delta = 2 / (sqrt(pi) * icr_default),
 					U = cbind(U, X),
 					Z = Z
 				)
@@ -127,7 +143,7 @@ henderson_robust_smoothing <- function(x,
 				c_coef <- mmsre_filter(
 					ref_filter = sym,
 					q = q,
-					delta = 2 / (sqrt(pi) * icr),
+					delta = 2 / (sqrt(pi) * icr_default),
 					U = cbind(U, X),
 					Z = Z
 				)
@@ -192,6 +208,7 @@ henderson_robust_smoothing <- function(x,
 				local_param_f)
 				param_i <- param_i[abs(lower_bound(local_param_f)) + 1]
 				bias_i <- param_i / sqrt(var)
+				bias_i <- abs(bias_i)
 				bias_i[bias_i >= max_bias] <- max_bias
 
 				if (asymmetric_var) {
@@ -263,6 +280,7 @@ henderson_robust_smoothing <- function(x,
 				local_param_f)
 				param_i <- param_i[abs(lower_bound(local_param_f)) + 1]
 				bias_i <- param_i / sqrt(var)
+				bias_i <- abs(bias_i)
 				bias_i[bias_i >= max_bias] <- max_bias
 
 				if (asymmetric_var) {

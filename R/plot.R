@@ -15,7 +15,10 @@
 #' (to emphasize that there is higher variability for the last estimates).
 #' If `NULL`, then `n_last_tc` is equal to the MCD statistic.
 #'
-#' @examples
+#' @returns `plot()` returns `NULL`, called for side effect.
+#' `autoplot()` returns a `ggplot` object.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' plot(tc_mod, xlim = c(2022, 2024.5))
 #' @export
@@ -94,7 +97,7 @@ autoplot.tc_estimates <- function(
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
-
+#' @name plot.tc_estimates
 #' @export
 autoplot.ts <- function (object, xlim = NULL, ylim = NULL, ...) {
 
@@ -119,7 +122,8 @@ autoplot.ts <- function (object, xlim = NULL, ylim = NULL, ...) {
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
-
+#' @noRd
+#' @keywords internal
 get_ylim <- function(data, xlim = NULL, na.rm = TRUE) {
 	if ( is.null(xlim)) {
 		return(range(data, na.rm = na.rm))

@@ -1,4 +1,4 @@
-#' Default `"tc_estimates"` plot
+#' Default `"tc_estimates"` plots
 #'
 #'
 #' @param object,x `"tc_estimates"` object.
@@ -15,7 +15,13 @@
 #' (to emphasize that there is higher variability for the last estimates).
 #' If `NULL`, then `n_last_tc` is equal to the MCD statistic.
 #'
-#' @returns `plot()` returns `NULL`, called for side effect.
+#' @details
+#' `plot.tc_estimates()` and `autoplot.tc_estimates` produce a  plot of the seasonally adjusted and
+#' trend-cycle components.
+#' `lines.tc_estimates()` only adds the trend-cycle components to an existing plot.
+#'
+#'
+#' @returns `plot()` and `lines()` returns `NULL`, called for side effect.
 #' `autoplot()` returns a `ggplot` object.
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
@@ -49,7 +55,24 @@ plot.tc_estimates <- function(
 		 col = c(col_sa, col_tc, col_tc),
 		 xlab = xlab, ylab = ylab, ...)
 }
+#' @name plot.tc_estimates
+#' @export
+lines.tc_estimates <- function(
+		x,
+		col_tc = "#E69F00",
+		lty_last_tc = 2,
+		n_last_tc = 4, ...){
+	tc <- x$tc
 
+	if (is.null(n_last_tc))
+		n_last_tc <- mcd(x)
+
+	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
+	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
+
+	lines(tc_final, col = col_tc, lty = 1, ...)
+	lines(tc_prov, col = col_tc, lty = lty_last_tc, ...)
+}
 
 #' @importFrom ggplot2 autoplot
 #' @method autoplot tc_estimates
@@ -122,6 +145,10 @@ autoplot.ts <- function (object, xlim = NULL, ylim = NULL, ...) {
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
+#' @importFrom ggplot2 autoplot
+#' @export
+ggplot2::autoplot
+
 #' @noRd
 #' @keywords internal
 get_ylim <- function(data, xlim = NULL, na.rm = TRUE) {
@@ -137,3 +164,4 @@ get_ylim <- function(data, xlim = NULL, na.rm = TRUE) {
 		return(range(window(data, start = start, end = end, extend = TRUE), na.rm = na.rm))
 	}
 }
+

@@ -1,0 +1,115 @@
+# Lollipop Plot for Trend-Cycle Estimates
+
+Base R (`lollypop()`) and ggplot2 (`gglollypop()`) graphics for creating
+lollipop plots of trend-cycle estimates alongside seasonally adjusted
+series.
+
+## Usage
+
+``` r
+lollypop(
+  object,
+  xlim = NULL,
+  ylim = NULL,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  color_points = col_sa,
+  cex_points = 1,
+  pch_points = 16,
+  xlab = "",
+  ylab = "",
+  lty_last_tc = 2,
+  n_last_tc = 4,
+  ...
+)
+
+gglollypop(
+  object,
+  xlim = NULL,
+  ylim = NULL,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  color_points = col_sa,
+  cex_points = 1,
+  pch_points = 16,
+  legend_tc = "Trend-cycle",
+  legend_sa = "Seasonally adjusted",
+  lty_last_tc = 2,
+  n_last_tc = 4,
+  ...
+)
+```
+
+## Arguments
+
+- object:
+
+  An object of class `"tc_estimates"`.
+
+- xlim, ylim:
+
+  Limits for the x- and y-axes. If `xlim` is specified and `ylim` is
+  `NULL`, `ylim` is determined automatically based on the truncated
+  series.
+
+- col_sa, col_tc:
+
+  Colors used for the seasonally adjusted and trend-cycle components,
+  respectively.
+
+- color_points, cex_points:
+
+  Color and size (character/numeric) of the points associated with the
+  seasonally adjusted component.
+
+- pch_points:
+
+  Point symbol type (integer or character) for the seasonally adjusted
+  component.
+
+- xlab, ylab:
+
+  Character strings for the x- and y-axis labels.
+
+- lty_last_tc:
+
+  Line type for the last values of the trend-cycle component.
+
+- n_last_tc:
+
+  Number of final values of the trend-cycle component to plot with a
+  distinct line type (`lty_last_tc`), emphasizing higher uncertainty in
+  recent estimates. If `NULL` (the default), `n_last_tc` is set to the
+  Month of Cyclical Dominance (MCD) statistic.
+
+- ...:
+
+  Additional graphical parameters passed to internal plotting functions.
+
+- legend_tc, legend_sa:
+
+  Character strings specifying the legend labels for the trend-cycle and
+  seasonally adjusted components, respectively.
+
+## Value
+
+- `lollypop()` returns `NULL` invisibly and is called for its side
+  effect (drawing a plot).
+
+- `gglollypop()` returns a
+  [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+  object.
+
+## Details
+
+`lollypop()` produces a base R graphic, whereas `gglollypop()` creates a
+ggplot2 object that can be further customized.
+
+## Examples
+
+``` r
+if (FALSE) { # rjd3jars::check_java_version(silent = TRUE)
+tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+lollypop(tc_mod, xlim = c(2022, 2024.5))
+}
+```

@@ -1,0 +1,110 @@
+# Plot Growth Rates for Trend-Cycle Estimates
+
+Base R (`growthplot()`) and ggplot2 (`gggrowthplot()`) graphics for
+plotting the growth rates of the trend-cycle estimates (solid lines) and
+the seasonally adjusted series (bar-lines or lines).
+
+## Usage
+
+``` r
+growthplot(
+  object,
+  pct = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  xlab = "",
+  ylab = "",
+  sa_bar_line = TRUE,
+  ...,
+  lag = -1
+)
+
+gggrowthplot(
+  object,
+  pct = TRUE,
+  xlim = NULL,
+  ylim = NULL,
+  sa_bar_line = TRUE,
+  col_tc = "#E69F00",
+  col_sa = "black",
+  col_sa_fill = "grey",
+  legend_tc = "Trend-cycle",
+  legend_sa = "Seasonally adjusted",
+  ...,
+  lag = -1
+)
+```
+
+## Arguments
+
+- object:
+
+  An object of class `"tc_estimates"`.
+
+- pct:
+
+  Logical. If `TRUE` (the default), the growth rate is expressed as a
+  percentage, otherwise as a ratio.
+
+- xlim, ylim:
+
+  Limits for the x- and y-axes. If `xlim` is specified and `ylim` is
+  `NULL`, `ylim` is determined automatically based on the truncated
+  series.
+
+- col_sa, col_tc:
+
+  Colors used for the seasonally adjusted and trend-cycle components,
+  respectively.
+
+- xlab, ylab:
+
+  Character strings for the x- and y-axis labels.
+
+- sa_bar_line:
+
+  Logical. If `TRUE` (the default), the growth rates of the seasonally
+  adjusted series are presented as bar-lines; otherwise, as lines.
+
+- ...:
+
+  Additional graphical parameters passed to internal plotting functions.
+
+- lag:
+
+  Integer specifying the lag used to compute the growth rate. Defaults
+  to `-1` (i.e., period-to-period growth rate).
+
+- col_sa_fill:
+
+  Fill color of the bars for the seasonally adjusted series.
+
+- legend_tc, legend_sa:
+
+  Character strings specifying the legend labels for the trend-cycle and
+  seasonally adjusted components, respectively.
+
+## Value
+
+- `growthplot()` returns `NULL` invisibly and is called for its side
+  effect (drawing a plot).
+
+- `gggrowthplot()` returns a
+  [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+  object.
+
+## Details
+
+`growthplot()` produces a base R graphic, whereas `gggrowthplot()`
+creates a ggplot2 object that can be further customized.
+
+## Examples
+
+``` r
+if (FALSE) { # rjd3jars::check_java_version(silent = TRUE)
+tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
+growthplot(tc_mod, xlim = c(2022, 2024.5))
+}
+```

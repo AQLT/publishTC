@@ -11,23 +11,25 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(publishTC)
 ```
 
-# publishTC
+# publishTC <img src="man/figures/logo.png" align="right" alt="" />
 
+<!-- badges: start -->
 [![R universe version](https://aqlt.r-universe.dev/badges/publishTC)](https://aqlt.r-universe.dev/publishTC)
-
+[![CRAN status](https://www.r-pkg.org/badges/version/publishTC)](https://CRAN.R-project.org/package=publishTC)
+<!-- [![R-CMD-check](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml) -->
+<!-- badges: end -->
 
 Why not publish the trend-cycle?
-The goal of `publishTC` is to facilitate the computation of trend-cycle component:
 
-- Using the Cascade Linear Filter (CLF) and the surrogate cut-and-normalise asymmetric filters, as done by [Statistique Canada](https://www.statcan.gc.ca/en/dai/btd/trend-cycle);
+The goal of **`publishTC`** is to facilitate the computation, evaluation, and visualization of trend-cycle components from time series using modern state-of-the-art methodology:
 
-- Using the classical Henderson symmetric filter and the surrogate Musgrave asymmetric filters, as done by Australian Bureau of Statistics (Trewin 2003);
-
-- Using a local Parametrization of the Musgrave asymmetric filters, as described in Quartier-la-Tente (2024);
-
-- Extending the Henderson symmetric fiter and the surrogate Musgrave asymmetric filters to take into account additive outliers and level shifts, as described in Quartier-la-Tente (2025).
+* Using the **Cascade Linear Filter (CLF)** and surrogate cut-and-normalise asymmetric filters, as done by Statistics Canada (Dagum and Luati 2008);
+* Using the classical **Henderson symmetric filter** and surrogate Musgrave asymmetric filters, as done by the Australian Bureau of Statistics (Trewin 2003);
+* Using a **local parametrization** of Musgrave asymmetric filters (Quartier-la-Tente 2024);
+* Extending Henderson filters to take into account **additive outliers (AO)** and **level shifts (LS)** (Quartier-la-Tente 2025).
 
 ## Installation
 
@@ -37,18 +39,103 @@ To install `publishTC`:
 install.packages('publishTC', repos = c('https://aqlt.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
+## Quick Start
 
-# Bibliography
+```{r setup, eval = FALSE}
+library(publishTC)
+```
 
-Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews* 28 (1-3): 40‑59. <https://doi.org/10.1080/07474930802387837>
+### 1. Trend-Cycle Estimation
 
-Henderson, R. (1916). Note on graduation by adjusted average. *Transactions of the actuarial society of America* 17: 43‑48.
+Estimate the trend-cycle component using the standard Henderson filter:
 
-Musgrave, J. (1964). A set of end weights to end all end weights. *US Census Bureau [custodian]*.
+```{r estimation}
+# Example dataset: French Industrial Production Index
+x <- french_ipi[, "manufacturing"]
 
-Trewin, D. (2003). A guide to interpreting time series - Monitoring trends. *Australian Bureau of Statistics Information Paper*. <https://www.abs.gov.au/AUSSTATS/abs@.nsf/Lookup/1349.0Main+Features12003?OpenDocument>.
+# Compute Henderson trend-cycle estimates
+tc_hend <- henderson_smoothing(x, length = 13)
 
-Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>.
+# Summary diagnostics (I/C ratio, MCD, filter length)
+summary(tc_hend)
+```
 
-Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. <https://github.com/AQLT/robustMA>.
+### 2. Multi-Method Comparison
 
+Compare different trend-cycle estimation approaches on the same series:
+
+```{r comparison, fig.alt = "Comparison of trend-cycle estimation methods"}
+# Estimate trend using multiple methods
+all_tc <- smoothing(x)
+
+# Plot comparison
+plot(all_tc$henderson, xlim = c(2021, 2024.5))
+lines(all_tc$henderson_localic, col_tc = "blue")
+```
+
+### 3. Outlier-Robust & Segmented Smoothing
+
+Account for Additive Outliers (AO) and Level Shifts (LS) during estimation:
+
+```{r robust}
+# Identify outliers using RegARIMA wrapper
+outliers <- x13_regarima_outliers(x)
+
+# Compute robust Henderson trend-cycle estimates
+tc_robust <- henderson_robust_smoothing(
+  x, 
+  ao = outliers$ao, 
+  ls = outliers$ls, 
+  local_icr = TRUE
+)
+
+# Segmented smoothing around a structural break
+tc_seg <- segmented_smoothing(
+  x, 
+  breaks = list(c(2020, 3)), 
+  break_method = "two-sides"
+)
+plot(tc_robust, xlim = c(2019, 2021))
+lines(tc_seg, col_tc = "#009E73")
+lines(tc_hend, col_tc = "#0072B2")
+legend(
+  "bottomleft",
+  legend = c("Seasonally adjusted (SA)", "Robust Henderson", "Segmented", "Standard Henderson"),
+  col = c("black", "orange", "#009E73", "#0072B2"),
+  lty = 1
+)
+```
+
+### 4. Turning Point & Ripple Diagnostics
+
+Identify economic turning points and short-term unwanted ripples:
+
+```{r turning_points}
+# Find turning points (upturns and downturns)
+tp <- turning_points(tc_hend)
+tp
+# Count unwanted ripples (cycles under 11 months)
+ripples <- unwanted_ripples(tc_hend)
+ripples
+```
+
+
+## Main Functions Overview
+
+| Category | Main Functions |
+| :--- | :--- |
+| **Estimation** | `henderson_smoothing()`, `clf_smoothing()`, `henderson_robust_smoothing()`, `segmented_smoothing()`, `smoothing()` |
+| **Diagnostics** | `icr()`, `icrs()`, `mcd()`, `smoothness()`, `bandwidth()`, `turning_points()`, `unwanted_ripples()`, `implicit_forecasts()`, `underlying_forecasts()` |
+| **Visualization** (base R) | `plot()`, `lines()`, `lollypop()`, `implicit_forecasts_plot()`, `confint_plot()`, `growthplot()`, `implicit_forecasts_plot()`, `underlying_forecasts_plot()` |
+| **Visualization** (ggplot2)| `autoplot()`, `gglollypop()`, `ggconfint_plot()`, `ggsmoothing_plot()`, `gggrowthplot()`, `ggimplicit_forecasts_plot()`, `ggunderlying_forecasts_plot()` |
+| **Utilities** | `write.ts()`, `read.ts()`, `x13_regarima_outliers()` |
+
+
+## References
+
+* **Dagum, E. B., & Luati, A. (2008).** A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews*, 28(1-3), 40‑59. <https://doi.org/10.1080/07474930802387837>
+* **Henderson, R. (1916).** Note on graduation by adjusted average. *Transactions of the Actuarial Society of America*, 17, 43‑48.
+* **Musgrave, J. (1964).** A set of end weights to end all end weights. *US Census Bureau [custodian]*.
+* **Quartier-la-Tente, A. (2024).** Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics*, 40(4), 685-715. <https://doi.org/10.1177/0282423X241283207>
+* **Quartier-la-Tente, A. (2025).** Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. <https://github.com/AQLT/robustMA>
+* **Trewin, D. (2003).** A guide to interpreting time series - Monitoring trends. *Australian Bureau of Statistics Information Paper*. <https://www.abs.gov.au/AUSSTATS/abs@.nsf/Lookup/1349.0Main+Features12003?OpenDocument>

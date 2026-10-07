@@ -111,7 +111,10 @@ lines(tc_seg, col_tc = "#009E73")
 lines(tc_hend, col_tc = "#0072B2")
 legend(
   "bottomleft",
-  legend = c("Seasonally adjusted (SA)", "Robust Henderson", "Segmented", "Standard Henderson"),
+  legend = c(
+    "Seasonally adjusted (SA)", "Robust Henderson", 
+    "Segmented", "Standard Henderson"
+    ),
   col = c("black", "orange", "#009E73", "#0072B2"),
   lty = 1
 )

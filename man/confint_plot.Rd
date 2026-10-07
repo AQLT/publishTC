@@ -3,7 +3,7 @@
 \name{confint_plot}
 \alias{confint_plot}
 \alias{ggconfint_plot}
-\title{Confidence Intervals plot}
+\title{Plot Confidence Intervals for Trend-Cycle Estimates}
 \usage{
 confint_plot(
   object,
@@ -33,30 +33,40 @@ ggconfint_plot(
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"}.
-The confidence intervals are computed using the \code{\link[=confint]{confint()}} function.}
+\item{object}{An object of class \code{"tc_estimates"}.}
 
-\item{xlim, ylim}{x and y limits of the plot.
-If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+\item{xlim, ylim}{Limits for the x- and y-axes.
+If \code{xlim} is specified and \code{ylim} is \code{NULL}, \code{ylim} is determined automatically
+based on the truncated series.}
 
-\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+\item{col_sa, col_tc}{Colors used for the seasonally adjusted and trend-cycle components,
+respectively.}
 
-\item{col_confint}{color of the confidence interval.}
+\item{col_confint}{Color of the confidence interval lines or shaded region.}
 
-\item{xlab, ylab}{x and y axis labels.}
+\item{xlab, ylab}{Character strings for the x- and y-axis labels.}
 
-\item{level}{the confidence level required.}
+\item{level}{The confidence level required (defaults to \code{0.95}).}
 
-\item{...}{other parameters.}
+\item{...}{Additional arguments (currently unused).}
 
-\item{legend_tc, legend_sa, legend_confint}{legend of the trend-cycle and seasonally adjusted components and for the confidence intervals.}
+\item{legend_tc, legend_sa, legend_confint}{Character strings specifying the legend labels for
+the trend-cycle, the seasonally adjusted series, and the confidence intervals, respectively.}
 }
 \value{
-\code{confint_plot()} returns \code{NULL}, called for side effect.
-\code{ggconfint_plot()} returns a \code{ggplot} object.
+\itemize{
+\item \code{confint_plot()} returns \code{NULL} invisibly and is called for its side effect (drawing a plot).
+\item \code{ggconfint_plot()} returns a \code{\link[ggplot2]{ggplot}} object.
+}
 }
 \description{
-Confidence Intervals plot
+Base R (\code{confint_plot()}) and \pkg{ggplot2} (\code{ggconfint_plot()}) graphics for
+plotting trend-cycle estimates alongside their confidence intervals.
+}
+\details{
+\code{confint_plot()} produces a base R graphic, whereas \code{ggconfint_plot()} creates a
+\pkg{ggplot2} object that can be further customized.
+The confidence intervals are computed internally using \link[=confint_tc]{confint()}.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

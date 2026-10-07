@@ -1,21 +1,32 @@
-#' Confidence Intervals plot
+#' Plot Confidence Intervals for Trend-Cycle Estimates
 #'
-#' @param object `"tc_estimates"`.
-#' The confidence intervals are computed using the [confint()] function.
-#' @param col_confint color of the confidence interval.
-#' @param legend_tc,legend_sa,legend_confint legend of the trend-cycle and seasonally adjusted components and for the confidence intervals.
+#' Base R (`confint_plot()`) and \pkg{ggplot2} (`ggconfint_plot()`) graphics for
+#' plotting trend-cycle estimates alongside their confidence intervals.
+#'
+#' @inheritParams confint_tc
+#' @param col_confint Color of the confidence interval lines or shaded region.
+#' @param legend_tc,legend_sa,legend_confint Character strings specifying the legend labels for
+#'   the trend-cycle, the seasonally adjusted series, and the confidence intervals, respectively.
 #'
 #' @inheritParams lollypop
 #' @inheritParams plot.tc_estimates
-#' @inheritParams confint-tc
+#' @inheritParams confint_tc
 #'
-#' @returns `confint_plot()` returns `NULL`, called for side effect.
-#' `ggconfint_plot()` returns a `ggplot` object.
+#' @details
+#' `confint_plot()` produces a base R graphic, whereas `ggconfint_plot()` creates a
+#' \pkg{ggplot2} object that can be further customized.
+#'  The confidence intervals are computed internally using [confint()][confint_tc].
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' confint_plot(tc_mod, xlim = c(2022, 2024.5))
+#'
+#' @returns
+#' * `confint_plot()` returns `NULL` invisibly and is called for its side effect (drawing a plot).
+#' * `ggconfint_plot()` returns a \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @export
+#' @rdname confint_plot
 confint_plot <- function(
 		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
@@ -28,6 +39,7 @@ confint_plot <- function(
 	UseMethod("confint_plot")
 }
 
+#' @noRd
 #' @importFrom graphics lines polygon
 #' @importFrom stats confint
 #' @export
@@ -58,6 +70,7 @@ confint_plot.default <- function(
 	lines(complete_data[, "sa"], col = col_sa)
 	lines(complete_data[, "tc"], col = col_tc)
 }
+#' @noRd
 #' @export
 confint_plot.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -90,6 +103,7 @@ ggconfint_plot <- function(object, xlim = NULL, ylim = NULL,
 						   ...) {
 	UseMethod("ggconfint_plot")
 }
+#' @noRd
 #' @export
 ggconfint_plot.default <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -128,6 +142,7 @@ ggconfint_plot.default <- function(
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
+#' @noRd
 #' @export
 ggconfint_plot.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,

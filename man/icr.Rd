@@ -3,40 +3,47 @@
 \name{icr}
 \alias{icr}
 \alias{icrs}
-\title{Compute IC-Ratio}
+\title{Compute Irregular-to-Trend-Cycle (I/C) Ratios}
 \usage{
 icr(x, tc, mul = FALSE)
 
 icrs(x, tc, mul = FALSE)
 }
 \arguments{
-\item{x, tc}{seasonally adjusted and trend-cycle components.
-If \code{x} is a \code{"tc_estimates"} object then \code{tc} is ignored.}
+\item{x}{A seasonally adjusted time series or an object of class \code{"tc_estimates"}.}
 
-\item{mul}{boolean indicating if the decomposition is multiplicative or additive.}
+\item{tc}{A time series representing the trend-cycle component. Ignored if \code{x}
+is an object of class \code{"tc_estimates"}.}
+
+\item{mul}{Logical indicating whether the decomposition is multiplicative (\code{TRUE})
+or additive (\code{FALSE}, the default).}
 }
 \value{
-\code{icr()} returns the overall I/C ratio, while \code{icrs()} returns a vector of I/C ratios for each period.
+\code{icr()} returns a single numeric value representing the overall I/C ratio,
+while \code{icrs()} returns a named numeric vector of I/C ratios for lags \eqn{1} to \eqn{p}.
 }
 \description{
-\code{icr()} compute the overall I/C ratio, while \code{icrs()} compute the I/C ratios for each period.
+\code{icr()} computes the overall I/C ratio, while \code{icrs()} computes the I/C ratios
+for each lag up to the series frequency.
 }
 \details{
-The I/C ratio is a measure of the relative importance of the irregular component compared to the trend-cycle component in a time series decomposition.
-For a time series of frequency \eqn{p}, when the decomposition is additive (\code{mul = FALSE}, the default),
-\code{icrs()} returns a vector with the ratio of the mean absolute variation of the irregular component
-to the mean absolute variation of the trend-cycle component:
-\deqn{
-\frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t-I_{t-k}\rvert}{\sum\lvert TC_t-TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
-}
-If the decomposition is multiplicative (\code{mul = TRUE}), the ratio is computed as:
-\deqn{
-\frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t/I_{t-k}\rvert}{\sum\lvert TC_t/TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
-}
-\code{icr()} returns the so called overall I/C ratio, which is the \eqn{\bar{I_1}/\bar{C_1}}.
+The I/C ratio measures the relative importance of the irregular component compared
+to the trend-cycle component in a time series decomposition.
 
-The irregular component is computed as the difference (or ratio, depending of the \code{mul} parameter?) between the original time series and the trend-cycle component:
-\deqn{I_t = X_t - TC_t\text{ or }I_t = X_t / TC_t.}
+For a time series of frequency \eqn{p}, when the decomposition is additive
+(\code{mul = FALSE}), the irregular component is defined as \eqn{I_t = X_t - TC_t}.
+\code{icrs()} returns a vector containing the ratio of the mean absolute variation
+of the irregular component to that of the trend-cycle component for each lag \eqn{k}:
+\deqn{
+\frac{\bar{I}_k}{\bar{C}_k} = \frac{\sum |I_t - I_{t-k}|}{\sum |TC_t - TC_{t-k}|} \quad \text{for } k \in \{1, 2, \dots, p\}.
+}
+If the decomposition is multiplicative (\code{mul = TRUE}), the irregular component is
+defined as \eqn{I_t = X_t / TC_t}, and the ratio of relative variations is computed as:
+\deqn{
+\frac{\bar{I}_k}{\bar{C}_k} = \frac{\sum |(I_t - I_{t-k}) / I_{t-k}|}{\sum |(TC_t - TC_{t-k}) / TC_{t-k}|} \quad \text{for } k \in \{1, 2, \dots, p\}.
+}
+\code{icr()} returns the overall I/C ratio, which corresponds to the first lag ratio
+\eqn{\bar{I}_1 / \bar{C}_1}.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

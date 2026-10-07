@@ -2,7 +2,7 @@
 % Please edit documentation in R/x13_regarima_outliers.R
 \name{x13_regarima_outliers}
 \alias{x13_regarima_outliers}
-\title{Outlier detection with RegARIMA Model}
+\title{Outlier Detection with RegARIMA Model}
 \usage{
 x13_regarima_outliers(
   y,
@@ -13,21 +13,31 @@ x13_regarima_outliers(
 )
 }
 \arguments{
-\item{y}{A \code{ts} object.}
+\item{y}{A time series object (class \code{"ts"}).}
 
-\item{order}{Orders of the ARIMA model.}
+\item{order}{An integer vector of length 3 specifying the non-seasonal ARIMA orders
+\eqn{(p, d, q)}.}
 
-\item{mean}{Logical, if \code{TRUE} the model includes a constant term.}
+\item{mean}{Logical. If \code{TRUE}, the model includes a constant term.}
 
-\item{ao, ls}{Boolean to indicate if additive outliers (AO) or level shifts (LS) should be detected.}
+\item{ao, ls}{Logical flags indicating whether Additive Outliers (AO) and Level Shifts (LS)
+should be detected, respectively.}
 }
 \value{
-A list with two elements: \code{ao} and \code{ls}, which are vectors of time points where the respective outliers were detected.
-If no outliers were detected, the corresponding element will be \code{NULL}.
+A list with two components:
+\itemize{
+\item \code{ao}: A vector of dates where Additive Outliers were detected (or \code{NULL} if none).
+\item \code{ls}: A vector of dates where Level Shifts were detected (or \code{NULL} if none).
+}
 }
 \description{
 Wrapper around \code{\link[rjd3x13:regarima_outliers]{rjd3x13::regarima_outliers()}} to detect Additive Outliers (AO) or
-Level Shifts (LS) in a seasonnally adjusted series.
+Level Shifts (LS) in a seasonally adjusted series.
+}
+\details{
+This function uses an underlying RegARIMA model via \pkg{rjd3x13} to automatically identify
+structural breaks and temporary shocks in the input series, returning their locations
+for downstream robust trend-cycle estimation.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

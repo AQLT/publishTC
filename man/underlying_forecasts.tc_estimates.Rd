@@ -4,7 +4,7 @@
 \alias{underlying_forecasts.henderson}
 \alias{underlying_forecasts.clf}
 \alias{underlying_forecasts.robust_henderson}
-\title{Implicit Forecasts Methodes}
+\title{Underlying Forecasts Methods}
 \usage{
 \method{underlying_forecasts}{henderson}(x, ...)
 
@@ -13,12 +13,15 @@
 \method{underlying_forecasts}{robust_henderson}(x, ...)
 }
 \arguments{
-\item{x}{a \code{"tc_estimates"} object otherwise uses the \code{\link[rjd3filters:underlying_forecasts]{rjd3filters::underlying_forecasts()}} function.}
+\item{x}{An object of class \code{"tc_estimates"}.}
 
-\item{...}{other unused parameters.}
+\item{...}{Additional arguments passed to internal methods (currently unused).}
+}
+\value{
+A \code{matrix} or \code{mts} object containing the underlying forecasts for the series.
 }
 \description{
-\code{\link[rjd3filters:underlying_forecasts]{rjd3filters::underlying_forecasts()}} methods for \code{"tc_estimates"} objects.
+S3 method of \code{\link[rjd3filters:underlying_forecasts]{rjd3filters::underlying_forecasts()}} for \code{"tc_estimates"} objects.
 }
 \details{
 See \code{\link[rjd3filters:underlying_forecasts]{rjd3filters::underlying_forecasts()}} for details on the computation of underlying forecasts.

@@ -1,26 +1,32 @@
-#' Compute IC-Ratio
+#' Compute Irregular-to-Trend-Cycle (I/C) Ratios
 #'
-#' `icr()` compute the overall I/C ratio, while `icrs()` compute the I/C ratios for each period.
-#' @param x,tc seasonally adjusted and trend-cycle components.
-#' If `x` is a `"tc_estimates"` object then `tc` is ignored.
-#' @param mul boolean indicating if the decomposition is multiplicative or additive.
+#' `icr()` computes the overall I/C ratio, while `icrs()` computes the I/C ratios
+#' for each lag up to the series frequency.
+#'
+#' @param x A seasonally adjusted time series or an object of class `"tc_estimates"`.
+#' @param tc A time series representing the trend-cycle component. Ignored if `x`
+#'   is an object of class `"tc_estimates"`.
+#' @param mul Logical indicating whether the decomposition is multiplicative (`TRUE`)
+#'   or additive (`FALSE`, the default).
 #'
 #' @details
-#' The I/C ratio is a measure of the relative importance of the irregular component compared to the trend-cycle component in a time series decomposition.
-#' For a time series of frequency \eqn{p}, when the decomposition is additive (`mul = FALSE`, the default),
-#'  `icrs()` returns a vector with the ratio of the mean absolute variation of the irregular component
-#'  to the mean absolute variation of the trend-cycle component:
-#' \deqn{
-#' \frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t-I_{t-k}\rvert}{\sum\lvert TC_t-TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
-#' }
-#' If the decomposition is multiplicative (`mul = TRUE`), the ratio is computed as:
-#' \deqn{
-#' \frac{\bar{I_k}}{\bar{C_k}}=\frac{\sum\lvert I_t/I_{t-k}\rvert}{\sum\lvert TC_t/TC_{t-k}\rvert}\text{ for }k\in\{1,2,\dots, p\}.
-#' }
-#' `icr()` returns the so called overall I/C ratio, which is the \eqn{\bar{I_1}/\bar{C_1}}.
+#' The I/C ratio measures the relative importance of the irregular component compared
+#' to the trend-cycle component in a time series decomposition.
 #'
-#' The irregular component is computed as the difference (or ratio, depending of the `mul` parameter?) between the original time series and the trend-cycle component:
-#' \deqn{I_t = X_t - TC_t\text{ or }I_t = X_t / TC_t.}
+#' For a time series of frequency \eqn{p}, when the decomposition is additive
+#' (`mul = FALSE`), the irregular component is defined as \eqn{I_t = X_t - TC_t}.
+#' `icrs()` returns a vector containing the ratio of the mean absolute variation
+#' of the irregular component to that of the trend-cycle component for each lag \eqn{k}:
+#' \deqn{
+#' \frac{\bar{I}_k}{\bar{C}_k} = \frac{\sum |I_t - I_{t-k}|}{\sum |TC_t - TC_{t-k}|} \quad \text{for } k \in \{1, 2, \dots, p\}.
+#' }
+#' If the decomposition is multiplicative (`mul = TRUE`), the irregular component is
+#' defined as \eqn{I_t = X_t / TC_t}, and the ratio of relative variations is computed as:
+#' \deqn{
+#' \frac{\bar{I}_k}{\bar{C}_k} = \frac{\sum |(I_t - I_{t-k}) / I_{t-k}|}{\sum |(TC_t - TC_{t-k}) / TC_{t-k}|} \quad \text{for } k \in \{1, 2, \dots, p\}.
+#' }
+#' `icr()` returns the overall I/C ratio, which corresponds to the first lag ratio
+#' \eqn{\bar{I}_1 / \bar{C}_1}.
 #'
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
@@ -28,8 +34,9 @@
 #' tc <- henderson_smoothing(x)
 #' icr(tc)
 #' icrs(tc)
+#' @returns `icr()` returns a single numeric value representing the overall I/C ratio,
+#'   while `icrs()` returns a named numeric vector of I/C ratios for lags \eqn{1} to \eqn{p}.
 #'
-#' @returns `icr()` returns the overall I/C ratio, while `icrs()` returns a vector of I/C ratios for each period.
 #'
 #' @export
 icr <- function(x, tc, mul = FALSE){
@@ -79,6 +86,8 @@ icrs <- function(x, tc, mul = FALSE){
 	icr <- gi / gc
 	return(icr)
 }
+#' @noRd
+#' @keywords internal
 abs_mean_var <- function(x, nlags = 1, mul = FALSE){
 	sapply(seq_len(nlags), function(lag){
 		d <- x - stats::lag(x, -lag)
@@ -88,21 +97,32 @@ abs_mean_var <- function(x, nlags = 1, mul = FALSE){
 		mean(abs(d), na.rm = TRUE)
 	})
 }
-#' Month of Cyclical Dominance
+#' Month of Cyclical Dominance (MCD)
+#'
+#' Computes the Month of Cyclical Dominance (MCD) for a time series decomposition.
 #'
 #' @inheritParams icr
+#'
+#' @details
+#' The Month of Cyclical Dominance (MCD) represents the minimum number of months required
+#' for the average absolute variation of the trend-cycle component to dominate that
+#' of the irregular component. In other words, it indicates the shortest time span needed
+#' on average for the cyclical signal to outweigh irregular fluctuations.
+#'
+#' It is computed as the smallest integer \eqn{k} (where \eqn{k \ge 1}) such that the I/C ratio
+#' remains less than or equal to 1 for all lags \eqn{j \ge k}:
+#' \deqn{
+#' k = \min \left\{ k \in \{1, \dots, p\} : \frac{\bar{I}_j}{\bar{C}_j} \le 1 \text{ for all } j \ge k \right\}
+#' }
+#' If the I/C ratio never falls below or equal to 1 within the frequency \eqn{p}, the MCD is set to \eqn{p}.
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' x <- cars_registrations
 #' tc <- henderson_smoothing(x)
-#' icr(tc)
-#' icrs(tc)
 #' mcd(tc)
+#' icrs(tc)
 #'
-#' @details The Month of Cyclical Dominance (MCD) is the months needed for the absolute variations of the trend-cycle component to override those of the irregular component
-#' smallest it takes on average for the cyclical signal to outweigh the irregular fluctuations.
-#' It is computed as the first month where the I/C ratio is less than or equal to 1.
-#' Therefore, the MCD is the number \eqn{k} such that \eqn{\bar{I_j}/\bar{C_j}\leq 1} for any \eqn{j\geq k}.
+#' @returns An integer specifying the Month of Cyclical Dominance (MCD).
 #'
 #' @export
 mcd <- function(x, tc, mul = FALSE){
@@ -115,7 +135,7 @@ mcd <- function(x, tc, mul = FALSE){
 	for (i in seq_along(ic)) {
 		has_mcd <- all(inf1[i:length(ic)])
 		if (has_mcd) {
-			break;
+			break
 		}
 	}
 	if (!has_mcd)
@@ -129,38 +149,45 @@ NULL
 
 #' X-11 Selection of Trend-Cycle Filter
 #'
-#' Perform X-11 selection of the length of Henderson (`x11_trend_selection()`) and
-#' compute the associated I/C ratio used to build Musgrave fuilters (`find_icr()`).
+#' Performs X-11 selection for the length of the Henderson filter
+#' (`x11_trend_selection()`) and computes the associated I/C ratio used
+#' to build Musgrave filters (`find_icr()`).
 #'
-#' @param x a `"ts"` object.
-#' @param freq frequency of the time series used to compute the I/C ratio.
-#' @param length length of the filter.
+#' @param x A `"ts"` object representing the time series.
+#' @param freq Integer specifying the frequency of the time series used to compute
+#'   the I/C ratio (e.g., 12 for monthly, 4 for quarterly).
+#' @param length Integer specifying the length of the filter.
 #'
-#' @details The following procedure is used in X-11 to select the length of the trend filter:
+#' @details
+#' The following procedure is used in X-11 to select the length of the trend filter:
 #'
-#' 1. Computes the I/C ratio, \eqn{icr} with an Henderson filter of length the frequency plus 1.
+#' 1. Computes the I/C ratio, \eqn{icr}, with a Henderson filter of length equal
+#'    to the series frequency plus 1.
 #'
-#' 2. The length depends on the value or \eqn{icr}:
+#' 2. The selected length depends on the value of \eqn{icr}:
+#'    * If \eqn{icr < 1}, the selected length is 9 for monthly data and 5 otherwise.
+#'    * If \eqn{1 \le icr < 3.5}, the selected length is \eqn{freq + 1}
+#'      (i.e., 13 for monthly data, 5 for quarterly data).
+#'    * If \eqn{icr \ge 3.5}, the selected length is 23 for monthly data and 7 otherwise.
 #'
-#'    * if \eqn{icr < 1} then the selected length is 9 for monthly data and 5 otherwise;
-#'    * if \eqn{1 \leq icr < 3.5} then the selected length is \eqn{freq + 1} where \eqn{freq} is the frequency of data (12 for monthly data, 4 for quarterly data...).
-#'    * if \eqn{icr \geq 3.5} then the selected length is 23 for monthly data and 7 otherwise.
-#'
-#' 3. The value of \eqn{icr} is then fixed to build Musgrave filters (`find_icr()`) :
-#'
-#'    * for quarterly data, if the length is 5 then \eqn{icr = 0.001}, otherwide \eqn{icr = 4.5};
-#'    * if the length if less or equal to 9 then \eqn{icr = 1};
-#'    * else if the length if less or equal to 13 then \eqn{icr = 3.5};
-#'    * else \eqn{icr = 4.5}.
+#' 3. The value of \eqn{icr} is then mapped to build Musgrave filters (`find_icr()`):
+#'    * For quarterly data, if the length is 5, then \eqn{icr = 0.001}; otherwise, \eqn{icr = 4.5}.
+#'    * For other frequencies, if the length is less than or equal to 9, then \eqn{icr = 1.0}.
+#'    * Else, if the length is less than or equal to 13, then \eqn{icr = 3.5}.
+#'    * Else, \eqn{icr = 4.5}.
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' x11_trend_selection(cars_registrations)
-#' find_icr(13)
+#' find_icr(length = 13, freq = 12)
 #'
-#' @returns `x11_trend_selection()` returns a named vector with the selected length and the associated I/C ratio.
-#' `find_icr()` returns the I/C ratio associated with the specified length and frequency used in the X-11 algorithm.
+#' @returns
+#' * `x11_trend_selection()` returns a named numeric vector containing the selected length
+#'   and the associated I/C ratio.
+#' * `find_icr()` returns a single numeric value corresponding to the I/C ratio
+#'   associated with the specified filter length and frequency in the X-11 algorithm.
 #'
 #' @export
+#' @rdname x11_trend_selection
 x11_trend_selection <- function(x){
 	icr <- icr(x, rjd3filters::filter(x, henderson[[as.character(frequency(x)+1)]]))
 	freq <- frequency(x)

@@ -13,35 +13,52 @@ is_tc_estimates(x)
 \method{summary}{tc_estimates}(object, ...)
 }
 \arguments{
-\item{tc}{the trend-cycle estimates.}
+\item{tc}{Time series object (\code{"ts"}) representing the estimated trend-cycle component.}
 
-\item{sa}{the original time series (usually seasonnally adjusted).}
+\item{sa}{Time series object (\code{"ts"}) representing the original or seasonally adjusted series.}
 
-\item{parameters}{a list of parameters used to compute the trend-cycle estimates (for example the filter coefficients).}
+\item{parameters}{A list of parameters used to compute the trend-cycle estimates
+(e.g., filter coefficients, variance, or degree of polynomial).}
 
-\item{extra_class}{additional class to add to the output object.}
+\item{extra_class}{Character string specifying an additional class to append to
+the returned object.}
 
-\item{...}{other unused parameters.}
+\item{...}{Additional arguments passed to or from other methods (currently unused).}
 
-\item{x, object}{a \code{"tc_estimates"} object.}
+\item{x}{An object of class \code{"tc_estimates"}.}
+
+\item{object}{An object of class \code{"tc_estimates"}.}
 }
 \value{
-\code{tc_estimates()} returns an object of class \code{c("tc_estimates", extra_class)} which is a list with the following components:
+\code{tc_estimates()} returns an object of class \code{c("tc_estimates", extra_class)},
+which is a list containing the following components:
 \itemize{
-\item \code{tc}: the trend-cycle estimates.
-\item \code{x}: the original time series.
-\item \code{parameters}: a list of parameters used to compute the trend-cycle estimates.
+\item \code{tc}: The estimated trend-cycle time series.
+\item \code{x}: The original (seasonally adjusted) time series.
+\item \code{parameters}: A list of parameters used during estimation.
 }
 
-The \code{summary()} method for \code{tc_estimates} objects returns a list with the following components:
+The \code{summary()} method returns a list of class \code{"summary.tc_estimates"} containing:
 \itemize{
-\item \verb{I/C ratio}: the I/C ratio of the trend-cycle estimates (see \code{\link[=icr]{icr()}}).
-\item \verb{I/C ratios}: the I/C ratio per period of the trend-cycle estimates (see \code{\link[=icrs]{icrs()}}).
-\item \code{MCD}: the Month of Cyclical Dominance (see \code{\link[=mcd]{mcd()}}).
-\item \code{Length}: the length of the trend-cycle filter used for the final estimates
-(i.e. the number of observations used to estimate the trend-cycle at the center of the series).
+\item \verb{I/C ratio}: The overall Irregular-to-Trend-Cycle ratio (see \code{\link[=icr]{icr()}}).
+\item \verb{I/C ratios}: The I/C ratio per period (see \code{\link[=icrs]{icrs()}}).
+\item \code{MCD}: The Month of Cyclical Dominance statistic (see \code{\link[=mcd]{mcd()}}).
+\item \code{Length}: The length of the symmetric trend-cycle filter.
 }
 }
 \description{
-Trend-Cycle Estimates Class
+Constructor and S3 methods for objects of class \code{"tc_estimates"}.
+}
+\details{
+Objects of class \code{"tc_estimates"} store trend-cycle estimates along with the
+original series and metadata required for summary statistics, confidence intervals,
+and implicit forecasts.
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+tc <- henderson_smoothing(x)
+summary(tc)
+print(tc)
+\dontshow{\}) # examplesIf}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/robust_filter.R
 \name{henderson_robust_smoothing}
 \alias{henderson_robust_smoothing}
-\title{Smoothing using the Henderson filter}
+\title{Robust Trend-Cycle Estimation using the Henderson Filter}
 \usage{
 henderson_robust_smoothing(
   x,
@@ -19,35 +19,57 @@ henderson_robust_smoothing(
 )
 }
 \arguments{
-\item{x}{input time-series.}
+\item{x}{An input time series (object of class \code{"ts"} or \code{"mts"}).}
 
-\item{endpoints}{Method used for the asymmetric filter.
-By default the Musgrave method is used}
+\item{endpoints}{Character string specifying the method used for asymmetric filters.
+By default, \code{"musgrave"} is used.}
 
-\item{length}{the length of the}
+\item{length}{An integer specifying the length of the symmetric filter.
+If \code{NULL}, the length is selected automatically using \code{\link[=x11_trend_selection]{x11_trend_selection()}}.}
 
-\item{ao}{Dates of the Additive Outliers (AO) which effects are associated to the irregular component.}
+\item{ao}{Vector of dates for Additive Outliers (AO) whose effects are allocated
+to the irregular component.}
 
-\item{ao_tc}{Dates of the Additive Outliers (AO) which effects are associated to the trend-cycle component.}
+\item{ao_tc}{Vector of dates for Additive Outliers (AO) whose effects are allocated
+to the trend-cycle component.}
 
-\item{ls}{Dates of the Level Shifts (LS) which effects are associated to the trend-cycle component.}
+\item{ls}{Vector of dates for Level Shifts (LS) whose effects are allocated
+to the trend-cycle component.}
 
-\item{icr}{I/C ratio used for the asymmetric filter.}
+\item{icr}{Numeric value specifying the Irregular-to-Trend (I/C) ratio used for
+asymmetric filters.}
 
-\item{local_icr}{if \code{TRUE}, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.}
+\item{local_icr}{Logical. If \code{TRUE}, the I/C ratio is estimated locally
+(as described in Quartier-la-Tente, 2024) instead of globally.}
 
-\item{asymmetric_var}{when \code{local_icr = TRUE},  if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.}
+\item{asymmetric_var}{Logical. When \code{local_icr = TRUE}, if \code{TRUE}, the variance
+is estimated for each asymmetric filter. If \code{FALSE} (the default), the variance
+associated with symmetric estimates is used throughout.}
 
-\item{degree}{if \code{local_icr = TRUE}, degree of polynomial used to estimate the local bias parameter.}
+\item{degree}{Integer. When \code{local_icr = TRUE}, degree of the polynomial used
+to estimate the local bias parameter.}
 
-\item{...}{other parameters passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
+\item{...}{Additional arguments passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
 }
 \value{
 An object of class \code{c("tc_estimates", "robust_henderson")}.
 See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
 }
 \description{
-Smoothing using the Henderson filter
+Estimates the trend-cycle component using Henderson moving averages robust to
+outliers (additive outliers and level shifts).
+}
+\details{
+When outliers are present in a time series, standard linear filters like the Henderson
+moving average can spread their impact across adjacent trend estimates. This function
+explicitly accounts for specified Additive Outliers (AO) and Level Shifts (LS) during
+the filtering process to prevent distortion of the trend-cycle estimates as described in Quartier-la-Tente (2025).
+
+In a nutshell, Henderson smoothing is equivalent to a local polynomial regression of degree 3
+(or equivalently 2) estimated with weighted least squares, using specific weights to obtain
+the Henderson coefficients. Adding regressors to this local regression to account for outliers
+allows removing their influence on the estimation of polynomial coefficients and thus on the
+trend-cycle estimates.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
@@ -59,4 +81,7 @@ tc_henderson <- henderson_smoothing(x)
 plot(tc, xlim = c(2019, 2022))
 lines(tc_henderson$tc, col = "blue")
 \dontshow{\}) # examplesIf}
+}
+\references{
+Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. \url{https://github.com/AQLT/robustMA}.
 }

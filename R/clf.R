@@ -1,13 +1,20 @@
-#' Smoothing using the Cascade Linear Filter
+#' Trend-Cycle Estimation using the Cascade Linear Filter
+#'
+#' Estimates the trend-cycle component using the Cascade Linear Filter (CLF) of length 13.
+#'
 #'
 #' @inheritParams henderson_smoothing
-#' @param endpoints Method used for the asymmetric filter.
-#' If `endpoints = "cut-and-normalize"` (the default) the cut-and-normalise method is used,
-#' otherwise the Asymmetric Linear Filter (ALF) filters are used.
-#' @param ... other unused parameters.
+#' @param endpoints Character string specifying the method used for asymmetric filters.
+#'   If `"cut-and-normalize"` (the default), the cut-and-normalize method is used
+#'   (cut the symmetric filter and normalize the coefficients, as done by Statistics Canada);
+#'   otherwise, Asymmetric Linear Filters (ALF) are used.
+#' @param ... Other unused parameters.
+#'
 #' @references
-#' Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. *Econometric Reviews* 28 (1-3): 40‑59.
-#' <https://doi.org/10.1080/07474930802387837>
+#' Dagum, E. B., & Luati, A. (2008).
+#' A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation.
+#' *Econometric Reviews* 28(1-3), 40–59.
+#' \doi{10.1080/07474930802387837}
 #'
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
@@ -16,7 +23,6 @@
 #'
 #' @returns An object of class `c("tc_estimates", "clf")`.
 #' See [tc_estimates()] for a full description of the returned object.
-#'
 #'
 #' @importFrom utils tail head
 #' @export

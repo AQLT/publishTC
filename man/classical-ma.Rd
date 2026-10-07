@@ -7,15 +7,18 @@
 \alias{CLF}
 \alias{CLF_CN}
 \alias{local_param_est}
-\title{Classical Moving Average}
+\title{Classical Moving Averages}
 \format{
-\code{henderson} is \code{list()} of \code{"moving_average"}.
+\code{henderson} is a list of objects of class \code{"moving_average"}.
 
-\code{CLF} is a \code{"finite_filters"}.
+\code{CLF} is an object of class \code{"finite_filters"}.
 
-\code{CLF_CN} is a \code{"finite_filters"}.
+\code{CLF_CN} is an object of class \code{"finite_filters"}.
 
-\code{local_param_est} is \code{list()} of \code{"finite_filters"}.
+\code{local_param_est} is a nested list of objects of class \code{"finite_filters"}.
+The first level corresponds to the length of the filter;
+the second level corresponds to the degree of the local polynomial model used for the trend-cycle;
+and the third level corresponds to the target component (1 for bias, 2 for slope, and 3 for curvature).
 }
 \usage{
 henderson
@@ -27,20 +30,37 @@ CLF_CN
 local_param_est
 }
 \description{
-Classical moving average for trend-cycle extraction.
+Datasets containing coefficients of classical moving averages used for
+trend-cycle extraction.
 }
 \details{
-\code{henderson} contains the Henderson moving average of length 5, 7, 9, 13 and 23.
-
-\code{CLF} contains the Cascade Linear Filter (CLF) of length 13 and the associated Asymmetric Linear Filters (ALF).
-
-\code{CLF_CN} contains the Cascade Linear Filter (CLF) of length 13 and the associated cut and normalise asymetric filters.
+\itemize{
+\item \code{henderson}: Henderson moving averages of lengths 5, 7, 9, 13, and 23.
+\item \code{CLF}: Cascade Linear Filter (CLF) of length 13 and associated Asymmetric
+Linear Filters (ALF).
+\item \code{CLF_CN}: Cascade Linear Filter (CLF) of length 13 and associated cut-and-normalize
+asymmetric filters.
+\item \code{local_param_est}: Moving averages used to locally estimate the bias, slope, or curvature
+associated with trend-cycle estimation (via local polynomial approximation).
+}
 }
 \references{
-Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59. \url{https://doi.org/10.1080/07474930802387837}.
+Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions
+and False Turning Points for Real Time Trend-Cycle Estimation.
+\emph{Econometric Reviews}, 28(1-3), 40–59.
+\doi{10.1080/07474930802387837}
 
-Henderson, R. (1916). Note on graduation by adjusted average. \emph{Transactions of the actuarial society of America} 17: 43‑48.
+Henderson, R. (1916). Note on graduation by adjusted average.
+\emph{Transactions of the Actuarial Society of America}, 17, 43–48.
 
-Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}.
+Musgrave, J. (1964).
+A Set of End Weights to End All End Weights.
+\emph{US Census Bureau [Custodian]}.
+\url{https://www.census.gov/library/working-papers/1964/adrm/musgrave-01.html}
+
+Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local
+Parametrization of Polynomial Regression Filters.
+\emph{Journal of Official Statistics}, 40(4), 685–715.
+\doi{10.1177/0282423X241283207}
 }
 \keyword{datasets}

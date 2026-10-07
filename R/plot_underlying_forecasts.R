@@ -1,18 +1,24 @@
-#' Implicit Forecasts plot
+#' Plot Underlying Forecasts for Trend-Cycle Estimates
 #'
-#' @param col_i_f color of the underlying forecasts.
+#' Base R (`underlying_forecasts_plot()`) and \pkg{ggplot2} (`ggunderlying_forecasts_plot()`)
+#' graphics for plotting trend-cycle estimates alongside their underlying forecasts.
 #'
-#' @param legend_tc,legend_sa,legend_i_f legend of the trend-cycle and seasonally adjusted components and for underlying forecasts.
-#' @param lty_last_tc,lty_i_f line type of the last values of the trend-cycle component and for the underlying forecasts.
-#' @inheritParams lollypop
-#' @inheritParams plot.tc_estimates
+#' @inheritParams implicit_forecasts_plot
 #'
-#' @returns `underlying_forecasts_plot()` returns `NULL`, called for side effect.
-#' `ggunderlying_forecasts_plot()` returns a `ggplot` object.
+#' @details
+#' `underlying_forecasts_plot()` produces a base R graphic, whereas
+#' `ggunderlying_forecasts_plot()` creates a \pkg{ggplot2} object that can be further customized.
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' underlying_forecasts_plot(tc_mod, xlim = c(2022, 2025))
+#'
+#' @returns
+#' * `underlying_forecasts_plot()` returns `NULL` invisibly and is called for its side effect (drawing a plot).
+#' * `ggunderlying_forecasts_plot()` returns a \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @export
+#' @rdname underlying_forecasts_plot
 underlying_forecasts_plot <- function(
 		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
@@ -27,6 +33,7 @@ underlying_forecasts_plot <- function(
 	UseMethod("underlying_forecasts_plot")
 }
 
+#' @noRd
 #' @export
 underlying_forecasts_plot.default <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -49,7 +56,7 @@ underlying_forecasts_plot.default <- function(
 	tc_final <- window(tc, end = time(tc)[length(tc) - n_last_tc])
 	tc_prov <- window(tc, start = time(tc)[length(tc) - n_last_tc])
 	complete_data <- ts.union(sa, i_f, tc, tc_final, tc_prov)
-	colnames(complete_data)[2] <- c("underlying forecast")
+	colnames(complete_data)[2] <- "underlying forecast"
 
 	if (is.null(ylim) & !is.null(xlim))
 		ylim <- get_ylim(complete_data, xlim)
@@ -60,6 +67,7 @@ underlying_forecasts_plot.default <- function(
 		 col = c(col_sa, col_i_f, col_tc, col_tc),
 		 xlab = xlab, ylab = ylab, ...)
 }
+#' @noRd
 #' @export
 underlying_forecasts_plot.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -102,6 +110,7 @@ ggunderlying_forecasts_plot <- function(
 		...) {
 	UseMethod("ggunderlying_forecasts_plot")
 }
+#' @noRd
 #' @export
 ggunderlying_forecasts_plot.default <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -150,6 +159,7 @@ ggunderlying_forecasts_plot.default <- function(
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
+#' @noRd
 #' @export
 ggunderlying_forecasts_plot.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -179,12 +189,11 @@ ggunderlying_forecasts_plot.tc_estimates <- function(
 		...)
 }
 
-#' Implicit Forecasts Methodes
+#' Underlying Forecasts Methods
 #'
-#' [rjd3filters::underlying_forecasts()] methods for `"tc_estimates"` objects.
+#' S3 method of [rjd3filters::underlying_forecasts()] for `"tc_estimates"` objects.
 #'
-#' @param x a `"tc_estimates"` object otherwise uses the [rjd3filters::underlying_forecasts()] function.
-#' @param ... other unused parameters.
+#' @inheritParams implicit_forecasts.henderson
 #'
 #' @details
 #' See [rjd3filters::underlying_forecasts()] for details on the computation of underlying forecasts.
@@ -192,6 +201,8 @@ ggunderlying_forecasts_plot.tc_estimates <- function(
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' underlying_forecasts(tc_mod)
+#'
+#' @returns A `matrix` or `mts` object containing the underlying forecasts for the series.
 #'
 #' @rdname underlying_forecasts.tc_estimates
 #' @exportS3Method rjd3filters::underlying_forecasts
@@ -247,3 +258,6 @@ underlying_forecasts.robust_henderson <- function(x, ...) {
 	coefs <- finite_filters(sym, rfilters, first_to_last = TRUE)
 	rjd3filters::underlying_forecasts(x = sa, coefs = coefs)
 }
+#' @importFrom rjd3filters underlying_forecasts
+#' @export
+rjd3filters::underlying_forecasts

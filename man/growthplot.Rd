@@ -3,7 +3,7 @@
 \name{growthplot}
 \alias{growthplot}
 \alias{gggrowthplot}
-\title{Growth plots}
+\title{Plot Growth Rates for Trend-Cycle Estimates}
 \usage{
 growthplot(
   object,
@@ -35,35 +35,47 @@ gggrowthplot(
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"} object.}
+\item{object}{An object of class \code{"tc_estimates"}.}
 
-\item{pct}{logical. If \code{TRUE} (the default), the growth rate is expressed in percentage points.}
+\item{pct}{Logical. If \code{TRUE} (the default), the growth rate is expressed as a
+percentage, otherwise as a ratio.}
 
-\item{xlim, ylim}{x and y limits of the plot.
-If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+\item{xlim, ylim}{Limits for the x- and y-axes.
+If \code{xlim} is specified and \code{ylim} is \code{NULL}, \code{ylim} is determined automatically
+based on the truncated series.}
 
-\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+\item{col_sa, col_tc}{Colors used for the seasonally adjusted and trend-cycle components,
+respectively.}
 
-\item{xlab, ylab}{x and y axis labels.}
+\item{xlab, ylab}{Character strings for the x- and y-axis labels.}
 
-\item{sa_bar_line}{logical. If \code{TRUE} (the default), the growth rates of the seasonally adjusted series are
-presented as bar-lines, otherwise they are presented as lines.}
+\item{sa_bar_line}{Logical. If \code{TRUE} (the default), the growth rates of the
+seasonally adjusted series are presented as bar-lines; otherwise, as lines.}
 
-\item{...}{other (unused) parameters.}
+\item{...}{Additional graphical parameters passed to internal plotting functions.}
 
-\item{lag}{lag used for the growth rate.
-By default, \code{lag = -1} (i.e. period-to-period growth rate).}
+\item{lag}{Integer specifying the lag used to compute the growth rate.
+Defaults to \code{-1} (i.e., period-to-period growth rate).}
 
-\item{col_sa_fill}{fill color of the bar of the seasonally adjusted series.}
+\item{col_sa_fill}{Fill color of the bars for the seasonally adjusted series.}
 
-\item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
+\item{legend_tc, legend_sa}{Character strings specifying the legend labels for
+the trend-cycle and seasonally adjusted components, respectively.}
 }
 \value{
-\code{growthplot()} returns \code{NULL}, called for side effect.
-\code{gggrowthplot()} returns a \code{ggplot} object.
+\itemize{
+\item \code{growthplot()} returns \code{NULL} invisibly and is called for its side effect (drawing a plot).
+\item \code{gggrowthplot()} returns a \code{\link[ggplot2]{ggplot}} object.
+}
 }
 \description{
-Plots the growth rate of the trend-cycle (solid lines) and the seasonally adjusted series (bar-line).
+Base R (\code{growthplot()}) and \pkg{ggplot2} (\code{gggrowthplot()}) graphics for
+plotting the growth rates of the trend-cycle estimates (solid lines) and
+the seasonally adjusted series (bar-lines or lines).
+}
+\details{
+\code{growthplot()} produces a base R graphic, whereas \code{gggrowthplot()} creates a
+\pkg{ggplot2} object that can be further customized.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

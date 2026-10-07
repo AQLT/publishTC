@@ -1,41 +1,53 @@
-#' Detect turning points in a time series
+#' Detect Turning Points and Unwanted Ripples in a Time Series
 #'
-#' `turning_points()` returns the number of downturns (`downturn()`) and upturns (`upturn()`) in a time series.
-#' `unwanted_ripples()` returns the number of unwanted ripples in a time series.
+#' Identifies turning points (upturns and downturns) and unwanted short-term
+#' ripples in a time series object using local extremum criteria.
 #'
-#' @param x the input time series.
-#' @param start,end the interval where to find turning points.
-#' @param digits number of digits used for the comparison of the values.
-#' @param k,m number of observation before and after the turning point (see details).
+#' @param x An input time series (object of class `"ts"`).
+#' @param start,end Numeric vectors specifying the start and end of the time interval
+#'   (e.g., `c(2020, 1)`) in which to search for turning points.
+#' @param digits Integer specifying the number of decimal digits used when comparing
+#'   values to determine turning points. Defaults to `NULL` (no rounding).
+#' @param k,m Integers specifying the required number of preceding (\eqn{k}) and
+#'   succeeding (\eqn{m}) observations to define a local extremum. See details.
 #'
 #' @details
-#' Zellner, Hong, et Min (1991) definition is used \eqn{k=3}, \eqn{m=1}:
-#' - we have an upturn at date \eqn{t} when
-#' \deqn{
-#' y_{t-k}\geq\cdots\geq y_{t-1}<y_t\leq y_{t+1}\leq\cdots y_{t+m}
-#' }
+#' Turning points are identified following the operational definition adapted from
+#' Zellner, Hong, and Min (1991), typically with \eqn{k = 3} and \eqn{m = 1}:
 #'
-#' - we have a downturn at date \eqn{t} when
+#' * An **upturn** occurs at time \eqn{t} if:
+#' \deqn{y_{t-k} \ge \dots \ge y_{t-1} < y_t \le y_{t+1} \le \dots \le y_{t+m}}
 #'
-#' \deqn{
-#' y_{t-k}\leq\cdots\leq y_{t-1}>y_t\geq y_{t+1}\geq\cdots y_{t+m}
-#' }
+#' * A **downturn** occurs at time \eqn{t} if:
+#' \deqn{y_{t-k} \le \dots \le y_{t-1} > y_t \ge y_{t+1} \ge \dots \ge y_{t+m}}
 #'
-#' An unwanted ripple is defined whenever two downturns or upturns occur within a 10 month period
-#' (i.e.: small cycles of less than 11 months).
+#' An **unwanted ripple** is defined as any occurrence where two turning points
+#' of the same type (two upturns or two downturns) occur within a 10-month window
+#' (i.e., short cycles lasting less than 11 months).
+#'
+#' @references
+#' Zellner, A., Hong, C., & Min, C. (1991). Forecasting Turning Points in International
+#' Growth Rates using Bayesian Exponential Smoothing Methods.
+#' *Journal of Econometrics*, 49(1–2), 275–304.
+#' \doi{10.1016/0304-4076(91)90099-H}
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' turning_points(tc)
 #' unwanted_ripples(tc)
 #'
-#' @returns `turning_points()` returns a list with two components:
-#' `"upturn"` and `"downturn"`, each containing the dates of the turning points.
-#' `upturn()` and `downturn()` returns a vector with the dates of the turning points in the time series.
-#' `unwanted_ripples()` returns the number of unwanted ripples in the time series.
+#' @returns
+#' * `turning_points()` returns a named list with two components: `"upturn"` and
+#'   `"downturn"`, each containing a vector of dates (or empty vectors if none found).
+#' * `upturn()` and `downturn()` return a vector of dates corresponding to the
+#'   detected upturns or downturns, respectively.
+#' * `unwanted_ripples()` returns an integer representing the number of unwanted
+#'   ripples detected in the series.
 #'
 #' @export
 #' @importFrom stats ts start end time window
 #' @importFrom zoo rollapply
+#' @rdname turning_points
 turning_points <- function(
 		x, start = NULL, end = NULL,
 		digits = 6, k = 3, m = 1){
@@ -55,7 +67,7 @@ upturn <- function(
 	if(is.null(x))
 		return(NULL)
 	if(!is.null(digits))
-		x = round(x, digits = digits)
+		x <- round(x, digits = digits)
 	res <- rollapply(
 		x, width=k+m+1,
 		function(x){
@@ -78,7 +90,7 @@ downturn <- function(
 	if(is.null(x))
 		return(NULL)
 	if(!is.null(digits))
-		x = round(x, digits = digits)
+		x <- round(x, digits = digits)
 	res <- rollapply(
 		x, width=k+m+1,
 		function(x){

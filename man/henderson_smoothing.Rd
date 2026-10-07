@@ -2,7 +2,7 @@
 % Please edit documentation in R/henderson.R
 \name{henderson_smoothing}
 \alias{henderson_smoothing}
-\title{Smoothing using the Henderson filter}
+\title{Trend-Cycle Estimation using the Henderson Filter}
 \usage{
 henderson_smoothing(
   x,
@@ -16,38 +16,54 @@ henderson_smoothing(
 )
 }
 \arguments{
-\item{x}{input time-series.}
+\item{x}{An input time series (object of class \code{"ts"} or \code{"mts"}).}
 
-\item{endpoints}{Method used for the asymmetric filter.
-By default the Musgrave method is used}
+\item{endpoints}{Character string specifying the method used for asymmetric filters.
+By default, \code{"musgrave"} is used.}
 
-\item{length}{the length of the}
+\item{length}{An integer specifying the length of the symmetric filter.
+If \code{NULL}, the length is selected automatically using \code{\link[=x11_trend_selection]{x11_trend_selection()}}.}
 
-\item{icr}{I/C ratio used for the asymmetric filter.}
+\item{icr}{Numeric value specifying the Irregular-to-Trend (I/C) ratio used for
+asymmetric filters.}
 
-\item{local_icr}{if \code{TRUE}, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.}
+\item{local_icr}{Logical. If \code{TRUE}, the I/C ratio is estimated locally
+(as described in Quartier-la-Tente, 2024) instead of globally.}
 
-\item{asymmetric_var}{when \code{local_icr = TRUE},  if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.}
+\item{asymmetric_var}{Logical. When \code{local_icr = TRUE}, if \code{TRUE}, the variance
+is estimated for each asymmetric filter. If \code{FALSE} (the default), the variance
+associated with symmetric estimates is used throughout.}
 
-\item{degree}{if \code{local_icr = TRUE}, degree of polynomial used to estimate the local bias parameter.}
+\item{degree}{Integer. When \code{local_icr = TRUE}, degree of the polynomial used
+to estimate the local bias parameter.}
 
-\item{...}{other parameters passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
+\item{...}{Additional arguments passed to \code{\link[rjd3filters:lp_filter]{rjd3filters::lp_filter()}}.}
 }
 \value{
 An object of class \code{c("tc_estimates", "henderson")}.
 See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
 }
 \description{
-Smoothing using the Henderson filter
+Estimates the trend-cycle component using Henderson moving averages.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x <- cars_registrations
 tc <- henderson_smoothing(x)
-plot(window(x, start = 2005))
-lines(tc$tc, col = "blue")
+plot(tc, xlim = c(2022, 2025))
 \dontshow{\}) # examplesIf}
 }
 \references{
-Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. \emph{Journal of Official Statistics, 40}(4), 685-715. \url{https://doi.org/10.1177/0282423X241283207}.
+Henderson, R. (1916).
+Note on Graduation by Adjusted Average.
+\emph{Transactions of the Actuarial Society of America} 17: 43-48.
+
+Musgrave, J. (1964).
+A Set of End Weights to End All End Weights.
+\emph{US Census Bureau [Custodian]}.
+\url{https://www.census.gov/library/working-papers/1964/adrm/musgrave-01.html}.
+
+Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters.
+\emph{Journal of Official Statistics, 40}(4), 685-715.
+\doi{10.1177/0282423X241283207}.
 }

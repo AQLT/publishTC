@@ -1,6 +1,8 @@
 # Local estimates of IC-ratios
 # We replicate the direct estimates to have
 # estimators of the slope and the concavity
+#' @noRd
+#' @keywords internal
 local_daf_est <- function(p=6, q=p, h = max(p, q), d=3, dest = 1, kernel = "Henderson", X_sup = NULL){
 	id_keep <- seq(-abs(p), abs(q)) + (h + 1)
 	k <- rjd3filters::get_kernel(kernel, horizon = h)
@@ -14,33 +16,52 @@ local_daf_est <- function(p=6, q=p, h = max(p, q), d=3, dest = 1, kernel = "Hend
 	MM <- K %*% X %*% solve(t(X) %*% K %*% X, e)
 	rjd3filters::moving_average(MM, lags = -p)
 }
-
+#' @noRd
+#' @keywords internal
 local_daf_filter <- function(p=6, d=3, dest = 1, X_sup = NULL, ...){
 	all_mm <- lapply(seq(p, 0), local_daf_est, p = p, d = d, dest = dest, X_sup = X_sup, ...)
 	rjd3filters::finite_filters(all_mm[[1]], all_mm[-1])
 }
-#' Smoothing using the Henderson filter
+#' Trend-Cycle Estimation using the Henderson Filter
 #'
-#' @param x input time-series.
-#' @param length the length of the
-#' @param endpoints Method used for the asymmetric filter.
-#' By default the Musgrave method is used
-#' @param icr I/C ratio used for the asymmetric filter.
-#' @param local_icr if `TRUE`, the I/C ratio is estimated locally (as described in Quartier-la-Tente, A. (2024)) instead of globally.
-#' @param asymmetric_var when `local_icr = TRUE`,  if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.
-#' @param degree if `local_icr = TRUE`, degree of polynomial used to estimate the local bias parameter.
-#' @param ... other parameters passed to [rjd3filters::lp_filter()].
+#' Estimates the trend-cycle component using Henderson moving averages.
+#'
+#' @param x An input time series (object of class `"ts"` or `"mts"`).
+#' @param length An integer specifying the length of the symmetric filter.
+#' If `NULL`, the length is selected automatically using [x11_trend_selection()].
+#' @param endpoints Character string specifying the method used for asymmetric filters.
+#'   By default, `"musgrave"` is used.
+#' @param icr Numeric value specifying the Irregular-to-Trend (I/C) ratio used for
+#'   asymmetric filters.
+#' @param local_icr Logical. If `TRUE`, the I/C ratio is estimated locally
+#'   (as described in Quartier-la-Tente, 2024) instead of globally.
+#' @param asymmetric_var Logical. When `local_icr = TRUE`, if `TRUE`, the variance
+#'   is estimated for each asymmetric filter. If `FALSE` (the default), the variance
+#'   associated with symmetric estimates is used throughout.
+#' @param degree Integer. When `local_icr = TRUE`, degree of the polynomial used
+#'   to estimate the local bias parameter.
+#' @param ... Additional arguments passed to [rjd3filters::lp_filter()].
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' x <- cars_registrations
 #' tc <- henderson_smoothing(x)
-#' plot(window(x, start = 2005))
-#' lines(tc$tc, col = "blue")
+#' plot(tc, xlim = c(2022, 2025))
 #'
 #' @returns An object of class `c("tc_estimates", "henderson")`.
 #' See [tc_estimates()] for a full description of the returned object.
 #' @references
-#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters. *Journal of Official Statistics, 40*(4), 685-715. <https://doi.org/10.1177/0282423X241283207>.
+#' Henderson, R. (1916).
+#' Note on Graduation by Adjusted Average.
+#' *Transactions of the Actuarial Society of America* 17: 43-48.
+#'
+#' Musgrave, J. (1964).
+#' A Set of End Weights to End All End Weights.
+#' *US Census Bureau \[Custodian\]*.
+#' <https://www.census.gov/library/working-papers/1964/adrm/musgrave-01.html>.
+#'
+#' Quartier-la-Tente, A. (2024). Improving Real-Time Trend Estimates Using Local Parametrization of Polynomial Regression Filters.
+#' *Journal of Official Statistics, 40*(4), 685-715.
+#' \doi{10.1177/0282423X241283207}.
 #' @importFrom utils tail head
 #' @export
 henderson_smoothing <- function(
@@ -196,7 +217,7 @@ local_param_filter <- function(x, icr = NULL,
 	}
 	default_f <- lp_filter(horizon = horizon,
 						   endpoints = endpoints,
-						   ic = find_icr(length, frequency(x)),,
+						   ic = find_icr(length, frequency(x)),
 						   kernel = kernel)
 	lfilters <- default_f@lfilters
 
@@ -237,7 +258,7 @@ check_icr <- function(icr, horizon) {
 	}
 
 	if (is.list(icr)) {
-		if (length(icr == 2)) {
+		if (length(icr) == 2) {
 			icr_l <- icr[[1]]
 			icr_r <- icr[[2]]
 		} else {

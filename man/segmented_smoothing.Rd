@@ -13,32 +13,39 @@ segmented_smoothing(
 )
 }
 \arguments{
-\item{x}{input time-series.}
+\item{x}{An input time series (object of class \code{"ts"} or \code{"mts"}).}
 
-\item{breaks}{A list of breakpoints (dates) where the series should be split for smoothing.}
+\item{breaks}{A vector or list of breakpoints (dates) where the series should be split for smoothing.}
 
-\item{break_method}{Method to split the series (see details).}
+\item{break_method}{Character string specifying the method used to handle boundaries at breakpoints:
+\code{"one-side"} or \code{"two-sides"} (the default). See details.}
 
-\item{smoothing_method}{Smoothing method to use on each segment : \code{\link[=henderson_smoothing]{henderson_smoothing()}} or \code{\link[=clf_smoothing]{clf_smoothing()}}.}
+\item{smoothing_method}{Function specifying the smoothing method to apply to each segment.
+Must be \code{\link[=henderson_smoothing]{henderson_smoothing()}} (the default) or \code{\link[=clf_smoothing]{clf_smoothing()}}.}
 
-\item{...}{Other parameters passed to the smoothing method.}
+\item{...}{Additional arguments passed to \code{smoothing_method}.}
 }
 \value{
 An object of class \code{c("tc_estimates", "henderson")} if
-the smoothing method is \code{\link[=henderson_smoothing]{henderson_smoothing()}} or
-\code{c("tc_estimates", "clf")} if the smoothing method is \code{\link[=clf_smoothing]{clf_smoothing()}}.
+\code{smoothing_method} is \code{\link[=henderson_smoothing]{henderson_smoothing()}}, or \code{c("tc_estimates", "clf")}
+if \code{smoothing_method} is \code{\link[=clf_smoothing]{clf_smoothing()}}.
 }
 \description{
-Segmented Smoothing around Breakpoints
+Estimates the trend-cycle component by segmenting a time series around known
+structural breakpoints.
 }
 \details{
 Two methods are available to estimate the trend-cycle around breakpoints:
 \enumerate{
-\item \code{"one-side"}: The trend-cycle is estimated on the all data and the estimates are overwritten after each breakpoint with the estimates obtained by smoothing only the data after the breakpoint.
-\item \code{"two-sides"}: The trend-cycle is estimated on each segment defined by the breakpoints and the estimates are combined to form the final trend-cycle.
+\item \code{"one-side"}: The trend-cycle is estimated across the entire dataset, and the estimates
+after each breakpoint are overwritten with the estimates obtained by smoothing only
+the data following that breakpoint.
+\item \code{"two-sides"}: The trend-cycle is estimated independently on each segment defined
+by the breakpoints, and the resulting estimates are combined to form the final trend-cycle.
 }
 
-The \code{"parameters"} field of the returned object corresponds to the parameters of the last segment (used to build confidence intervals and implicit forecasts).
+The \code{parameters} field of the returned object corresponds to the parameters of the last segment
+(used to compute confidence intervals and implicit forecasts).
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
@@ -46,22 +53,22 @@ x <- window(publishTC::french_ipi[, "manufacturing"], start = 2015)
 tc_h <- henderson_smoothing(x, length = 13)$tc
 breaks <- list(c(2020, 3))
 tc_h_2s <- segmented_smoothing(x, breaks = breaks, break_method = "two-sides", length = 13)$tc
-tc_h_rob <- henderson_robust_smoothing(x, ls = c(2020+ (3-1)/12, 2020+ (4-1)/12))$tc
+tc_h_rob <- henderson_robust_smoothing(x, ls = c(2020 + (3 - 1) / 12, 2020 + (4 - 1) / 12))$tc
 
- plot(window(x, start = 2019.5, end = 2021),
- main = "Smoothing around COVID-19",
- xlab = NULL, ylab = NULL,
- lty = 3
- )
+plot(window(x, start = 2019.5, end = 2021),
+  main = "Smoothing around COVID-19",
+  xlab = NULL, ylab = NULL,
+  lty = 3
+)
 lines(tc_h, col = "purple")
 lines(tc_h_2s, col = "lightblue")
 lines(tc_h_rob, col = "orange")
 legend(
-	"bottomright",
-	legend = c("y", "Henderson", "Two-Sides Segmented", "Robust H. (2 LS)"),
-	col= c("black", "purple", "lightblue", "orange"),
-	lty = c(3, 1, 1, 1, 1),
-	cex = 0.7
+  "bottomright",
+  legend = c("y", "Henderson", "Two-Sides Segmented", "Robust H. (2 LS)"),
+  col = c("black", "purple", "lightblue", "orange"),
+  lty = c(3, 1, 1, 1, 1),
+  cex = 0.7
 )
 \dontshow{\}) # examplesIf}
 }

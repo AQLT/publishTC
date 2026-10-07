@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoothing.R
 \name{smoothing}
 \alias{smoothing}
-\title{Smoothing using several methods}
+\title{Multi-Method Trend-Cycle Estimation}
 \usage{
 smoothing(
   x,
@@ -20,37 +20,58 @@ smoothing(
 )
 }
 \arguments{
-\item{x}{input time-series.}
+\item{x}{An input time series (object of class \code{"ts"} or \code{"mts"}).}
 
-\item{methods}{list of methods to use.}
+\item{methods}{A list of character strings specifying the smoothing methods to apply.
+Defaults to \code{c("henderson", "henderson_localic", "clf")}.}
 
-\item{endpoints}{Method used for the asymmetric filter.
-By default the Musgrave method is used}
+\item{endpoints}{Character string specifying the method used for asymmetric filters.
+By default, \code{"musgrave"} is used.}
 
-\item{length}{the length of the}
+\item{length}{An integer specifying the length of the symmetric filter.
+If \code{NULL}, the length is selected automatically using \code{\link[=x11_trend_selection]{x11_trend_selection()}}.}
 
-\item{icr}{I/C ratio used for the asymmetric filter.}
+\item{icr}{Numeric value specifying the Irregular-to-Trend (I/C) ratio used for
+asymmetric filters.}
 
-\item{asymmetric_var}{when \code{local_icr = TRUE},  if \code{asymmetric_var = TRUE} then the variance is estimated for each asymmetric filters instead of using the variance associated to the symmetric estimates.}
+\item{asymmetric_var}{Logical. When \code{local_icr = TRUE}, if \code{TRUE}, the variance
+is estimated for each asymmetric filter. If \code{FALSE} (the default), the variance
+associated with symmetric estimates is used throughout.}
 
-\item{degree}{if \code{local_icr = TRUE}, degree of polynomial used to estimate the local bias parameter.}
+\item{degree}{Integer. When \code{local_icr = TRUE}, degree of the polynomial used
+to estimate the local bias parameter.}
 
-\item{ao}{Dates of the Additive Outliers (AO) which effects are associated to the irregular component.}
+\item{ao}{Vector of dates for Additive Outliers (AO) whose effects are allocated
+to the irregular component.}
 
-\item{ao_tc}{Dates of the Additive Outliers (AO) which effects are associated to the trend-cycle component.}
+\item{ao_tc}{Vector of dates for Additive Outliers (AO) whose effects are allocated
+to the trend-cycle component.}
 
-\item{ls}{Dates of the Level Shifts (LS) which effects are associated to the trend-cycle component.}
+\item{ls}{Vector of dates for Level Shifts (LS) whose effects are allocated
+to the trend-cycle component.}
 
-\item{...}{other unused parameters.}
+\item{...}{Additional parameters passed to the underlying smoothing functions.}
+}
+\value{
+A named list of objects of class \code{"tc_estimates"}, where each element
+corresponds to one of the specified methods in \code{methods}.
 }
 \description{
-Smoothing using several methods and returning a list of trend-cycle estimates.
+Computes trend-cycle estimates using multiple smoothing methods simultaneously
+and returns a list of \code{"tc_estimates"} objects.
+}
+\details{
+This convenience function applies multiple trend-cycle estimation algorithms to
+the same input series, facilitating direct comparison between different filtering
+approaches (e.g., standard Henderson, Henderson with local I/C ratio, or CLF smoothing).
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x <- french_ipi[, "manufacturing"]
 outliers <- x13_regarima_outliers(x)
 all_methods <- smoothing(x, ao = outliers$ao, ao_tc = outliers$ao_tc, ls = outliers$ls)
-ggsmoothing_plot(all_methods)
+
+plot(all_methods$henderson, xlim = c(2023, 2025))
+lines(all_methods$henderson_localic, col_tc = "blue")
 \dontshow{\}) # examplesIf}
 }

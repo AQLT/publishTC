@@ -3,7 +3,7 @@
 \name{underlying_forecasts_plot}
 \alias{underlying_forecasts_plot}
 \alias{ggunderlying_forecasts_plot}
-\title{Implicit Forecasts plot}
+\title{Plot Underlying Forecasts for Trend-Cycle Estimates}
 \usage{
 underlying_forecasts_plot(
   object,
@@ -37,33 +37,45 @@ ggunderlying_forecasts_plot(
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"} object.}
+\item{object}{An object of class \code{"tc_estimates"}.}
 
-\item{xlim, ylim}{x and y limits of the plot.
-If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+\item{xlim, ylim}{Limits for the x- and y-axes.
+If \code{xlim} is specified and \code{ylim} is \code{NULL}, \code{ylim} is determined automatically
+based on the truncated series.}
 
-\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+\item{col_sa, col_tc}{Colors used for the seasonally adjusted and trend-cycle components,
+respectively.}
 
-\item{col_i_f}{color of the underlying forecasts.}
+\item{col_i_f}{Color of the forecasts lines.}
 
-\item{xlab, ylab}{x and y axis labels.}
+\item{xlab, ylab}{Character strings for the x- and y-axis labels.}
 
-\item{lty_last_tc, lty_i_f}{line type of the last values of the trend-cycle component and for the underlying forecasts.}
+\item{lty_last_tc, lty_i_f}{Line types used for the last values of the trend-cycle
+component and for the forecasts, respectively.}
 
-\item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
-(to emphasize that there is higher variability for the last estimates).
-If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
+\item{n_last_tc}{Number of final values of the trend-cycle component to plot
+with a distinct line type (\code{lty_last_tc}), emphasizing higher uncertainty in
+recent estimates. If \code{NULL} (the default), \code{n_last_tc} is set to the Month of
+Cyclical Dominance (MCD) statistic.}
 
-\item{...}{other parameters.}
+\item{...}{Additional graphical parameters passed to internal plotting functions.}
 
-\item{legend_tc, legend_sa, legend_i_f}{legend of the trend-cycle and seasonally adjusted components and for underlying forecasts.}
+\item{legend_tc, legend_sa, legend_i_f}{Character strings specifying the legend labels
+for the trend-cycle, the seasonally adjusted series, and the forecasts, respectively.}
 }
 \value{
-\code{underlying_forecasts_plot()} returns \code{NULL}, called for side effect.
-\code{ggunderlying_forecasts_plot()} returns a \code{ggplot} object.
+\itemize{
+\item \code{underlying_forecasts_plot()} returns \code{NULL} invisibly and is called for its side effect (drawing a plot).
+\item \code{ggunderlying_forecasts_plot()} returns a \code{\link[ggplot2]{ggplot}} object.
+}
 }
 \description{
-Implicit Forecasts plot
+Base R (\code{underlying_forecasts_plot()}) and \pkg{ggplot2} (\code{ggunderlying_forecasts_plot()})
+graphics for plotting trend-cycle estimates alongside their underlying forecasts.
+}
+\details{
+\code{underlying_forecasts_plot()} produces a base R graphic, whereas
+\code{ggunderlying_forecasts_plot()} creates a \pkg{ggplot2} object that can be further customized.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

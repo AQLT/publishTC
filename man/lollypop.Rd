@@ -3,7 +3,7 @@
 \name{lollypop}
 \alias{lollypop}
 \alias{gglollypop}
-\title{Lollypop plot}
+\title{Lollipop Plot for Trend-Cycle Estimates}
 \usage{
 lollypop(
   object,
@@ -38,35 +38,47 @@ gglollypop(
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"} object.}
+\item{object}{An object of class \code{"tc_estimates"}.}
 
-\item{xlim, ylim}{x and y limits of the plot.
-If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+\item{xlim, ylim}{Limits for the x- and y-axes.
+If \code{xlim} is specified and \code{ylim} is \code{NULL}, \code{ylim} is determined automatically
+based on the truncated series.}
 
-\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+\item{col_sa, col_tc}{Colors used for the seasonally adjusted and trend-cycle components,
+respectively.}
 
-\item{color_points, cex_points}{color and size of the points associated to the seasonnaly adjusted component.}
+\item{color_points, cex_points}{Color and size (character/numeric) of the points
+associated with the seasonally adjusted component.}
 
-\item{pch_points}{point type of the seasonally adjusted component.}
+\item{pch_points}{Point symbol type (integer or character) for the seasonally adjusted component.}
 
-\item{xlab, ylab}{x and y axis labels.}
+\item{xlab, ylab}{Character strings for the x- and y-axis labels.}
 
-\item{lty_last_tc}{line type of the last values of the trend-cycle component.}
+\item{lty_last_tc}{Line type for the last values of the trend-cycle component.}
 
-\item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
-(to emphasize that there is higher variability for the last estimates).
-If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
+\item{n_last_tc}{Number of final values of the trend-cycle component to plot
+with a distinct line type (\code{lty_last_tc}), emphasizing higher uncertainty in
+recent estimates. If \code{NULL} (the default), \code{n_last_tc} is set to the Month of
+Cyclical Dominance (MCD) statistic.}
 
-\item{...}{other parameters.}
+\item{...}{Additional graphical parameters passed to internal plotting functions.}
 
-\item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
+\item{legend_tc, legend_sa}{Character strings specifying the legend labels for
+the trend-cycle and seasonally adjusted components, respectively.}
 }
 \value{
-\code{lollypop()} returns \code{NULL}, called for side effect.
-\code{gglollypop()} returns a \code{ggplot} object.
+\itemize{
+\item \code{lollypop()} returns \code{NULL} invisibly and is called for its side effect (drawing a plot).
+\item \code{gglollypop()} returns a \code{\link[ggplot2]{ggplot}} object.
+}
 }
 \description{
-Lollypop plot
+Base R (\code{lollypop()}) and \pkg{ggplot2} (\code{gglollypop()}) graphics for creating
+lollipop plots of trend-cycle estimates alongside seasonally adjusted series.
+}
+\details{
+\code{lollypop()} produces a base R graphic, whereas \code{gglollypop()} creates a
+\pkg{ggplot2} object that can be further customized.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

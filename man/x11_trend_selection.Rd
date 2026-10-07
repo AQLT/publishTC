@@ -10,42 +10,50 @@ x11_trend_selection(x)
 find_icr(length, freq = 12)
 }
 \arguments{
-\item{x}{a \code{"ts"} object.}
+\item{x}{A \code{"ts"} object representing the time series.}
 
-\item{length}{length of the filter.}
+\item{length}{Integer specifying the length of the filter.}
 
-\item{freq}{frequency of the time series used to compute the I/C ratio.}
+\item{freq}{Integer specifying the frequency of the time series used to compute
+the I/C ratio (e.g., 12 for monthly, 4 for quarterly).}
 }
 \value{
-\code{x11_trend_selection()} returns a named vector with the selected length and the associated I/C ratio.
-\code{find_icr()} returns the I/C ratio associated with the specified length and frequency used in the X-11 algorithm.
+\itemize{
+\item \code{x11_trend_selection()} returns a named numeric vector containing the selected length
+and the associated I/C ratio.
+\item \code{find_icr()} returns a single numeric value corresponding to the I/C ratio
+associated with the specified filter length and frequency in the X-11 algorithm.
+}
 }
 \description{
-Perform X-11 selection of the length of Henderson (\code{x11_trend_selection()}) and
-compute the associated I/C ratio used to build Musgrave fuilters (\code{find_icr()}).
+Performs X-11 selection for the length of the Henderson filter
+(\code{x11_trend_selection()}) and computes the associated I/C ratio used
+to build Musgrave filters (\code{find_icr()}).
 }
 \details{
 The following procedure is used in X-11 to select the length of the trend filter:
 \enumerate{
-\item Computes the I/C ratio, \eqn{icr} with an Henderson filter of length the frequency plus 1.
-\item The length depends on the value or \eqn{icr}:
+\item Computes the I/C ratio, \eqn{icr}, with a Henderson filter of length equal
+to the series frequency plus 1.
+\item The selected length depends on the value of \eqn{icr}:
 \itemize{
-\item if \eqn{icr < 1} then the selected length is 9 for monthly data and 5 otherwise;
-\item if \eqn{1 \leq icr < 3.5} then the selected length is \eqn{freq + 1} where \eqn{freq} is the frequency of data (12 for monthly data, 4 for quarterly data...).
-\item if \eqn{icr \geq 3.5} then the selected length is 23 for monthly data and 7 otherwise.
+\item If \eqn{icr < 1}, the selected length is 9 for monthly data and 5 otherwise.
+\item If \eqn{1 \le icr < 3.5}, the selected length is \eqn{freq + 1}
+(i.e., 13 for monthly data, 5 for quarterly data).
+\item If \eqn{icr \ge 3.5}, the selected length is 23 for monthly data and 7 otherwise.
 }
-\item The value of \eqn{icr} is then fixed to build Musgrave filters (\code{find_icr()}) :
+\item The value of \eqn{icr} is then mapped to build Musgrave filters (\code{find_icr()}):
 \itemize{
-\item for quarterly data, if the length is 5 then \eqn{icr = 0.001}, otherwide \eqn{icr = 4.5};
-\item if the length if less or equal to 9 then \eqn{icr = 1};
-\item else if the length if less or equal to 13 then \eqn{icr = 3.5};
-\item else \eqn{icr = 4.5}.
+\item For quarterly data, if the length is 5, then \eqn{icr = 0.001}; otherwise, \eqn{icr = 4.5}.
+\item For other frequencies, if the length is less than or equal to 9, then \eqn{icr = 1.0}.
+\item Else, if the length is less than or equal to 13, then \eqn{icr = 3.5}.
+\item Else, \eqn{icr = 4.5}.
 }
 }
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x11_trend_selection(cars_registrations)
-find_icr(13)
+find_icr(length = 13, freq = 12)
 \dontshow{\}) # examplesIf}
 }

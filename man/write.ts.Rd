@@ -3,30 +3,41 @@
 \name{write.ts}
 \alias{write.ts}
 \alias{read.ts}
-\title{Export and Import time series object to/from CSV}
+\title{Export and Import Time Series to and from CSV}
 \usage{
 write.ts(x, file, ...)
 
 read.ts(file, frequency = NULL, list = FALSE)
 }
 \arguments{
-\item{x}{a time series object}
+\item{x}{A time series object (class \code{"ts"}) or a list of \code{"ts"} objects to export.}
 
-\item{file}{a character string giving the name of the file to write to.}
+\item{file}{A character string specifying the path to the CSV file to write or read.}
 
-\item{...}{other arguments passed to \code{\link[utils:write.csv]{utils::write.csv()}} or \code{\link[utils:read.csv]{utils::read.csv()}}.}
+\item{...}{Additional arguments passed to \code{\link[utils:write.csv]{utils::write.csv()}} or \code{\link[utils:read.csv]{utils::read.csv()}}.}
 
-\item{frequency}{an integer giving the number of observations per unit of time.
-By default it is guessed from the data.}
+\item{frequency}{An integer specifying the number of observations per unit of time
+(e.g., 12 for monthly, 4 for quarterly). If \code{NULL} (the default), it is automatically
+inferred from the date column.}
 
-\item{list}{boolean, if \code{TRUE}, the function returns a list of time series objects.}
+\item{list}{Logical. If \code{TRUE}, \code{read.ts()} returns a list of time series objects;
+otherwise, it returns a single \code{"ts"} or \code{"mts"} object.}
 }
 \value{
-\code{write.ts()} returns \code{NULL} invisibly, while \code{read.ts()} returns a \code{ts()} object or a list of \code{ts()} objects.
+\itemize{
+\item \code{write.ts()} returns \code{NULL} invisibly and is called for its side effect (writing a CSV file).
+\item \code{read.ts()} returns a \code{"ts"} object, a multiple time series (\code{"mts"}), or a \code{list} of \code{"ts"} objects depending on \code{list}.
+}
 }
 \description{
-\code{write.ts()} exports a time series object to a CSV file addind a column \code{"time"},
-while \code{read.ts()} imports the CSV file which first column are the dates and returns a \code{ts()} object.
+\code{write.ts()} exports a time series object (\code{"ts"}) or a list of time series to
+a CSV file, adding a \code{"time"} column. \code{read.ts()} imports a CSV file whose first
+column contains dates and reconstructs the corresponding \code{ts} object.
+}
+\details{
+\code{write.ts()} formats the time index into a dedicated date column (e.g., \code{YYYY-MM-DD} or
+fractional years) alongside the data series. When reading back with \code{read.ts()}, the time
+index is parsed to reconstruct regular R time series objects.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

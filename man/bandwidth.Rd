@@ -2,17 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{bandwidth}
 \alias{bandwidth}
-\title{Get Bandwidth}
+\title{Get Filter Bandwidth}
 \usage{
 bandwidth(x)
 }
 \arguments{
-\item{x}{a \code{"tc_estimates"} object.}
+\item{x}{An object of class \code{"tc_estimates"}.}
+}
+\value{
+An \code{integer} representing the bandwidth of the trend-cycle filter.
 }
 \description{
-The bandwidth of a \code{"tc_estimates"} object is the number of observations on each side of symmetric
-the trend-cycle filter used to compute the trend-cycle estimates.
-The length of the filter is then equal to \eqn{2 \times \text{bandwidth}(x) + 1}.
+Retrieves the bandwidth of the filter used in a \code{"tc_estimates"} object.
+}
+\details{
+The bandwidth corresponds to the number of observations on each side of the central
+value for a symmetric trend-cycle filter.
+The total filter length is equal to \eqn{2 \times \text{bandwidth}(x) + 1}{2 * bandwidth(x) + 1}.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

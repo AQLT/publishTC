@@ -1,19 +1,30 @@
-#' Lollypop plot
+#' Lollipop Plot for Trend-Cycle Estimates
 #'
-#' @param object `"tc_estimates"` object.
+#' Base R (`lollypop()`) and \pkg{ggplot2} (`gglollypop()`) graphics for creating
+#' lollipop plots of trend-cycle estimates alongside seasonally adjusted series.
 #'
-#' @param color_points,cex_points color and size of the points associated to the seasonnaly adjusted component.
-#'
-#' @param pch_points point type of the seasonally adjusted component.
+#' @inheritParams confint_plot
 #' @inheritParams plot.tc_estimates
-#' @param ... other parameters.
+#' @inheritParams tc_estimates
+#' @param color_points,cex_points Color and size (character/numeric) of the points
+#'   associated with the seasonally adjusted component.
+#' @param pch_points Point symbol type (integer or character) for the seasonally adjusted component.
 #'
-#' @returns `lollypop()` returns `NULL`, called for side effect.
-#' `gglollypop()` returns a `ggplot` object.
+#'
+#' @details
+#' `lollypop()` produces a base R graphic, whereas `gglollypop()` creates a
+#' \pkg{ggplot2} object that can be further customized.
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' lollypop(tc_mod, xlim = c(2022, 2024.5))
+#'
+#' @returns
+#' * `lollypop()` returns `NULL` invisibly and is called for its side effect (drawing a plot).
+#' * `gglollypop()` returns a \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @export
+#' @rdname lollypop
 lollypop <- function(
 		object, xlim = NULL, ylim = NULL,
 		col_tc = "#E69F00",
@@ -29,6 +40,7 @@ lollypop <- function(
 	UseMethod("lollypop")
 }
 
+#' @noRd
 #' @importFrom graphics points segments
 #' @importFrom stats coef frequency start time ts ts.union window end qt
 #' @export
@@ -74,6 +86,7 @@ lollypop.default <- function(
 			 y1 = complete_data[, "sa"],
 			 col = col_sa)
 }
+#' @noRd
 #' @export
 lollypop.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -113,6 +126,7 @@ gglollypop <- function(
 		...) {
 	UseMethod("gglollypop")
 }
+#' @noRd
 #' @export
 gglollypop.default <- function(
 		object, xlim = NULL, ylim = NULL,
@@ -159,6 +173,7 @@ gglollypop.default <- function(
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
+#' @noRd
 #' @export
 gglollypop.tc_estimates <- function(
 		object, xlim = NULL, ylim = NULL,

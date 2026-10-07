@@ -2,13 +2,13 @@
 #'
 #' Computes confidence intervals for trend-cycle estimates of class `"tc_estimates"`.
 #'
-#'
-#' @param object a `"tc_estimates"` object.
-#' @param parm unused parameter.
-#' @param level the confidence level required.
-#' @param ... other (unused) parameters.
-#' @param asymmetric_var if `asymmetric_var = TRUE` then the variance is estimated for each asymmetric filters
-#' instead of using the variance associated the symmetric estimates.
+#' @inheritParams tc_estimates
+#' @param parm Unused parameter, kept for compatibility with the generic function.
+#' @param level The confidence level required (defaults to `0.95`).
+#' @param ... Additional arguments (currently unused).
+#' @param asymmetric_var Logical. If `TRUE` (the default), the variance is estimated
+#'   for each asymmetric filter. If `FALSE`, the variance associated
+#'   with the symmetric filter is used throughout.
 #'
 #' @details
 #' See [rjd3filters::confint_filter()] for details on the computation of confidence intervals.
@@ -28,19 +28,19 @@
 #' 	   col= c("grey", "red", "black"), lty = c(1, 1, 2))
 #' @export
 #' @importFrom rjd3filters confint_filter
-#' @rdname confint-tc
-#' @name confint-tc
+#' @rdname confint_tc
+#' @name confint_tc
 confint.henderson <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
 				   gaussian_distribution = FALSE, exact_df = TRUE, asymmetric_var = asymmetric_var, ...)
 }
-#' @name confint-tc
+#' @name confint_tc
 #' @export
 confint.clf <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	confint_filter(x = object$x, coef = object$parameters$tc_coef, level = level,
 				   gaussian_distribution = FALSE, exact_df = TRUE, asymmetric_var = asymmetric_var, ...)
 }
-#' @name confint-tc
+#' @name confint_tc
 #' @export
 confint.robust_henderson <- function(object, parm, level = 0.95, asymmetric_var = TRUE, ...){
 	c <- (1 - level) / 2

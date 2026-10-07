@@ -1,36 +1,27 @@
 # publishTC 0.2.3
 
-- Handle filtering cases when the series is constant.
-
-- New function `split_smoothing()` to smooth series taking into account breaks.
-
-- Correction in legend colors of ggplot2 plots whend the names of the items are changes.
-
+- Handled filtering case when the series is constant.
+- Added `split_smoothing()` to smooth series while taking structural breaks into account.
+- Fixed legend colors in `ggplot2` plots when item names are modified.
+- Added `underlying_forecasts()`, `underlying_forecasts_plot()`, and `ggunderlying_forecasts_plot()`.
+- Added `lines.tc_estimates()` S3 method.
+- Reviewed and refined documentation.
 
 # publishTC 0.2.2
 
-- New function `x13_regarima_outliers()` to detect AO and LS on a seasonally adjusted series.
-
-- New function `smoothness()` to compute a smoothness statistic.
-
-- If `n_last_tc = NULL` then the value is defined according to the MCD statistic.
-
-- `ggconfint_plot()` correction of parameters `xlim` and `ylim` which were not used. 
-
-- New parameter `sa_bar_line` for `growthplot()`.
+- Added `x13_regarima_outliers()` to detect AO and LS on seasonally adjusted series.
+- Added `smoothness()` to compute a smoothness statistic.
+- If `n_last_tc = NULL`, the value is now automatically set based on the MCD statistic.
+- Fixed `xlim` and `ylim` parameters in `ggconfint_plot()`, which were previously ignored.
+- Added `sa_bar_line` parameter to `growthplot()`.
 
 # publishTC 0.2.1
 
-- Improvement of `ggplot2` plots.
+- Improved `ggplot2` plots layout and customization options.
 
 # publishTC 0.2.0
 
-- `mcd()` now returns by default the value of the number of period (instead of `NULL`)
-
-- correction of local parameterisation functions when series contains NA.
-
-- For the plots, by default only the 4 last values of the trend-cycle are dotted to emphasize the higher variability of the last values.
-
-- New `growthplot()` function.
-
-
+- `mcd()` now returns the number of periods by default (instead of `NULL`).
+- Fixed local parameterization functions when the series contains `NA` values.
+- In plots, only the last 4 values of the trend-cycle are now dotted by default to emphasize higher variability at the end of the series.
+- Added `growthplot()` function.

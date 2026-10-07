@@ -8,7 +8,7 @@
 \alias{fred}
 \alias{simulated_data}
 \alias{etip}
-\title{Data set examples}
+\title{Example Datasets}
 \format{
 An object of class \code{ts} of length 177.
 
@@ -32,18 +32,23 @@ simulated_data
 etip
 }
 \description{
-All data sets examples used in the paper Quartier-la-Tente (2025).
+Example datasets used in Quartier-la-Tente (2025).
 }
 \details{
 \itemize{
-\item \code{cars_registrations}: monthly new passenger cars registrations in France, published in October 2024.
-\item \code{french_ipi}: monthly industrial production index in France for Crude Petroleum, Motor Vehicles and Manufacturing published in October 2024.
-\item \code{fred}: the series CE16OV (Civilian Employment Level) and RETAILx (Retail and Food Services Sales) from the FRED-MD database published in November 2022.
-\item \code{simulated_data}: simulated trends of degree 0, 1 and 2 with an Additive Outlier (AO) or Level Shift (LS) in January 2022
+\item \code{cars_registrations}: Monthly new passenger car registrations in France,
+published in October 2024.
+\item \code{french_ipi}: Monthly Industrial Production Index (IPI) in France for crude
+petroleum, motor vehicles, and manufacturing, published in October 2024.
+\item \code{fred}: The series \code{CE16OV} (Civilian Employment Level) and \code{RETAILx}
+(Retail and Food Services Sales) from the FRED-MD database, published in
+November 2022.
+\item \code{simulated_data}: Simulated trends of degree 0, 1, and 2 with an Additive
+Outlier (AO) or Level Shift (LS) in January 2022.
+\item \code{etip}: Expected trend in production (balance of opinion) in the French
+manufacturing industry, published in May 2024 in the monthly business survey
+in goods-producing industries by INSEE.
 }
-
-\code{etip} corresponds to the Expected trend in production (balance of opinion) in the French Manufacturing industry, published in May 2025 in
-the monthly business survey in goods-producing industries by the INSEE.
 }
 \references{
 Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. \url{https://github.com/AQLT/robustMA}.

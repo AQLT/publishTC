@@ -1,29 +1,50 @@
+#' @noRd
 #' @export
 print.tc_estimates <- function(x, ...) {
 	print(x["tc"])
+	invisible(x)
 }
 
 #' Trend-Cycle Estimates Class
 #'
-#' @param tc the trend-cycle estimates.
-#' @param sa the original time series (usually seasonnally adjusted).
-#' @param parameters a list of parameters used to compute the trend-cycle estimates (for example the filter coefficients).
-#' @param extra_class additional class to add to the output object.
-#' @param x,object a `"tc_estimates"` object.
-#' @param ... other unused parameters.
+#' Constructor and S3 methods for objects of class `"tc_estimates"`.
 #'
-#' @return `tc_estimates()` returns an object of class `c("tc_estimates", extra_class)` which is a list with the following components:
-#' - `tc`: the trend-cycle estimates.
-#' - `x`: the original time series.
-#' - `parameters`: a list of parameters used to compute the trend-cycle estimates.
+#' @param tc Time series object (`"ts"`) representing the estimated trend-cycle component.
+#' @param sa Time series object (`"ts"`) representing the original or seasonally adjusted series.
+#' @param parameters A list of parameters used to compute the trend-cycle estimates
+#'   (e.g., filter coefficients, variance, or degree of polynomial).
+#' @param extra_class Character string specifying an additional class to append to
+#'   the returned object.
+#' @param x An object of class `"tc_estimates"`.
+#' @param object An object of class `"tc_estimates"`.
+#' @param ... Additional arguments passed to or from other methods (currently unused).
 #'
-#' The `summary()` method for `tc_estimates` objects returns a list with the following components:
-#' - `I/C ratio`: the I/C ratio of the trend-cycle estimates (see [icr()]).
-#' - `I/C ratios`: the I/C ratio per period of the trend-cycle estimates (see [icrs()]).
-#' - `MCD`: the Month of Cyclical Dominance (see [mcd()]).
-#' - `Length`: the length of the trend-cycle filter used for the final estimates
-#' (i.e. the number of observations used to estimate the trend-cycle at the center of the series).
+#' @details
+#' Objects of class `"tc_estimates"` store trend-cycle estimates along with the
+#' original series and metadata required for summary statistics, confidence intervals,
+#' and implicit forecasts.
 #'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' summary(tc)
+#' print(tc)
+#'
+#' @returns
+#' `tc_estimates()` returns an object of class `c("tc_estimates", extra_class)`,
+#' which is a list containing the following components:
+#' * `tc`: The estimated trend-cycle time series.
+#' * `x`: The original (seasonally adjusted) time series.
+#' * `parameters`: A list of parameters used during estimation.
+#'
+#' The `summary()` method returns a list of class `"summary.tc_estimates"` containing:
+#' * `I/C ratio`: The overall Irregular-to-Trend-Cycle ratio (see [icr()]).
+#' * `I/C ratios`: The I/C ratio per period (see [icrs()]).
+#' * `MCD`: The Month of Cyclical Dominance statistic (see [mcd()]).
+#' * `Length`: The length of the symmetric trend-cycle filter.
+#'
+#' @export
+#' @rdname tc_estimates
 tc_estimates <- function(tc, sa, parameters = NULL, extra_class = NULL, ...) {
 	res <- list(
 		tc = tc,

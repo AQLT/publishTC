@@ -2,9 +2,10 @@
 % Please edit documentation in R/plot.R
 \name{plot.tc_estimates}
 \alias{plot.tc_estimates}
+\alias{lines.tc_estimates}
 \alias{autoplot.tc_estimates}
 \alias{autoplot.ts}
-\title{Default \code{"tc_estimates"} plot}
+\title{Plotting Methods for Trend-Cycle Estimates}
 \usage{
 \method{plot}{tc_estimates}(
   x,
@@ -19,6 +20,8 @@
   n_last_tc = 4,
   ...
 )
+
+\method{lines}{tc_estimates}(x, col_tc = "#E69F00", lty_last_tc = 2, n_last_tc = 4, ...)
 
 \method{autoplot}{tc_estimates}(
   object,
@@ -36,33 +39,47 @@
 \method{autoplot}{ts}(object, xlim = NULL, ylim = NULL, ...)
 }
 \arguments{
-\item{y}{unused parameter.}
+\item{x}{An object of class \code{"tc_estimates"}.}
 
-\item{xlim, ylim}{x and y limits of the plot.
-If \code{xlim} is defined and not \code{ylim}, then \code{ylim} is determined automatically.}
+\item{y}{Unused parameter, kept for compatibility with the generic function.}
 
-\item{col_sa, col_tc}{color of the seasonally adjusted and trend-cycle components.}
+\item{xlim, ylim}{Limits for the x- and y-axes.
+If \code{xlim} is specified and \code{ylim} is \code{NULL}, \code{ylim} is determined automatically
+based on the truncated series.}
 
-\item{xlab, ylab}{x and y axis labels.}
+\item{col_sa, col_tc}{Colors used for the seasonally adjusted and trend-cycle components,
+respectively.}
 
-\item{lty_last_tc}{line type of the last values of the trend-cycle component.}
+\item{xlab, ylab}{Character strings for the x- and y-axis labels.}
 
-\item{n_last_tc}{number of last values of the trend-cycle component to be plotted with a different line type
-(to emphasize that there is higher variability for the last estimates).
-If \code{NULL}, then \code{n_last_tc} is equal to the MCD statistic.}
+\item{lty_last_tc}{Line type for the last values of the trend-cycle component.}
 
-\item{...}{other (unused) parameters.}
+\item{n_last_tc}{Number of final values of the trend-cycle component to plot
+with a distinct line type (\code{lty_last_tc}), emphasizing higher uncertainty in
+recent estimates. If \code{NULL} (the default), \code{n_last_tc} is set to the Month of
+Cyclical Dominance (MCD) statistic.}
 
-\item{object, x}{\code{"tc_estimates"} object.}
+\item{...}{Additional graphical parameters passed to internal plotting functions.}
 
-\item{legend_tc, legend_sa}{legend of the trend-cycle and seasonally adjusted components.}
+\item{object}{An object of class \code{"tc_estimates"}.}
+
+\item{legend_tc, legend_sa}{Character strings specifying the legend labels for
+the trend-cycle and seasonally adjusted components, respectively.}
 }
 \value{
-\code{plot()} returns \code{NULL}, called for side effect.
-\code{autoplot()} returns a \code{ggplot} object.
+\itemize{
+\item \code{plot()} and \code{lines()} return \code{NULL} invisibly and are called for their side effect (drawing a plot).
+\item \code{autoplot()} returns a \code{\link[ggplot2]{ggplot}} object.
+}
 }
 \description{
-Default \code{"tc_estimates"} plot
+Plotting methods for objects of class \code{"tc_estimates"}. \code{plot()} and \code{lines()}
+produce base R graphics, whereas \code{autoplot()} creates a \pkg{ggplot2} object.
+}
+\details{
+\code{plot.tc_estimates()} and \code{autoplot.tc_estimates()} produce a plot showing both
+the seasonally adjusted series and the estimated trend-cycle component.
+\code{lines.tc_estimates()} adds only the trend-cycle component to an existing base R plot.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}

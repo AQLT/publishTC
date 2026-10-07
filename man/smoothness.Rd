@@ -2,32 +2,34 @@
 % Please edit documentation in R/utils.R
 \name{smoothness}
 \alias{smoothness}
-\title{Get Smoothness of Trend-Cycle estimates}
+\title{Measure Smoothness of Trend-Cycle Estimates}
 \usage{
 smoothness(x)
 }
 \arguments{
-\item{x}{a \code{"tc_estimates"} object.}
+\item{x}{An object of class \code{"tc_estimates"}.}
 }
 \value{
-A numeric value representing the smoothness of the trend-cycle estimates.
+A numeric value representing the smoothness index of the trend-cycle estimates.
 }
 \description{
-Compute the smoothness of trend-cycle estimates using Picard and Matthews (2006) definition.
+Computes the smoothness ratio of trend-cycle estimates relative to the seasonally
+adjusted series following Picard and Matthews (2016).
 }
 \details{
-There are several definitions or criteria of smoothness. The measure of smoothness used here is defined as:
+Smoothness is evaluated as the ratio of month-to-month growth rate variances:
 \deqn{
 100 \times \sqrt{
 \frac{
-\sum_t [(TC_t - TC_{t-1})/TC_{t-1}]^2
+\sum_t \left( \frac{TC_t - TC_{t-1}}{TC_{t-1}} \right)^2
 }{
-\sum_t [(SA_t - SA_{t-1})/SA_{t-1}]^2
+\sum_t \left( \frac{SA_t - SA_{t-1}}{SA_{t-1}} \right)^2
 }
 }
-}
-This represents a measure of the month-to-month percentage change in the trend-cycle.
-The smaller the smoothness number is, the smoother the trend-cycle.
+}{100 * sqrt( sum( ((TC_t - TC_{t-1}) / TC_{t-1})^2 ) / sum( ((SA_t - SA_{t-1}) / SA_{t-1})^2 ) )}
+
+This metric quantifies the relative variability of the trend-cycle compared to
+the seasonally adjusted series. A lower value indicates a smoother trend-cycle.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
@@ -39,7 +41,8 @@ smoothness(tc_henderson)
 \dontshow{\}) # examplesIf}
 }
 \references{
-Picard, Frédéric et Steve Matthews (2016).
-\emph{The Addition of Trend-Cycle Estimates to Selected Publications at Statistics Canada}.
-Proceedings of the Survey Methods Section, Statistical Society of Canada (SSC) Annual Meeting. <https://ssc.ca/sites/default/files/imce/pdf/p icard_ssc2016.pdf>.
+Picard, F., & Matthews, S. (2016). The Addition of Trend-Cycle Estimates
+to Selected Publications at Statistics Canada. \emph{Proceedings of the Survey
+Methods Section, Statistical Society of Canada (SSC) Annual Meeting}.
+\url{https://ssc.ca/sites/default/files/imce/pdf/picard_ssc2016.pdf}
 }

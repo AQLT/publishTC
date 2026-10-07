@@ -1,31 +1,43 @@
 #' @noRd
-#' @exportS3Method
+#' @exportS3Method base::as.list
 as.list.ts <- function(x, ...) {
 	if (is.matrix(x)) {
-		res <- lapply(1:ncol(x), function(i) x[, i])
+		res <- lapply(seq_len(ncol(x)), function(i) x[, i])
 		names(res) <- colnames(x)
 		res
 	} else {
 		list(x)
 	}
 }
-#' Export and Import time series object to/from CSV
+
+#' Export and Import Time Series to and from CSV
 #'
-#' `write.ts()` exports a time series object to a CSV file addind a column `"time"`,
-#' while `read.ts()` imports the CSV file which first column are the dates and returns a `ts()` object.
-#' @param x a time series object
-#' @param file a character string giving the name of the file to write to.
-#' @param frequency an integer giving the number of observations per unit of time.
-#' By default it is guessed from the data.
-#' @param list boolean, if `TRUE`, the function returns a list of time series objects.
-#' @param ... other arguments passed to [utils::write.csv()] or [utils::read.csv()].
+#' `write.ts()` exports a time series object (`"ts"`) or a list of time series to
+#' a CSV file, adding a `"time"` column. `read.ts()` imports a CSV file whose first
+#' column contains dates and reconstructs the corresponding `ts` object.
+#'
+#' @param x A time series object (class `"ts"`) or a list of `"ts"` objects to export.
+#' @param file A character string specifying the path to the CSV file to write or read.
+#' @param frequency An integer specifying the number of observations per unit of time
+#'   (e.g., 12 for monthly, 4 for quarterly). If `NULL` (the default), it is automatically
+#'   inferred from the date column.
+#' @param list Logical. If `TRUE`, `read.ts()` returns a list of time series objects;
+#'   otherwise, it returns a single `"ts"` or `"mts"` object.
+#' @param ... Additional arguments passed to [utils::write.csv()] or [utils::read.csv()].
+#'
+#' @details
+#' `write.ts()` formats the time index into a dedicated date column (e.g., `YYYY-MM-DD` or
+#' fractional years) alongside the data series. When reading back with `read.ts()`, the time
+#' index is parsed to reconstruct regular R time series objects.
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' file <- tempfile(fileext = ".csv")
 #' write.ts(AirPassengers, file)
 #' read.ts(file)
 #'
-#' @returns `write.ts()` returns `NULL` invisibly, while `read.ts()` returns a `ts()` object or a list of `ts()` objects.
+#' @returns
+#' * `write.ts()` returns `NULL` invisibly and is called for its side effect (writing a CSV file).
+#' * `read.ts()` returns a `"ts"` object, a multiple time series (`"mts"`), or a `list` of `"ts"` objects depending on `list`.
 #'
 #' @export
 write.ts <- function(x, file, ...){

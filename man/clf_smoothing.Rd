@@ -2,25 +2,26 @@
 % Please edit documentation in R/clf.R
 \name{clf_smoothing}
 \alias{clf_smoothing}
-\title{Smoothing using the Cascade Linear Filter}
+\title{Trend-Cycle Estimation using the Cascade Linear Filter}
 \usage{
 clf_smoothing(x, endpoints = c("cut-and-normalize", "ALF"), ...)
 }
 \arguments{
-\item{x}{input time-series.}
+\item{x}{An input time series (object of class \code{"ts"} or \code{"mts"}).}
 
-\item{endpoints}{Method used for the asymmetric filter.
-If \code{endpoints = "cut-and-normalize"} (the default) the cut-and-normalise method is used,
-otherwise the Asymmetric Linear Filter (ALF) filters are used.}
+\item{endpoints}{Character string specifying the method used for asymmetric filters.
+If \code{"cut-and-normalize"} (the default), the cut-and-normalize method is used
+(cut the symmetric filter and normalize the coefficients, as done by Statistics Canada);
+otherwise, Asymmetric Linear Filters (ALF) are used.}
 
-\item{...}{other unused parameters.}
+\item{...}{Other unused parameters.}
 }
 \value{
 An object of class \code{c("tc_estimates", "clf")}.
 See \code{\link[=tc_estimates]{tc_estimates()}} for a full description of the returned object.
 }
 \description{
-Smoothing using the Cascade Linear Filter
+Estimates the trend-cycle component using the Cascade Linear Filter (CLF) of length 13.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
@@ -29,6 +30,8 @@ plot(tc, xlim = c(2022, 2025))
 \dontshow{\}) # examplesIf}
 }
 \references{
-Dagum, E. B., & Luati, A. (2008). A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation. \emph{Econometric Reviews} 28 (1-3): 40‑59.
-\url{https://doi.org/10.1080/07474930802387837}
+Dagum, E. B., & Luati, A. (2008).
+A Cascade Linear Filter to Reduce Revisions and False Turning Points for Real Time Trend-Cycle Estimation.
+\emph{Econometric Reviews} 28(1-3), 40–59.
+\doi{10.1080/07474930802387837}
 }

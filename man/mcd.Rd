@@ -2,31 +2,43 @@
 % Please edit documentation in R/icr.R
 \name{mcd}
 \alias{mcd}
-\title{Month of Cyclical Dominance}
+\title{Month of Cyclical Dominance (MCD)}
 \usage{
 mcd(x, tc, mul = FALSE)
 }
 \arguments{
-\item{x, tc}{seasonally adjusted and trend-cycle components.
-If \code{x} is a \code{"tc_estimates"} object then \code{tc} is ignored.}
+\item{x}{A seasonally adjusted time series or an object of class \code{"tc_estimates"}.}
 
-\item{mul}{boolean indicating if the decomposition is multiplicative or additive.}
+\item{tc}{A time series representing the trend-cycle component. Ignored if \code{x}
+is an object of class \code{"tc_estimates"}.}
+
+\item{mul}{Logical indicating whether the decomposition is multiplicative (\code{TRUE})
+or additive (\code{FALSE}, the default).}
+}
+\value{
+An integer specifying the Month of Cyclical Dominance (MCD).
 }
 \description{
-Month of Cyclical Dominance
+Computes the Month of Cyclical Dominance (MCD) for a time series decomposition.
 }
 \details{
-The Month of Cyclical Dominance (MCD) is the months needed for the absolute variations of the trend-cycle component to override those of the irregular component
-smallest it takes on average for the cyclical signal to outweigh the irregular fluctuations.
-It is computed as the first month where the I/C ratio is less than or equal to 1.
-Therefore, the MCD is the number \eqn{k} such that \eqn{\bar{I_j}/\bar{C_j}\leq 1} for any \eqn{j\geq k}.
+The Month of Cyclical Dominance (MCD) represents the minimum number of months required
+for the average absolute variation of the trend-cycle component to dominate that
+of the irregular component. In other words, it indicates the shortest time span needed
+on average for the cyclical signal to outweigh irregular fluctuations.
+
+It is computed as the smallest integer \eqn{k} (where \eqn{k \ge 1}) such that the I/C ratio
+remains less than or equal to 1 for all lags \eqn{j \ge k}:
+\deqn{
+k = \min \left\{ k \in \{1, \dots, p\} : \frac{\bar{I}_j}{\bar{C}_j} \le 1 \text{ for all } j \ge k \right\}
+}
+If the I/C ratio never falls below or equal to 1 within the frequency \eqn{p}, the MCD is set to \eqn{p}.
 }
 \examples{
 \dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 x <- cars_registrations
 tc <- henderson_smoothing(x)
-icr(tc)
-icrs(tc)
 mcd(tc)
+icrs(tc)
 \dontshow{\}) # examplesIf}
 }

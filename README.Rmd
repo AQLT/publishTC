@@ -18,7 +18,7 @@ library(publishTC)
 
 <!-- badges: start -->
 [![R universe version](https://aqlt.r-universe.dev/badges/publishTC)](https://aqlt.r-universe.dev/publishTC)
-[![CRAN status](https://www.r-pkg.org/badges/version/publishTC)](https://CRAN.R-project.org/package=publishTC)
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/publishTC)](https://CRAN.R-project.org/package=publishTC) -->
 <!-- [![R-CMD-check](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml) -->
 <!-- badges: end -->
 

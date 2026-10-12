@@ -89,13 +89,13 @@ icrs <- function(x, tc, mul = FALSE){
 #' @noRd
 #' @keywords internal
 abs_mean_var <- function(x, nlags = 1, mul = FALSE){
-	sapply(seq_len(nlags), function(lag){
+	vapply(seq_len(nlags), function(lag){
 		d <- x - stats::lag(x, -lag)
 		if (mul) {
 			d <- d / stats::lag(x, -lag)
 		}
 		mean(abs(d), na.rm = TRUE)
-	})
+	}, FUN.VALUE = numeric(1))
 }
 #' Month of Cyclical Dominance (MCD)
 #'

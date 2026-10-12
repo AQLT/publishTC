@@ -71,7 +71,7 @@ points of the same type (two upturns or two downturns) occur within a
 Zellner, A., Hong, C., & Min, C. (1991). Forecasting Turning Points in
 International Growth Rates using Bayesian Exponential Smoothing Methods.
 *Journal of Econometrics*, 49(1–2), 275–304.
-[doi:10.1016/0304-4076(91)90099-H](https://doi.org/10.1016/0304-4076%2891%2990099-H)
+[doi:10.1016/0304-4076(91)90016-7](https://doi.org/10.1016/0304-4076%2891%2990016-7)
 
 ## Examples
 

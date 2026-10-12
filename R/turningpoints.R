@@ -29,7 +29,7 @@
 #' Zellner, A., Hong, C., & Min, C. (1991). Forecasting Turning Points in International
 #' Growth Rates using Bayesian Exponential Smoothing Methods.
 #' *Journal of Econometrics*, 49(1–2), 275–304.
-#' \doi{10.1016/0304-4076(91)90099-H}
+#' \doi{10.1016/0304-4076(91)90016-7}
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc <- henderson_smoothing(french_ipi[, "manufacturing"])

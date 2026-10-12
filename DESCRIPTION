@@ -23,9 +23,6 @@ Imports:
   ggplot2,
   zoo,
   rjd3jars (>= 0.0.5)
-Remotes:
-  github::rjdverse/rjd3x13,
-  github::rjdverse/rjd3filters
 URL: https://github.com/AQLT/publishTC, https://aqlt.github.io/publishTC/
 BugReports: https://github.com/AQLT/publishTC/issues
 SystemRequirements: Java (>= 17)

@@ -128,7 +128,9 @@
 #'
 #' @references
 #' Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. <https://github.com/AQLT/robustMA>.
-#' McCracken, Michael W., et Serena Ng. 2016. FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics 34 (4): 574‑89. <https://doi.org/10.1080/07350015.2015.1086655>.
+#' McCracken, Michael W., et Serena Ng. 2016.
+#' FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics 34 (4): 574‑89.
+#' \doi{10.1080/07350015.2015.1086655}.
 #' @docType data
 #' @rdname ts-exemple
 #' @name ts-exemple

@@ -1,7 +1,7 @@
 Package: publishTC
 Type: Package
-Title: Tools to Help to Publish the Trend-Cycle Component
-Version: 0.2.3
+Title: Publishing Trend-Cycle Components
+Version: 0.2.3.9000
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre", "cph"),
                  email = "alain.quartier@yahoo.fr",
@@ -29,4 +29,4 @@ SystemRequirements: Java (>= 17)
 License: EUPL
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

@@ -1,10 +1,31 @@
-
-#' Smoothing using several methods
+#' Multi-Method Trend-Cycle Estimation
+#'
+#' Computes trend-cycle estimates using multiple smoothing methods simultaneously
+#' and returns a list of `"tc_estimates"` objects.
+#'
+#' @param methods A list of character strings specifying the smoothing methods to apply.
+#'   Defaults to `c("henderson", "henderson_localic", "clf")`.
+#' @param ... Additional parameters passed to the underlying smoothing functions.
 #'
 #' @inheritParams henderson_smoothing
 #' @inheritParams henderson_robust_smoothing
-#' @param methods list of methods to use.
-#' @param ... other unused parameters.
+#'
+#' @details
+#' This convenience function applies multiple trend-cycle estimation algorithms to
+#' the same input series, facilitating direct comparison between different filtering
+#' approaches (e.g., standard Henderson, Henderson with local I/C ratio, or CLF smoothing).
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- french_ipi[, "manufacturing"]
+#' outliers <- x13_regarima_outliers(x)
+#' all_methods <- smoothing(x, ao = outliers$ao, ao_tc = outliers$ao_tc, ls = outliers$ls)
+#'
+#' plot(all_methods$henderson, xlim = c(2023, 2025))
+#' lines(all_methods$henderson_localic, col_tc = "blue")
+#'
+#' @returns A named list of objects of class `"tc_estimates"`, where each element
+#'   corresponds to one of the specified methods in `methods`.
+#'
 #' @export
 smoothing <- function(
 		x,
@@ -60,16 +81,38 @@ smoothing <- function(
 		names(res) <- names(methods)
 	res
 }
-#' Produce several plots
+#' Plot Multiple Trend-Cycle Visualizations
+#'
+#' Generates a list of \pkg{ggplot2} graphics displaying various diagnostic and
+#' comparative plots for a `"tc_estimates"` object.
+#'
+#' @param plots A character vector specifying the types of plots to generate.
+#'   Available options are `"normal"`, `"confint"`, `"lollypop"`, `"implicit_forecasts"`,
+#'   and `"underlying_forecasts"`. Defaults to generating all available plots.
+#' @param ... Additional graphical arguments passed to internal plotting functions.
 #'
 #' @inheritParams confint_plot
-#' @inheritParams confint-tc
-#' @param plots list of plots to use.
-#' @param ... other unused parameters.
+#' @inheritParams confint_tc
+#'
+#' @details
+#' The following plot types can be produced:
+#' * `"normal"`: Standard plot showing trend-cycle and seasonally adjusted series via [autoplot.tc_estimates()].
+#' * `"confint"`: Confidence interval plot via [ggconfint_plot()].
+#' * `"lollypop"`: Lollipop chart comparing estimates via [gglollypop()].
+#' * `"implicit_forecasts"`: Implicit forecasts plot via [ggimplicit_forecasts_plot()].
+#' * `"underlying_forecasts"`: Underlying forecasts plot via [ggunderlying_forecasts_plot()].
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' tc <- henderson_smoothing(x)
+#' ggsmoothing_plot(tc)
+#'
+#' @returns A list of \code{\link[ggplot2]{ggplot}} objects corresponding to the requested `plots`.
+#'
 #' @export
 ggsmoothing_plot <- function(
 		object,
-		plots = c("normal", "confint", "lollypop", "implicit_forecasts"),
+		plots = c("normal", "confint", "lollypop", "implicit_forecasts", "underlying_forecasts"),
 		level = 0.95,
 		...) {
 	plots <- tolower(plots)
@@ -117,6 +160,17 @@ ggsmoothing_plot <- function(
 		if (!is.null(names(plots)) && names(plots)[plots %in% "implicit_forecasts"]) {
 			res$implicit_forecasts <- res$implicit_forecasts +
 				ggplot2::ggtitle(names(plots)[plots %in% "implicit_forecasts"])
+		}
+	}
+
+	if ("underlying_forecasts" %in% plots) {
+		res$underlying_forecasts <- ggunderlying_forecasts_plot(
+			object = object, ...
+		) +
+			ggplot2::ggtitle("Underlying forecasts")
+		if (!is.null(names(plots)) && names(plots)[plots %in% "underlying_forecasts"]) {
+			res$underlying_forecasts <- res$underlying_forecasts +
+				ggplot2::ggtitle(names(plots)[plots %in% "underlying_forecasts"])
 		}
 	}
 	res

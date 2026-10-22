@@ -1,3 +1,5 @@
+#' @noRd
+#' @keywords internal
 gen_ls <- function(t, h = 6){
 	if (t > -h & t <= h) {
 		if (t <= 0) {
@@ -11,6 +13,8 @@ gen_ls <- function(t, h = 6){
 	}
 	X
 }
+#' @noRd
+#' @keywords internal
 gen_ao <- function(t, h = 6){
 	if (abs(t) <= h) {
 		X <- c(rep(0, h + t), 1, rep(0,  h - t))
@@ -20,6 +24,8 @@ gen_ao <- function(t, h = 6){
 	}
 	X
 }
+#' @noRd
+#' @keywords internal
 gen_ao_tc <- function(t, h = 6){
 	X <- gen_ao(t, h)
 	if (abs(t) <= h) {
@@ -34,6 +40,8 @@ gen_ao_tc <- function(t, h = 6){
 	}
 	X
 }
+#' @noRd
+#' @keywords internal
 build_reg <-  function(x, ao, ao_tc, ls, ...){
 	dates <- as.numeric(time(x))
 	ao_reg <- ao_tc_reg <- ls_reg <- NULL

@@ -2,25 +2,48 @@
 % Please edit documentation in R/smoothing.R
 \name{ggsmoothing_plot}
 \alias{ggsmoothing_plot}
-\title{Produce several plots}
+\title{Plot Multiple Trend-Cycle Visualizations}
 \usage{
 ggsmoothing_plot(
   object,
-  plots = c("normal", "confint", "lollypop", "implicit_forecasts"),
+  plots = c("normal", "confint", "lollypop", "implicit_forecasts",
+    "underlying_forecasts"),
   level = 0.95,
   ...
 )
 }
 \arguments{
-\item{object}{\code{"tc_estimates"}.
-The confidence intervals are computed using the \code{\link[=confint]{confint()}} function.}
+\item{object}{An object of class \code{"tc_estimates"}.}
 
-\item{plots}{list of plots to use.}
+\item{plots}{A character vector specifying the types of plots to generate.
+Available options are \code{"normal"}, \code{"confint"}, \code{"lollypop"}, \code{"implicit_forecasts"},
+and \code{"underlying_forecasts"}. Defaults to generating all available plots.}
 
-\item{level}{the confidence level required.}
+\item{level}{The confidence level required (defaults to \code{0.95}).}
 
-\item{...}{other unused parameters.}
+\item{...}{Additional graphical arguments passed to internal plotting functions.}
+}
+\value{
+A list of \code{\link[ggplot2]{ggplot}} objects corresponding to the requested \code{plots}.
 }
 \description{
-Produce several plots
+Generates a list of \pkg{ggplot2} graphics displaying various diagnostic and
+comparative plots for a \code{"tc_estimates"} object.
+}
+\details{
+The following plot types can be produced:
+\itemize{
+\item \code{"normal"}: Standard plot showing trend-cycle and seasonally adjusted series via \code{\link[=autoplot.tc_estimates]{autoplot.tc_estimates()}}.
+\item \code{"confint"}: Confidence interval plot via \code{\link[=ggconfint_plot]{ggconfint_plot()}}.
+\item \code{"lollypop"}: Lollipop chart comparing estimates via \code{\link[=gglollypop]{gglollypop()}}.
+\item \code{"implicit_forecasts"}: Implicit forecasts plot via \code{\link[=ggimplicit_forecasts_plot]{ggimplicit_forecasts_plot()}}.
+\item \code{"underlying_forecasts"}: Underlying forecasts plot via \code{\link[=ggunderlying_forecasts_plot]{ggunderlying_forecasts_plot()}}.
+}
+}
+\examples{
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+x <- cars_registrations
+tc <- henderson_smoothing(x)
+ggsmoothing_plot(tc)
+\dontshow{\}) # examplesIf}
 }

@@ -1,10 +1,43 @@
-#' Smoothing using the Henderson filter
+#' Robust Trend-Cycle Estimation using the Henderson Filter
+#'
+#' Estimates the trend-cycle component using Henderson moving averages robust to
+#' outliers (additive outliers and level shifts).
 #'
 #' @inheritParams henderson_smoothing
 #'
-#' @param ao Dates of the Additive Outliers (AO) which effects are associated to the irregular component.
-#' @param ao_tc Dates of the Additive Outliers (AO) which effects are associated to the trend-cycle component.
-#' @param ls Dates of the Level Shifts (LS) which effects are associated to the trend-cycle component.
+#' @param ao Vector of dates for Additive Outliers (AO) whose effects are allocated
+#'   to the irregular component.
+#' @param ao_tc Vector of dates for Additive Outliers (AO) whose effects are allocated
+#'   to the trend-cycle component.
+#' @param ls Vector of dates for Level Shifts (LS) whose effects are allocated
+#'   to the trend-cycle component.
+#'
+#' @details
+#' When outliers are present in a time series, standard linear filters like the Henderson
+#' moving average can spread their impact across adjacent trend estimates. This function
+#' explicitly accounts for specified Additive Outliers (AO) and Level Shifts (LS) during
+#' the filtering process to prevent distortion of the trend-cycle estimates as described in Quartier-la-Tente (2025).
+#'
+#' In a nutshell, Henderson smoothing is equivalent to a local polynomial regression of degree 3
+#' (or equivalently 2) estimated with weighted least squares, using specific weights to obtain
+#' the Henderson coefficients. Adding regressors to this local regression to account for outliers
+#' allows removing their influence on the estimation of polynomial coefficients and thus on the
+#' trend-cycle estimates.
+#'
+#' @references
+#' Quartier-la-Tente, A. (2025). Estimation de la tendance-cycle avec des méthodes robustes aux points atypiques. <https://github.com/AQLT/robustMA>.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
+#' x <- cars_registrations
+#' outliers <- x13_regarima_outliers(x)
+#' tc <- henderson_robust_smoothing(x, ao = outliers$ao, ls = outliers$ls, local_icr = TRUE)
+#'
+#' tc_henderson <- henderson_smoothing(x)
+#' plot(tc, xlim = c(2019, 2022))
+#' lines(tc_henderson$tc, col = "blue")
+#'
+#' @returns An object of class `c("tc_estimates", "robust_henderson")`.
+#'   See [tc_estimates()] for a full description of the returned object.
 #'
 #' @importFrom rjd3filters polynomial_matrix mmsre_filter finite_filters
 #' @export
@@ -44,7 +77,7 @@ henderson_robust_smoothing <- function(x,
 		return(henderson_smoothing(x, endpoints = endpoints, length = length, icr = icr, degree = degree, ...))
 	}
 
-	has_na <- any(is.na(x))
+	has_na <- anyNA(x)
 	input_x <- x
 	data_clean <- remove_bound_NA(x)
 	x <- data_clean$data
@@ -60,6 +93,10 @@ henderson_robust_smoothing <- function(x,
 			icr <- find_icr(length, frequency(x))
 		}
 	}
+	icr_default <- icr
+	if (is.null(icr_default)){
+		icr_default <- find_icr(length, frequency(x))
+	}
 
 	dates_x <- as.numeric(time(x))
 	f_reg <- build_reg(x = x, ao = ao, ao_tc = ao_tc, ls = ls)
@@ -67,10 +104,11 @@ henderson_robust_smoothing <- function(x,
 	reg <- f_reg$reg
 
 	h <- (length - 1) / 2
-	default_filter <- lp_filter(horizon = h,
-								ic = icr,
-								endpoints = endpoints,
-								kernel = kernel)
+	default_filter <- lp_filter(
+		horizon = h,
+		ic = icr_default,
+		endpoints = endpoints,
+		kernel = kernel)
 	sym_coef <- default_filter@sfilter
 	lb <- lower_bound(sym_coef)
 	ub <- upper_bound(sym_coef)
@@ -106,7 +144,7 @@ henderson_robust_smoothing <- function(x,
 				c_coef <- mmsre_filter(
 					ref_filter = sym,
 					q = q,
-					delta = 2 / (sqrt(pi) * icr),
+					delta = 2 / (sqrt(pi) * icr_default),
 					U = cbind(U, X),
 					Z = Z
 				)
@@ -127,7 +165,7 @@ henderson_robust_smoothing <- function(x,
 				c_coef <- mmsre_filter(
 					ref_filter = sym,
 					q = q,
-					delta = 2 / (sqrt(pi) * icr),
+					delta = 2 / (sqrt(pi) * icr_default),
 					U = cbind(U, X),
 					Z = Z
 				)
@@ -192,6 +230,7 @@ henderson_robust_smoothing <- function(x,
 				local_param_f)
 				param_i <- param_i[abs(lower_bound(local_param_f)) + 1]
 				bias_i <- param_i / sqrt(var)
+				bias_i <- abs(bias_i)
 				bias_i[bias_i >= max_bias] <- max_bias
 
 				if (asymmetric_var) {
@@ -263,6 +302,7 @@ henderson_robust_smoothing <- function(x,
 				local_param_f)
 				param_i <- param_i[abs(lower_bound(local_param_f)) + 1]
 				bias_i <- param_i / sqrt(var)
+				bias_i <- abs(bias_i)
 				bias_i[bias_i >= max_bias] <- max_bias
 
 				if (asymmetric_var) {
@@ -334,6 +374,8 @@ henderson_robust_smoothing <- function(x,
 	res
 }
 
+#' @noRd
+#' @keywords internal
 build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, degree, lfilter = FALSE) {
 	kernel <- "Henderson"
 	dates_x <- as.numeric(time(reg))
@@ -378,7 +420,8 @@ build_robust_hat_matrix_ma <- function(reg, fun_out, delta, default_ma, U, Z, de
 	H
 }
 
-
+#' @noRd
+#' @keywords internal
 variance_hat_matrix <- function(x, H) {
 	n <- length(x)
 	non_estimate <- apply(H == 0, 1, all)
@@ -390,7 +433,8 @@ variance_hat_matrix <- function(x, H) {
 	res <- sum((sc - x)^2, na.rm = TRUE)
 	res / (nobs - 2*nu1 + nu2)
 }
-
+#' @noRd
+#' @keywords internal
 df_var_hat_matrix <- function(H) {
 	n <- nrow(H)
 	non_estimate <- apply(H == 0, 1, all)
@@ -399,9 +443,13 @@ df_var_hat_matrix <- function(H) {
 	Delta <- I - H
 	tr(Delta)^2 / tr(Delta %*% t(Delta))
 }
+#' @noRd
+#' @keywords internal
 tr <- function(x) {
 	sum(diag(x))
 }
+#' @noRd
+#' @keywords internal
 sym_robust_filter <- function(X = NULL, kernel = "Henderson", degree = 3,
 							  horizon = 6) {
 	kernel <- rjd3filters::get_kernel(kernel, horizon = horizon)
@@ -416,7 +464,8 @@ sym_robust_filter <- function(X = NULL, kernel = "Henderson", degree = 3,
 		K %*% X_full %*% solve(t(X_full) %*% K %*% X_full, e_1),
 		lags = - horizon)
 }
-
+#' @noRd
+#' @keywords internal
 build_matrix_reg <- function(focus_reg, fun_out, h, current_date, U = NULL, q = NULL) {
 	if (!is.matrix(focus_reg))
 		focus_reg <- matrix(focus_reg, ncol = 1)
@@ -430,6 +479,8 @@ build_matrix_reg <- function(focus_reg, fun_out, h, current_date, U = NULL, q = 
 		return(NULL)
 	check_matrix_reg(X = X, U = U, q = q)
 }
+#' @noRd
+#' @keywords internal
 check_matrix_reg <- function(X, U = NULL, q = NULL) {
 	if (is.null(X))
 		return(X)
@@ -450,7 +501,9 @@ check_matrix_reg <- function(X, U = NULL, q = NULL) {
 		return(NULL)
 	X
 }
-#'@importFrom rjd3filters is.moving_average lower_bound upper_bound
+#' @importFrom rjd3filters is.moving_average lower_bound upper_bound
+#' @noRd
+#' @keywords internal
 hat_matrix <- function(n, coef) {
 	if (is.moving_average(coef)) {
 		sym_coef <- coef
@@ -482,7 +535,8 @@ hat_matrix <- function(n, coef) {
 	H
 }
 
-
+#' @noRd
+#' @keywords internal
 remove_bound_NA <- function(x) {
 	if (all(is.na(x)))
 		return(x)

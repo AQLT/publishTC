@@ -1,7 +1,11 @@
 ## @import rjd3filters
-#' @import rjd3x13
+#' @importFrom rjd3x13 regarima_outliers
 #' @importFrom rJava .jcall .jaddClassPath
+NULL
 
+#' @noRd
+#' @keywords internal
+#' @importFrom rjd3jars check_java_version
 .onLoad <- function(libname, pkgname) {
 	# if (!requireNamespace("rjd3filters", quietly = TRUE)) stop("Loading rjd3 libraries failed")
 	# if (!requireNamespace("rjd3x13", quietly = TRUE)) stop("Loading rjd3 libraries failed")

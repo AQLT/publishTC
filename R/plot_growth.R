@@ -1,22 +1,35 @@
-#' Growth plots
+#' Plot Growth Rates for Trend-Cycle Estimates
 #'
-#' Plots the growth rate of the trend-cycle (solid lines) and the seasonally adjusted series (bar-line).
+#' Base R (`growthplot()`) and \pkg{ggplot2} (`gggrowthplot()`) graphics for
+#' plotting the growth rates of the trend-cycle estimates (solid lines) and
+#' the seasonally adjusted series (bar-lines or lines).
 #'
-#' @param pct logical. If `TRUE` (the default), the growth rate is expressed in percentage points.
-#' @param col_sa_fill fill color of the bar of the seasonally adjusted series.
-#'
-#' @param sa_bar_line logical. If `TRUE` (the default), the growth rates of the seasonally adjusted series are
-#' presented as bar-lines, otherwise they are presented as lines.
-#' @param lag lag used for the growth rate.
-#' By default, `lag = -1` (i.e. period-to-period growth rate).
+#' @param pct Logical. If `TRUE` (the default), the growth rate is expressed as a
+#'   percentage, otherwise as a ratio.
+#' @param col_sa_fill Fill color of the bars for the seasonally adjusted series.
+#' @param sa_bar_line Logical. If `TRUE` (the default), the growth rates of the
+#'   seasonally adjusted series are presented as bar-lines; otherwise, as lines.
+#' @param lag Integer specifying the lag used to compute the growth rate.
+#'   Defaults to `-1` (i.e., period-to-period growth rate).
 #'
 #' @inheritParams plot.tc_estimates
 #' @inheritParams lollypop
+#' @inheritParams tc_estimates
 #'
-#' @examples
+#' @details
+#' `growthplot()` produces a base R graphic, whereas `gggrowthplot()` creates a
+#' \pkg{ggplot2} object that can be further customized.
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' tc_mod <- henderson_smoothing(french_ipi[, "manufacturing"])
 #' growthplot(tc_mod, xlim = c(2022, 2024.5))
+#'
+#' @returns
+#' * `growthplot()` returns `NULL` invisibly and is called for its side effect (drawing a plot).
+#' * `gggrowthplot()` returns a \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @export
+#' @rdname growthplot
 growthplot <- function(
 		object,
 		pct = TRUE,
@@ -33,6 +46,7 @@ growthplot <- function(
 
 #' @importFrom graphics points segments
 #' @importFrom stats coef frequency start time ts ts.union window end qt
+#' @noRd
 #' @export
 growthplot.default <- function(
 		object,
@@ -65,6 +79,7 @@ growthplot.default <- function(
 	lines(complete_data[, "tc"],
 		  col = col_tc)
 }
+#' @noRd
 #' @export
 growthplot.tc_estimates <- function(
 		object,
@@ -104,6 +119,7 @@ gggrowthplot <- function(
 		lag = -1) {
 	UseMethod("gggrowthplot")
 }
+#' @noRd
 #' @export
 gggrowthplot.default <- function(
 		object,
@@ -139,13 +155,17 @@ gggrowthplot.default <- function(
 	}
 	p <- p +
 		ggplot2::geom_line(ggplot2::aes(y = tc, color = legend_tc), na.rm = TRUE) +
-		ggplot2::scale_color_manual(values = c(col_sa, col_tc)) +
+		ggplot2::scale_color_manual(
+			values = c(col_sa, col_tc),
+			breaks = c(legend_sa, legend_tc)
+		) +
 		ggplot2::theme(legend.title = ggplot2::element_blank()) +
 		ggplot2::labs(x = NULL, y = NULL)
 	if (!is.null(xlim) | !is.null(ylim))
 		p <- p + ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)
 	p
 }
+#' @noRd
 #' @export
 gggrowthplot.tc_estimates <- function(
 		object,
@@ -169,7 +189,8 @@ gggrowthplot.tc_estimates <- function(
 		lag = lag,
 		...)
 }
-
+#' @noRd
+#' @keywords internal
 growth_rate <- function(x, lag =-1, pct = TRUE) {
 	res <- (x - stats::lag(x, lag)) / stats::lag(x, lag)
 	if (is.matrix(x)) {

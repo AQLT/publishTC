@@ -43,7 +43,7 @@ To install the release version `publishTC`:
 install.packages("publishTC")
 ```
 
-To install the developpment version:
+To install the development version:
 
 - From [r-universe](https://aqlt.r-universe.dev/publishTC):
 

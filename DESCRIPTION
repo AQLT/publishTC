@@ -8,10 +8,13 @@ Authors@R: c(
                  comment = c(ORCID = "0000-0001-7890-3857"))
   )
 Description: Tools to facilitate the computation of the trend-cycle component of time series.
-  In particular, the computation can be performed using: the Cascade Linear Filter ('CLF', Dagum and Luati, 2008), 
-  classical Henderson symmetric filters with surrogate Musgrave asymmetric filters, local parameterizations of
-  Musgrave filters (Quartier-la-Tente, 2024), and robust extensions taking into account
-  additive outliers and level shifts (Quartier-la-Tente, 2025). Computes confidence intervals
+  In particular, the computation can be performed using: the Cascade Linear Filter 
+  ('CLF', Dagum and Luati (2008) <doi:10.1080/07474930802387837>), classical Henderson 
+  symmetric filters with surrogate Musgrave asymmetric filters, local parameterizations of
+  Musgrave filters (Quartier-la-Tente (2024) <doi:10.1177/0282423X241283207>), 
+  and robust extensions taking into account additive outliers and level shifts 
+  (Quartier-la-Tente (2025) <https://insee.hal.science/hal-05622434>). 
+  Computes confidence intervals
   and provides specialized plotting functions for publication.
 LazyData: true
 Depends:

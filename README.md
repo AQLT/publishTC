@@ -5,10 +5,17 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/publishTC)](https://CRAN.R-project.org/package=publishTC)
+[![CRAN last
+release](https://www.r-pkg.org/badges/last-release/publishTC)](https://cran.r-project.org/package=publishTC)
 [![R universe
 version](https://aqlt.r-universe.dev/badges/publishTC)](https://aqlt.r-universe.dev/publishTC)
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/publishTC)](https://CRAN.R-project.org/package=publishTC) -->
-[![R-CMD-check](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-check.yaml)
+[![CRAN monthly
+downloads](https://cranlogs.r-pkg.org/badges/publishTC?color=lightgrey)](https://cran.r-project.org/package=publishTC)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/publishTC?color=lightgrey)](https://cran.r-project.org/package=publishTC)
+[![R-CMD-check](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-CHECK.yaml/badge.svg)](https://github.com/AQLT/publishTC/actions/workflows/R-CMD-CHECK.yaml)
 <!-- badges: end -->
 
 Why not publish the trend-cycle?
@@ -30,9 +37,27 @@ using modern state-of-the-art methodology:
 
 ## Installation
 
-To install `publishTC`:
+To install the release version `publishTC`:
 
-    install.packages('publishTC', repos = c('https://aqlt.r-universe.dev', 'https://cloud.r-project.org'))
+``` r
+# Install release version from CRAN
+install.packages("publishTC")
+```
+
+To install the developpment version:
+
+- From [r-universe](https://aqlt.r-universe.dev/publishTC):
+
+``` r
+install.packages("publishTC", repos = c("https://aqlt.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+- From GitHub:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("AQLT/publishTC")
+```
 
 ## Quick Start
 
@@ -170,7 +195,7 @@ ripples
   <https://doi.org/10.1177/0282423X241283207>
 - **Quartier-la-Tente, A. (2025).** Estimation de la tendance-cycle avec
   des méthodes robustes aux points atypiques.
-  <https://github.com/AQLT/robustMA>
+  <https://github.com/AQLT/robustMA>.
 - **Trewin, D. (2003).** A guide to interpreting time series -
   Monitoring trends. *Australian Bureau of Statistics Information
   Paper*.

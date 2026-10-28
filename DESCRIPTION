@@ -28,7 +28,7 @@ Imports:
   rjd3jars (>= 0.0.5)
 URL: https://github.com/AQLT/publishTC, https://aqlt.github.io/publishTC/
 BugReports: https://github.com/AQLT/publishTC/issues
-SystemRequirements: Java (>= 17)
+SystemRequirements: Java (>= 21)
 License: EUPL
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
